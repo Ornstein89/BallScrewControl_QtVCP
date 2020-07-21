@@ -19,8 +19,8 @@ from qtvcp.lib.keybindings import Keylookup
 from qtvcp.core import Status, Action
 
 # пакеты для графиков
-from pyqtgraph import PlotWidget, plot
 import pyqtgraph as pg
+from pyqtgraph import PlotWidget, plot
 
 # пакет для xlsx
 import openpyxl
@@ -54,6 +54,11 @@ class HandlerClass:
         self.hal = halcomp
         self.w = widgets
         self.PATHS = paths
+        
+        self.siggen_test_read_pin = self.hal.newpin('siggen_test_read_pin',hal.HAL_FLOAT, hal.HAL_IN) # тестовый пин для получения синусоиды с siggen http://linuxcnc.org/docs/2.8/html/hal/halmodule.html#_use_with_hal_glib_in_qtvcp_handler
+        
+        self.siggen_test_read_pin.value_changed.connect(lambda s: self.on_siggen_test_read_pin_value_changed(s)) # connect the pin to a callback http://linuxcnc.org/docs/2.8/html/hal/halmodule.html#_use_with_hal_glib_in_qtvcp_handler
+
 
     ##########################################
     # SPECIAL FUNCTIONS SECTION              #
@@ -92,12 +97,13 @@ class HandlerClass:
             pass
         
     ########################
-    # CALLBACKS FROM STATUS #
+    # CALLBACKS FROM STATUS#
     ########################
 
     #######################
     # CALLBACKS FROM FORM #
     #######################
+    
     def onBtnNext(self):
         print "*** onBtnNext clicked"
         if(self.w.cmbTestType.currentIndex()<4):
@@ -109,33 +115,47 @@ class HandlerClass:
     def onBtnTempShow1(self):
         self.w.stackedWidget.setCurrentIndex(0)
         pass
+        
     def onBtnTempShow21(self):
         self.w.stackedWidget.setCurrentIndex(1)
         pass
+        
     def onBtnTempShow22(self):
         self.w.stackedWidget.setCurrentIndex(2)
         pass
+        
     def onBtnTempShow23(self):
         self.w.stackedWidget.setCurrentIndex(3)
         pass
+        
     def onBtnTempShow24(self):
         self.w.stackedWidget.setCurrentIndex(4)
         pass
+        
     def onBtnTempShow31(self):
         self.w.stackedWidget.setCurrentIndex(5)
         pass
+        
     def onBtnTempShow32(self):
         self.w.stackedWidget.setCurrentIndex(6)
         pass
+        
     def onBtnTempShow33(self):
         self.w.stackedWidget.setCurrentIndex(7)
         pass
+        
     def onBtnTempShow34(self):
         self.w.stackedWidget.setCurrentIndex(8)
         pass
+
     #####################
     # GENERAL FUNCTIONS #
     #####################
+    
+    def on_siggen_test_read_pin_value_changed(self,data):
+        print("*** siggen pin data: ", data)
+        print("*** siggen pin: ", self.siggen_test_read_pin.get())
+        print("*** siggen.0.sine directly", hal.get_value("siggen.0.sine"))
     
 ################################
 # required handler boiler code #

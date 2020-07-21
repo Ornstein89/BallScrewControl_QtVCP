@@ -1,0 +1,5 @@
+# net signal_sine <= siggen.0.sine
+# net signal_sine siggen.0.sine => BallScrewControl.siggen_test_read_pin
+
+net signal_sine siggen.0.sine
+net signal_sine siggen.0.sine BallScrewControl.siggen_test_read_pin
