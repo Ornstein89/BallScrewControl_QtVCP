@@ -1,0 +1,1 @@
+halrun -I start_siggen_and_halscope.hal

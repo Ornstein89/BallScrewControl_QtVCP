@@ -77,7 +77,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="4" column="3">
-         <widget class="QComboBox" name="cmbTestType">
+         <widget class="QComboBox" name="cmbType1">
           <item>
            <property name="text">
             <string>Измерение хода</string>
@@ -111,7 +111,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="4" column="5">
-         <widget class="QLineEdit" name="edtPartNumber">
+         <widget class="QLineEdit" name="edtPart1">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -131,7 +131,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="5" column="5">
-         <widget class="QLineEdit" name="edtDate">
+         <widget class="QLineEdit" name="edtDate1">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -141,7 +141,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="4" column="2">
-         <widget class="QComboBox" name="cmbModel"/>
+         <widget class="QComboBox" name="cmbModel1"/>
         </item>
         <item row="2" column="1">
          <widget class="QLabel" name="label">
@@ -173,12 +173,16 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="edtTestName"/>
+           <widget class="QLineEdit" name="edtName1">
+            <property name="inputMask">
+             <string>A__A__A__A__</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
         <item row="4" column="1">
-         <widget class="QComboBox" name="cmbActuator">
+         <widget class="QComboBox" name="cmbDrive1">
           <item>
            <property name="text">
             <string>Перпендикулярный</string>
@@ -192,7 +196,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="8" column="1" colspan="5" alignment="Qt::AlignHCenter">
-         <widget class="QPushButton" name="btnNext">
+         <widget class="QPushButton" name="btnNext1">
           <property name="text">
            <string>Далее</string>
           </property>
@@ -236,7 +240,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="4" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_16"/>
+         <widget class="QDoubleSpinBox" name="spnTravel21"/>
         </item>
         <item row="5" column="0">
          <widget class="QLabel" name="label_44">
@@ -246,17 +250,17 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="5" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_17"/>
+         <widget class="QDoubleSpinBox" name="dpnNom_Vel21"/>
         </item>
         <item row="6" column="0">
          <widget class="QLabel" name="label_42">
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Линейная скорость гайки, мм/c&lt;span style=&quot; vertical-align:super;&quot;&gt;2&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Линейное ускорение гайки, мм/c&lt;span style=&quot; vertical-align:super;&quot;&gt;2&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
         <item row="6" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_15"/>
+         <widget class="QDoubleSpinBox" name="spnNom_Accel21"/>
         </item>
         <item row="8" column="0" colspan="2">
          <widget class="QLabel" name="label_46">
@@ -278,10 +282,10 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_5"/>
+           <widget class="QLineEdit" name="edtFilename21"/>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_8">
+           <widget class="QPushButton" name="btnFileSelect21">
             <property name="text">
              <string>Обзор</string>
             </property>
@@ -305,7 +309,7 @@ font: 15pt bold;</string>
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_7">
+           <widget class="QPushButton" name="btnNext21">
             <property name="text">
              <string>Далее</string>
             </property>
@@ -344,7 +348,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_18"/>
+         <widget class="QDoubleSpinBox" name="spnGear21"/>
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="label_48">
@@ -354,7 +358,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_19"/>
+         <widget class="QDoubleSpinBox" name="spnPitch21"/>
         </item>
         <item row="4" column="0">
          <widget class="QLabel" name="label_43">
@@ -421,7 +425,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_12"/>
+         <widget class="QDoubleSpinBox" name="spnGear22"/>
         </item>
         <item row="2" column="2">
          <widget class="QLabel" name="label_26">
@@ -431,7 +435,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="2" column="3">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_11"/>
+         <widget class="QDoubleSpinBox" name="spnBrake_Torque22"/>
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="label_24">
@@ -441,7 +445,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_14"/>
+         <widget class="QDoubleSpinBox" name="spnNom_Vel22"/>
         </item>
         <item row="3" column="2">
          <widget class="QLabel" name="label_21">
@@ -451,7 +455,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="3" column="3">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_13"/>
+         <widget class="QDoubleSpinBox" name="spnDuration22"/>
         </item>
         <item row="5" column="0" colspan="4">
          <widget class="QLabel" name="label_22">
@@ -473,10 +477,10 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_2"/>
+           <widget class="QLineEdit" name="edtFile22"/>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_3">
+           <widget class="QPushButton" name="btnFileSelect22">
             <property name="text">
              <string>Обзор</string>
             </property>
@@ -500,7 +504,7 @@ font: 15pt bold;</string>
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_4">
+           <widget class="QPushButton" name="btnNext22">
             <property name="text">
              <string>Далее</string>
             </property>
@@ -566,10 +570,10 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="5" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_9"/>
+         <widget class="QDoubleSpinBox" name="spnNom_Vel_Idle23"/>
         </item>
         <item row="4" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_5"/>
+         <widget class="QDoubleSpinBox" name="spnNom_Dsp_Idle23"/>
         </item>
         <item row="1" column="0" colspan="2">
          <widget class="QLabel" name="label_20">
@@ -599,7 +603,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+         <widget class="QDoubleSpinBox" name="spnGear23"/>
         </item>
         <item row="2" column="2">
          <widget class="QLabel" name="label_13">
@@ -609,7 +613,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="2" column="3">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_4"/>
+         <widget class="QDoubleSpinBox" name="spnNom_Load23"/>
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="label_7">
@@ -619,7 +623,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+         <widget class="QDoubleSpinBox" name="spnPitch23"/>
         </item>
         <item row="3" column="2">
          <widget class="QLabel" name="label_9">
@@ -629,7 +633,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="3" column="3">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
+         <widget class="QDoubleSpinBox" name="spnNom_Pos_Measure23"/>
         </item>
         <item row="4" column="0">
          <widget class="QLabel" name="label_8">
@@ -646,7 +650,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="6" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_10"/>
+         <widget class="QDoubleSpinBox" name="spnNom_Accel_Idle23"/>
         </item>
         <item row="6" column="0">
          <widget class="QLabel" name="label_18">
@@ -656,7 +660,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="7" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_8"/>
+         <widget class="QDoubleSpinBox" name="spnNom_Dsp_Measure23"/>
         </item>
         <item row="7" column="0">
          <widget class="QLabel" name="label_11">
@@ -666,7 +670,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="8" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_7"/>
+         <widget class="QDoubleSpinBox" name="spnNom_Vel_Measure23"/>
         </item>
         <item row="8" column="0">
          <widget class="QLabel" name="label_10">
@@ -676,7 +680,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="9" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBox_6"/>
+         <widget class="QDoubleSpinBox" name="spnNom_Accel_Measure23"/>
         </item>
         <item row="9" column="0">
          <widget class="QLabel" name="label_19">
@@ -697,10 +701,10 @@ font: 15pt bold;</string>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit"/>
+             <widget class="QLineEdit" name="edtFile23"/>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_2">
+             <widget class="QPushButton" name="btnFileSelect23">
               <property name="text">
                <string>Обзор</string>
               </property>
@@ -724,7 +728,7 @@ font: 15pt bold;</string>
              </spacer>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton">
+             <widget class="QPushButton" name="btnNext23">
               <property name="text">
                <string>Далее</string>
               </property>
@@ -771,22 +775,22 @@ font: 15pt bold;</string>
          </spacer>
         </item>
        </layout>
-       <zorder>doubleSpinBox</zorder>
-       <zorder>doubleSpinBox_4</zorder>
+       <zorder>spnGear23</zorder>
+       <zorder>spnNom_Load23</zorder>
        <zorder>label_7</zorder>
        <zorder>label_10</zorder>
-       <zorder>doubleSpinBox_5</zorder>
-       <zorder>doubleSpinBox_9</zorder>
-       <zorder>doubleSpinBox_2</zorder>
+       <zorder>spnNom_Dsp_Idle23</zorder>
+       <zorder>spnNom_Vel_Idle23</zorder>
+       <zorder>spnPitch23</zorder>
        <zorder>label_8</zorder>
        <zorder>label_15</zorder>
-       <zorder>doubleSpinBox_6</zorder>
+       <zorder>spnNom_Accel_Measure23</zorder>
        <zorder>label_9</zorder>
-       <zorder>doubleSpinBox_7</zorder>
-       <zorder>doubleSpinBox_8</zorder>
+       <zorder>spnNom_Vel_Measure23</zorder>
+       <zorder>spnNom_Dsp_Measure23</zorder>
        <zorder>label_11</zorder>
-       <zorder>doubleSpinBox_3</zorder>
-       <zorder>doubleSpinBox_10</zorder>
+       <zorder>spnNom_Pos_Measure23</zorder>
+       <zorder>spnNom_Accel_Idle23</zorder>
        <zorder>label_12</zorder>
        <zorder>label_13</zorder>
        <zorder>label_14</zorder>
@@ -829,7 +833,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QSpinBox" name="spinBox_6"/>
+         <widget class="QSpinBox" name="spnGearRatio24"/>
         </item>
         <item row="1" column="3">
          <widget class="QLabel" name="label_41">
@@ -839,7 +843,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="1" column="4">
-         <widget class="QSpinBox" name="spinBox">
+         <widget class="QSpinBox" name="spnStartLoad24">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -856,7 +860,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QSpinBox" name="spinBox_7"/>
+         <widget class="QSpinBox" name="spnPitch24"/>
         </item>
         <item row="2" column="3">
          <widget class="QLabel" name="label_38">
@@ -866,7 +870,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="2" column="4">
-         <widget class="QSpinBox" name="spinBox_2"/>
+         <widget class="QSpinBox" name="spnFinalLoad24"/>
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="label_36">
@@ -876,7 +880,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QSpinBox" name="spinBox_8"/>
+         <widget class="QSpinBox" name="spnTravel24"/>
         </item>
         <item row="3" column="2">
          <spacer name="horizontalSpacer_9">
@@ -902,13 +906,13 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="4" column="1">
-         <widget class="QSpinBox" name="spinBox_9"/>
+         <widget class="QSpinBox" name="spnFrequency24"/>
         </item>
         <item row="3" column="4">
-         <widget class="QSpinBox" name="spinBox_3"/>
+         <widget class="QSpinBox" name="spnOverload24"/>
         </item>
         <item row="4" column="4">
-         <widget class="QSpinBox" name="spinBox_4"/>
+         <widget class="QSpinBox" name="spnStayDuration24"/>
         </item>
         <item row="4" column="0">
          <widget class="QLabel" name="label_39">
@@ -918,7 +922,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="5" column="1">
-         <widget class="QSpinBox" name="spinBox_10"/>
+         <widget class="QSpinBox" name="spnAcceleration24"/>
         </item>
         <item row="4" column="3">
          <widget class="QLabel" name="label_37">
@@ -928,7 +932,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="5" column="4">
-         <widget class="QSpinBox" name="spinBox_5"/>
+         <widget class="QSpinBox" name="spnNumOfCycles24"/>
         </item>
         <item row="5" column="0">
          <widget class="QLabel" name="label_29">
@@ -964,10 +968,10 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_3"/>
+           <widget class="QLineEdit" name="edtFile24"/>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_6">
+           <widget class="QPushButton" name="btnFileSelect24">
             <property name="text">
              <string>Обзор</string>
             </property>
@@ -985,7 +989,7 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_4"/>
+           <widget class="QLineEdit" name="edtRecordFrequency24"/>
           </item>
          </layout>
         </item>
@@ -1005,7 +1009,7 @@ font: 15pt bold;</string>
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_5">
+           <widget class="QPushButton" name="btnNext24">
             <property name="text">
              <string>Далее</string>
             </property>
@@ -1053,7 +1057,7 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="StateLabel" name="statelabel">
+           <widget class="StateLabel" name="lblNominalPosition31">
             <property name="text">
              <string>---</string>
             </property>
@@ -1073,7 +1077,7 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="StateLabel" name="statelabel_2">
+           <widget class="StateLabel" name="lblCurrentPosition31">
             <property name="text">
              <string>---</string>
             </property>
@@ -1097,24 +1101,24 @@ font: 15pt bold;</string>
            </spacer>
           </item>
           <item>
-           <widget class="LED" name="led"/>
+           <widget class="LED" name="ledStartSwitch31"/>
           </item>
           <item>
-           <widget class="PushButton" name="pushbutton_2">
+           <widget class="PushButton" name="btnBack31">
             <property name="text">
              <string>&lt;</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="PushButton" name="pushbutton">
+           <widget class="PushButton" name="btnForward31">
             <property name="text">
              <string>&gt;</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="LED" name="led_2"/>
+           <widget class="LED" name="ledEndSwitch31"/>
           </item>
           <item>
            <spacer name="horizontalSpacer_2">
@@ -1134,7 +1138,7 @@ font: 15pt bold;</string>
         <item row="2" column="2" rowspan="2">
          <layout class="QGridLayout" name="gridLayout_11">
           <item row="1" column="0" colspan="2" alignment="Qt::AlignHCenter">
-           <widget class="QPushButton" name="pushButton_9">
+           <widget class="QPushButton" name="btnSave31">
             <property name="text">
              <string>Сохранить показание</string>
             </property>
@@ -1148,7 +1152,7 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="LED" name="led_3"/>
+           <widget class="LED" name="ledStatus31"/>
           </item>
          </layout>
         </item>
@@ -1169,7 +1173,7 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="Slider" name="slider">
+           <widget class="Slider" name="sldSpeed31">
             <property name="maximum">
              <number>100</number>
             </property>
@@ -1179,7 +1183,7 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="Slider" name="slider_2">
+           <widget class="Slider" name="sldAccel31">
             <property name="maximum">
              <number>100</number>
             </property>
@@ -1242,7 +1246,7 @@ font: 15pt bold;</string>
            </spacer>
           </item>
           <item row="0" column="1">
-           <widget class="PushButton" name="pushbutton_3">
+           <widget class="PushButton" name="btnOn31">
             <property name="styleSheet">
              <string notr="true">background-color: rgb(138, 226, 52);</string>
             </property>
@@ -1252,7 +1256,7 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="PushButton" name="pushbutton_4">
+           <widget class="PushButton" name="btnOff31">
             <property name="styleSheet">
              <string notr="true">background-color: rgb(239, 41, 41);</string>
             </property>
@@ -1262,7 +1266,7 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="LED" name="led_4"/>
+           <widget class="LED" name="ledOn31"/>
           </item>
           <item row="1" column="2">
            <spacer name="horizontalSpacer_23">
@@ -1781,7 +1785,7 @@ font: 15pt bold;</string>
              <widget class="LED" name="led_26"/>
             </item>
             <item row="1" column="2" rowspan="2">
-             <widget class="PushButton" name="pushbutton_11">
+             <widget class="PushButton" name="btnForward33">
               <property name="text">
                <string>&gt;</string>
               </property>
@@ -1816,7 +1820,7 @@ font: 15pt bold;</string>
              </widget>
             </item>
             <item row="1" column="0" rowspan="2">
-             <widget class="PushButton" name="pushbutton_12">
+             <widget class="PushButton" name="btnBack33">
               <property name="text">
                <string>&lt;</string>
               </property>
@@ -2090,9 +2094,6 @@ font: 15pt bold;</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="0" rowspan="2">
-             <widget class="GcodeDisplay" name="gcode_display_2"/>
-            </item>
            </layout>
           </item>
          </layout>
@@ -2282,7 +2283,7 @@ font: 15pt bold;</string>
            </spacer>
           </item>
           <item row="1" column="0">
-           <widget class="QPushButton" name="pushButton_22">
+           <widget class="QPushButton" name="btnClear33">
             <property name="text">
              <string>Очистить</string>
             </property>
@@ -2695,16 +2696,6 @@ font: 15pt bold;</string>
           </item>
           <item row="7" column="0">
            <layout class="QGridLayout" name="gridLayout_18">
-            <item row="1" column="0" rowspan="3">
-             <widget class="GcodeDisplay" name="gcode_display">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="1">
              <widget class="QPushButton" name="pushButton_11">
               <property name="styleSheet">
@@ -2778,16 +2769,16 @@ font: 15pt bold;</string>
            <layout class="QGridLayout" name="gridLayout_16">
             <item row="1" column="1" rowspan="2">
              <widget class="LED" name="led_6">
-              <property name="state">
+              <property name="flashing" stdset="0">
                <bool>false</bool>
               </property>
-              <property name="flashing" stdset="0">
+              <property name="state" stdset="0">
                <bool>false</bool>
               </property>
              </widget>
             </item>
             <item row="1" column="2" rowspan="2">
-             <widget class="PushButton" name="pushbutton_8">
+             <widget class="PushButton" name="btnForward34">
               <property name="text">
                <string>&gt;</string>
               </property>
@@ -2822,7 +2813,7 @@ font: 15pt bold;</string>
              </widget>
             </item>
             <item row="1" column="0" rowspan="2">
-             <widget class="PushButton" name="pushbutton_9">
+             <widget class="PushButton" name="btnBack34">
               <property name="text">
                <string>&lt;</string>
               </property>
@@ -3103,12 +3094,6 @@ font: 15pt bold;</string>
    <header>qtvcp.widgets.simple_widgets</header>
   </customwidget>
   <customwidget>
-   <class>GcodeDisplay</class>
-   <extends>QFrame</extends>
-   <header>qtvcp.widgets.gcode_editor</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>PlotWidget</class>
    <extends>QWidget</extends>
    <header>pyqtgraph</header>
@@ -3120,14 +3105,14 @@ font: 15pt bold;</string>
  </resources>
  <connections>
   <connection>
-   <sender>btnNext</sender>
+   <sender>btnNext1</sender>
    <signal>clicked()</signal>
    <receiver>BallScrewControlMainWindow</receiver>
-   <slot>onBtnNext()</slot>
+   <slot>onBtnNext1()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>98</x>
-     <y>76</y>
+     <x>698</x>
+     <y>755</y>
     </hint>
     <hint type="destinationlabel">
      <x>614</x>
@@ -3142,8 +3127,8 @@ font: 15pt bold;</string>
    <slot>onBtnTempShow1()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>66</x>
-     <y>740</y>
+     <x>76</x>
+     <y>83</y>
     </hint>
     <hint type="destinationlabel">
      <x>6</x>
@@ -3158,8 +3143,8 @@ font: 15pt bold;</string>
    <slot>onBtnTempShow21()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>136</x>
-     <y>737</y>
+     <x>127</x>
+     <y>164</y>
     </hint>
     <hint type="destinationlabel">
      <x>4</x>
@@ -3174,8 +3159,8 @@ font: 15pt bold;</string>
    <slot>onBtnTempShow22()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>210</x>
-     <y>743</y>
+     <x>127</x>
+     <y>244</y>
     </hint>
     <hint type="destinationlabel">
      <x>4</x>
@@ -3190,8 +3175,8 @@ font: 15pt bold;</string>
    <slot>onBtnTempShow23()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>306</x>
-     <y>734</y>
+     <x>127</x>
+     <y>325</y>
     </hint>
     <hint type="destinationlabel">
      <x>1</x>
@@ -3206,8 +3191,8 @@ font: 15pt bold;</string>
    <slot>onBtnTempShow24()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>405</x>
-     <y>733</y>
+     <x>127</x>
+     <y>405</y>
     </hint>
     <hint type="destinationlabel">
      <x>3</x>
@@ -3222,8 +3207,8 @@ font: 15pt bold;</string>
    <slot>onBtnTempShow34()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>763</x>
-     <y>743</y>
+     <x>127</x>
+     <y>727</y>
     </hint>
     <hint type="destinationlabel">
      <x>1147</x>
@@ -3238,8 +3223,8 @@ font: 15pt bold;</string>
    <slot>onBtnTempShow33()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>674</x>
-     <y>751</y>
+     <x>127</x>
+     <y>646</y>
     </hint>
     <hint type="destinationlabel">
      <x>1129</x>
@@ -3254,8 +3239,8 @@ font: 15pt bold;</string>
    <slot>onBtnTempShow32()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>590</x>
-     <y>751</y>
+     <x>127</x>
+     <y>566</y>
     </hint>
     <hint type="destinationlabel">
      <x>1090</x>
@@ -3270,8 +3255,8 @@ font: 15pt bold;</string>
    <slot>onBtnTempShow31()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>490</x>
-     <y>738</y>
+     <x>127</x>
+     <y>485</y>
     </hint>
     <hint type="destinationlabel">
      <x>1066</x>
@@ -3281,7 +3266,7 @@ font: 15pt bold;</string>
   </connection>
  </connections>
  <slots>
-  <slot>onBtnNext()</slot>
+  <slot>onBtnNext1()</slot>
   <slot>onBtnTempShow1()</slot>
   <slot>onBtnTempShow21()</slot>
   <slot>onBtnTempShow22()</slot>

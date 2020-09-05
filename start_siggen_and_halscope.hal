@@ -1,0 +1,6 @@
+loadrt siggen
+loadrt threads name1=test-thread period1=10000000
+addf siggen.0.update test-thread
+start
+loadusr halmeter
+loadusr halscope -o halscope_output.txt

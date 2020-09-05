@@ -5,12 +5,12 @@
 # **** IMPORT SECTION **** #
 ############################
 # стандартные пакеты
-import sys, os
+import sys, os, configparser
 
 # пакеты linuxcnc
-import linuxcnc, hal, hal_glib
+import linuxcnc, hal
 
-# пакеты интерфейса
+# пакеты GUI
 from PyQt5 import QtCore, QtWidgets
 #from qtvcp.widgets import FocusOverlay
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
@@ -27,6 +27,7 @@ import openpyxl
 
 # Set up logging
 from qtvcp import logger
+
 LOG = logger.getLogger(__name__)
 
 # Set the log level for this module
@@ -55,10 +56,10 @@ class HandlerClass:
         self.w = widgets
         self.PATHS = paths
         
-        self.siggen_test_read_pin = self.hal.newpin('siggen_test_read_pin',hal.HAL_FLOAT, hal.HAL_IN) # тестовый пин для получения синусоиды с siggen http://linuxcnc.org/docs/2.8/html/hal/halmodule.html#_use_with_hal_glib_in_qtvcp_handler
-        
-        self.siggen_test_read_pin.value_changed.connect(lambda s: self.on_siggen_test_read_pin_value_changed(s)) # connect the pin to a callback http://linuxcnc.org/docs/2.8/html/hal/halmodule.html#_use_with_hal_glib_in_qtvcp_handler
+        self.siggen_test_read_pin = self.hal.newpin('siggen_test_read_pin',
+                                                    hal.HAL_FLOAT, hal.HAL_IN) # тестовый пин для получения синусоиды с siggen http://linuxcnc.org/docs/2.8/html/hal/halmodule.html#_use_with_hal_glib_in_qtvcp_handler
 
+        self.siggen_test_read_pin.value_changed.connect(lambda s: self.on_siggen_test_read_pin_value_changed(s)) # connect the pin to a callback http://linuxcnc.org/docs/2.8/html/hal/halmodule.html#_use_with_hal_glib_in_qtvcp_handler
 
     ##########################################
     # SPECIAL FUNCTIONS SECTION              #
@@ -85,7 +86,8 @@ class HandlerClass:
             
             while(ws.cell(row = row, column = 1).value is not None):
                 list_test_types.append(ws.cell(row = row, column = 1).value)
-                print("*** OK row=", row, " appended, value = ", ws.cell(row = row, column = 1).value)
+                print("*** OK row=", row, " appended, value = ",
+                      ws.cell(row = row, column = 1).value)
                 row = row + 1
             print("*** list_test_types = ", list_test_types) 
             self.w.cmbModel.addItems(list_test_types)
@@ -94,8 +96,38 @@ class HandlerClass:
             print("*** Не удалось открыть файл базы данных \"", database_file, "\"")
             #fov = FocusOverlay(self)
             #fov.show()
-            pass
-        
+        self.params_and_controls_dict = {
+            1 : {'GEAR': self.w.spnGear21,
+            'PITCH' : self.w.spnPitch21,
+            'TRAVEL' : self.w.spnTravel21,
+            'NOM_VEL' : self.w.spnNom_Vel21,
+            'NOM_ACCEL' : self.w.spnNom_Accel},
+            2 : {'GEAR' : self.w.spnGear22,
+            'NOM_VEL' : self.w.spnNom_Vel22,
+            'BRAKE_TORQUE' : self.w.spnBrake_Torque22,
+            'DURATION' : self.w.spnDuration22},
+            3 : {'GEAR' : self.w.spnGear23,
+            'PITCH' : self.w.spnPitch23,
+            'NOM_DSP_IDLE' : self.w.spnNom_Dsp_Idle23,
+            'NOM_VEL_IDLE' : self.w.spnNom_Vel_Idle23,
+            'NOM_ACCEL_IDLE' : self.w.spnNom_Accel_Idle23,
+            'NOM_DSP_MEASURE' : self.w.spnNom_Dsp_Measure23,
+            'NOM_VEL_MEASURE' : self.w.spnNom_Vel_Measure23,
+            'NOM_ACCEL_MEASURE' : self.w.spnNom_Accel_Measure23,
+            'NOM_LOAD' : self.w.spnNom_Load23,
+            'NOM_POS_MEASURE' : self.w.spnNom_Pos_Measure23},
+            4 : {'GEAR' : self.w.spnGear24,
+            'PITCH' : self.w.spnPitch24,
+            'NOM_TRAVEL' : self.w.spnNom_Travel24,
+            'NOM_OMEGA' : self.w.spnNom_Omega24,
+            'NOM_ACCEL_COEFF' : self.w.spnNom_Accel_Coeff24,
+            'NOM_F1' : self.w.spnNom_F1_24,
+            'NOM_F2' : self.w.spnNom_F2_24,
+            'OVERLOAD_COEFF' : self.w.spnOverload_Coeff24,
+            'DWELL' : self.w.spnDwell24,
+            'N' : self.w.spnN24,
+            'LOG_FREQ' : self.w.spnLog_Freq24}}
+
     ########################
     # CALLBACKS FROM STATUS#
     ########################
@@ -104,11 +136,18 @@ class HandlerClass:
     # CALLBACKS FROM FORM #
     #######################
     
-    def onBtnNext(self):
+    def onBtnNext1(self):
         print "*** onBtnNext clicked"
-        if(self.w.cmbTestType.currentIndex()<4):
-            self.w.stackedWidget.setCurrentIndex(self.w.cmbTestType.currentIndex()+1)
+        self.DRIVE = self.w.cmbDrive1.currentIndex()
+        self.NAME = self.w.edtName1.text()
+        self.DATE = self.w.edtDate1.text()
+        self.PART = self.w.edtPart1.text()
+        self.MODEL = self.w.edtModel1.text()
+        if(self.w.cmbType1.currentIndex()<4):
+            self.load_ini(self.w.cmbType1.currentIndex()+1)
+            self.w.stackedWidget.setCurrentIndex(self.w.cmbType1.currentIndex()+1)
         else:
+            self.load_ini(4)
             self.w.stackedWidget.setCurrentIndex(3)
         # self.close() только для случая многооконного интерфейса
     
@@ -152,14 +191,39 @@ class HandlerClass:
     # GENERAL FUNCTIONS #
     #####################
     
-    def on_siggen_test_read_pin_value_changed(self,data):
+    def on_siggen_test_read_pin_value_changed(self, data):
+        return
         print("*** siggen pin data: ", data)
         print("*** siggen pin: ", self.siggen_test_read_pin.get())
         print("*** siggen.0.sine directly", hal.get_value("siggen.0.sine"))
+
+    def load_ini(n_form):
+         # открытие и парсинг INI-файла, соответствующего типу испытания, в объект config
+        config = configparser.ConfigParser()
+        config.read('BallScrewControl' + str(n_form) + '.ini')
+        # занесение значений из config в интерфейс по словарю
+        for key in params_and_controls_dict:
+            params_and_controls_dict[key].value = config[key]
+        #TODO обработка ошибок и исключений: 1) нет файла - сообщение и заполнение по умолчанию, создание конфига
+        #TODO обработка ошибок и исключений: 2) нет ключей в конфиге - сообщение и заполнение по умолчанию
+
+    def save_ini(n_form):
+        # перемещение значений  из интерфейса в объект config
+        config = configparser.ConfigParser()
+        for key in params_and_controls_dict:
+            config[key] = params_and_controls_dict[key].value
+
+        # запись заполненного config в ini-файл
+        with open('BallScrewControl' + str(n_form) + '.ini', 'w') as configfile:
+            config.write(configfile)
+
+        #TODO обработка ошибок и исключений
+        return
+
     
 ################################
 # required handler boiler code #
 ################################
 
-def get_handlers(halcomp,widgets,paths):
-     return [HandlerClass(halcomp,widgets,paths)]
+def get_handlers(halcomp, widgets, paths):
+     return [HandlerClass(halcomp, widgets, paths)]

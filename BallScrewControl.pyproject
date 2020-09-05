@@ -1,0 +1,3 @@
+{
+    "files": ["BallScrewControl.ui","BallScrewControl_handler.py","resources/BallScrewPanel.qrc","main.py"]
+}
