@@ -250,7 +250,7 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="5" column="1">
-         <widget class="QDoubleSpinBox" name="dpnNom_Vel21"/>
+         <widget class="QDoubleSpinBox" name="spnNom_Vel21"/>
         </item>
         <item row="6" column="0">
          <widget class="QLabel" name="label_42">
@@ -802,142 +802,13 @@ font: 15pt bold;</string>
       </widget>
       <widget class="QWidget" name="page24">
        <layout class="QGridLayout" name="gridLayout_6">
-        <item row="0" column="0" colspan="5">
-         <widget class="QLabel" name="label_133">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>50</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>50</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(114, 159, 207);
-font: 15pt bold;</string>
-          </property>
-          <property name="text">
-           <string>2.4 Настройка конфигурации</string>
-          </property>
-         </widget>
+        <item row="5" column="1">
+         <widget class="QSpinBox" name="spnNom_Accel_Coeff24"/>
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_31">
           <property name="text">
            <string>Передаточные числа редуктора</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QSpinBox" name="spnGearRatio24"/>
-        </item>
-        <item row="1" column="3">
-         <widget class="QLabel" name="label_41">
-          <property name="text">
-           <string>Нагрузка в начальном положении, кгс</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="4">
-         <widget class="QSpinBox" name="spnStartLoad24">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_40">
-          <property name="text">
-           <string>Шаг ШВП, мм/об</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QSpinBox" name="spnPitch24"/>
-        </item>
-        <item row="2" column="3">
-         <widget class="QLabel" name="label_38">
-          <property name="text">
-           <string>Нагрузка в конечном положении, кгс</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="4">
-         <widget class="QSpinBox" name="spnFinalLoad24"/>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_36">
-          <property name="text">
-           <string>Ход, мм</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QSpinBox" name="spnTravel24"/>
-        </item>
-        <item row="3" column="2">
-         <spacer name="horizontalSpacer_9">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="3" column="3">
-         <widget class="QLabel" name="label_33">
-          <property name="text">
-           <string>Перегрузка, %</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QSpinBox" name="spnFrequency24"/>
-        </item>
-        <item row="3" column="4">
-         <widget class="QSpinBox" name="spnOverload24"/>
-        </item>
-        <item row="4" column="4">
-         <widget class="QSpinBox" name="spnStayDuration24"/>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="label_39">
-          <property name="text">
-           <string>Скорость вращения приводного вала, об/мин</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1">
-         <widget class="QSpinBox" name="spnAcceleration24"/>
-        </item>
-        <item row="4" column="3">
-         <widget class="QLabel" name="label_37">
-          <property name="text">
-           <string>Время выстоя, с</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="4">
-         <widget class="QSpinBox" name="spnNumOfCycles24"/>
-        </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="label_29">
-          <property name="text">
-           <string>Ускорение, %</string>
           </property>
          </widget>
         </item>
@@ -948,15 +819,32 @@ font: 15pt bold;</string>
           </property>
          </widget>
         </item>
-        <item row="7" column="0" colspan="5">
-         <widget class="QLabel" name="label_35">
+        <item row="2" column="3">
+         <widget class="QLabel" name="label_38">
           <property name="text">
-           <string>Параметры записи</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <string>Нагрузка в конечном положении, кгс</string>
           </property>
          </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="label_29">
+          <property name="text">
+           <string>Ускорение, %</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="4">
+         <widget class="QSpinBox" name="spnN24"/>
+        </item>
+        <item row="3" column="3">
+         <widget class="QLabel" name="label_33">
+          <property name="text">
+           <string>Перегрузка, %</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QSpinBox" name="spnNom_Omega24"/>
         </item>
         <item row="9" column="0" colspan="5">
          <layout class="QHBoxLayout" name="horizontalLayout_8">
@@ -979,19 +867,12 @@ font: 15pt bold;</string>
           </item>
          </layout>
         </item>
-        <item row="8" column="0" colspan="5">
-         <layout class="QHBoxLayout" name="horizontalLayout_9">
-          <item>
-           <widget class="QLabel" name="label_34">
-            <property name="text">
-             <string>Темп записи, 1/с</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="edtRecordFrequency24"/>
-          </item>
-         </layout>
+        <item row="4" column="3">
+         <widget class="QLabel" name="label_37">
+          <property name="text">
+           <string>Время выстоя, с</string>
+          </property>
+         </widget>
         </item>
         <item row="10" column="0" colspan="5">
          <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -1030,6 +911,23 @@ font: 15pt bold;</string>
           </item>
          </layout>
         </item>
+        <item row="3" column="1">
+         <widget class="QSpinBox" name="spnNom_Travel24"/>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_36">
+          <property name="text">
+           <string>Ход, мм</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_39">
+          <property name="text">
+           <string>Скорость вращения приводного вала, об/мин</string>
+          </property>
+         </widget>
+        </item>
         <item row="6" column="0">
          <spacer name="verticalSpacer_7">
           <property name="orientation">
@@ -1042,6 +940,108 @@ font: 15pt bold;</string>
            </size>
           </property>
          </spacer>
+        </item>
+        <item row="2" column="4">
+         <widget class="QSpinBox" name="spnNom_F2_24"/>
+        </item>
+        <item row="7" column="0" colspan="5">
+         <widget class="QLabel" name="label_35">
+          <property name="text">
+           <string>Параметры записи</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="4">
+         <widget class="QSpinBox" name="spnDwell24"/>
+        </item>
+        <item row="3" column="2">
+         <spacer name="horizontalSpacer_9">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="0" colspan="5">
+         <widget class="QLabel" name="label_133">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(114, 159, 207);
+font: 15pt bold;</string>
+          </property>
+          <property name="text">
+           <string>2.4 Настройка конфигурации</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="4">
+         <widget class="QSpinBox" name="spnNom_F1_24">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QSpinBox" name="spnPitch24"/>
+        </item>
+        <item row="1" column="1">
+         <widget class="QSpinBox" name="spnGear24"/>
+        </item>
+        <item row="3" column="4">
+         <widget class="QSpinBox" name="spnOverload_Coeff24"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_40">
+          <property name="text">
+           <string>Шаг ШВП, мм/об</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QLabel" name="label_41">
+          <property name="text">
+           <string>Нагрузка в начальном положении, кгс</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0" colspan="5">
+         <layout class="QHBoxLayout" name="horizontalLayout_9">
+          <item>
+           <widget class="QLabel" name="label_34">
+            <property name="text">
+             <string>Темп записи, 1/с</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="spnLog_Freq24"/>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>

@@ -56,10 +56,10 @@ class HandlerClass:
         self.w = widgets
         self.PATHS = paths
         
-        self.siggen_test_read_pin = self.hal.newpin('siggen_test_read_pin',
-                                                    hal.HAL_FLOAT, hal.HAL_IN) # тестовый пин для получения синусоиды с siggen http://linuxcnc.org/docs/2.8/html/hal/halmodule.html#_use_with_hal_glib_in_qtvcp_handler
+        #self.siggen_test_read_pin = self.hal.newpin('siggen_test_read_pin',
+        #                                            hal.HAL_FLOAT, hal.HAL_IN) # тестовый пин для получения синусоиды с siggen http://linuxcnc.org/docs/2.8/html/hal/halmodule.html#_use_with_hal_glib_in_qtvcp_handler
 
-        self.siggen_test_read_pin.value_changed.connect(lambda s: self.on_siggen_test_read_pin_value_changed(s)) # connect the pin to a callback http://linuxcnc.org/docs/2.8/html/hal/halmodule.html#_use_with_hal_glib_in_qtvcp_handler
+        #self.siggen_test_read_pin.value_changed.connect(lambda s: self.on_siggen_test_read_pin_value_changed(s)) # connect the pin to a callback http://linuxcnc.org/docs/2.8/html/hal/halmodule.html#_use_with_hal_glib_in_qtvcp_handler
 
     ##########################################
     # SPECIAL FUNCTIONS SECTION              #
@@ -96,17 +96,17 @@ class HandlerClass:
             print("*** Не удалось открыть файл базы данных \"", database_file, "\"")
             #fov = FocusOverlay(self)
             #fov.show()
-        self.params_and_controls_dict = {
-            1 : {'GEAR': self.w.spnGear21,
+        self.params_and_controls_dict = (
+            {'GEAR': self.w.spnGear21,
             'PITCH' : self.w.spnPitch21,
             'TRAVEL' : self.w.spnTravel21,
             'NOM_VEL' : self.w.spnNom_Vel21,
-            'NOM_ACCEL' : self.w.spnNom_Accel},
-            2 : {'GEAR' : self.w.spnGear22,
+            'NOM_ACCEL' : self.w.spnNom_Accel21},
+            {'GEAR' : self.w.spnGear22,
             'NOM_VEL' : self.w.spnNom_Vel22,
             'BRAKE_TORQUE' : self.w.spnBrake_Torque22,
             'DURATION' : self.w.spnDuration22},
-            3 : {'GEAR' : self.w.spnGear23,
+            {'GEAR' : self.w.spnGear23,
             'PITCH' : self.w.spnPitch23,
             'NOM_DSP_IDLE' : self.w.spnNom_Dsp_Idle23,
             'NOM_VEL_IDLE' : self.w.spnNom_Vel_Idle23,
@@ -116,7 +116,7 @@ class HandlerClass:
             'NOM_ACCEL_MEASURE' : self.w.spnNom_Accel_Measure23,
             'NOM_LOAD' : self.w.spnNom_Load23,
             'NOM_POS_MEASURE' : self.w.spnNom_Pos_Measure23},
-            4 : {'GEAR' : self.w.spnGear24,
+            {'GEAR' : self.w.spnGear24,
             'PITCH' : self.w.spnPitch24,
             'NOM_TRAVEL' : self.w.spnNom_Travel24,
             'NOM_OMEGA' : self.w.spnNom_Omega24,
@@ -126,7 +126,7 @@ class HandlerClass:
             'OVERLOAD_COEFF' : self.w.spnOverload_Coeff24,
             'DWELL' : self.w.spnDwell24,
             'N' : self.w.spnN24,
-            'LOG_FREQ' : self.w.spnLog_Freq24}}
+            'LOG_FREQ' : self.w.spnLog_Freq24} )
 
     ########################
     # CALLBACKS FROM STATUS#
@@ -142,12 +142,12 @@ class HandlerClass:
         self.NAME = self.w.edtName1.text()
         self.DATE = self.w.edtDate1.text()
         self.PART = self.w.edtPart1.text()
-        self.MODEL = self.w.edtModel1.text()
+        self.MODEL = self.w.cmbModel1.currentText()
         if(self.w.cmbType1.currentIndex()<4):
-            self.load_ini(self.w.cmbType1.currentIndex()+1)
+            self.load_ini(self.w.cmbType1.currentIndex())
             self.w.stackedWidget.setCurrentIndex(self.w.cmbType1.currentIndex()+1)
         else:
-            self.load_ini(4)
+            self.load_ini(3)
             self.w.stackedWidget.setCurrentIndex(3)
         # self.close() только для случая многооконного интерфейса
     
@@ -193,28 +193,28 @@ class HandlerClass:
     
     def on_siggen_test_read_pin_value_changed(self, data):
         return
-        print("*** siggen pin data: ", data)
-        print("*** siggen pin: ", self.siggen_test_read_pin.get())
-        print("*** siggen.0.sine directly", hal.get_value("siggen.0.sine"))
+        #print("*** siggen pin data: ", data)
+        #print("*** siggen pin: ", self.siggen_test_read_pin.get())
+        #print("*** siggen.0.sine directly", hal.get_value("siggen.0.sine"))
 
-    def load_ini(n_form):
+    def load_ini(self, n_form):
          # открытие и парсинг INI-файла, соответствующего типу испытания, в объект config
         config = configparser.ConfigParser()
-        config.read('BallScrewControl' + str(n_form) + '.ini')
+        config.read('BallScrewControl' + str(n_form+1) + '.ini')
         # занесение значений из config в интерфейс по словарю
-        for key in params_and_controls_dict:
-            params_and_controls_dict[key].value = config[key]
+        for key in self.params_and_controls_dict[n_form]:
+            self.params_and_controls_dict[n_form][key].setValue(float(config['PARAMETERS'][key]))
         #TODO обработка ошибок и исключений: 1) нет файла - сообщение и заполнение по умолчанию, создание конфига
         #TODO обработка ошибок и исключений: 2) нет ключей в конфиге - сообщение и заполнение по умолчанию
 
-    def save_ini(n_form):
+    def save_ini(self, n_form):
         # перемещение значений  из интерфейса в объект config
         config = configparser.ConfigParser()
-        for key in params_and_controls_dict:
-            config[key] = params_and_controls_dict[key].value
+        for key in self.params_and_controls_dict[n_form]:
+            config['PARAMETERS'][key] = str(self.params_and_controls_dict[n_form][key].value())
 
         # запись заполненного config в ini-файл
-        with open('BallScrewControl' + str(n_form) + '.ini', 'w') as configfile:
+        with open('BallScrewControl' + str(n_form+1) + '.ini', 'w') as configfile:
             config.write(configfile)
 
         #TODO обработка ошибок и исключений
