@@ -41,7 +41,7 @@ qproperty-diameter: 20;
     <item row="0" column="1">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="page1">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -1048,24 +1048,11 @@ font: 15pt bold;</string>
       <widget class="QWidget" name="page31">
        <layout class="QGridLayout" name="gridLayout_8">
         <item row="2" column="0">
-         <layout class="QGridLayout" name="gridLayout_9" columnstretch="0,0" columnminimumwidth="0,0">
+         <layout class="QGridLayout" name="gridLayout_9" columnstretch="0,0">
           <item row="0" column="0">
            <widget class="QLabel" name="label_50">
             <property name="text">
              <string>Расчётное положение:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="StateLabel" name="lblNominalPosition31">
-            <property name="text">
-             <string>---</string>
-            </property>
-            <property name="diameter_mode_status" stdset="0">
-             <bool>false</bool>
-            </property>
-            <property name="buddy">
-             <cstring></cstring>
             </property>
            </widget>
           </item>
@@ -1077,7 +1064,14 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="StateLabel" name="lblCurrentPosition31">
+           <widget class="QLabel" name="lblPosition_Actual31">
+            <property name="text">
+             <string>---</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="lblPosition31">
             <property name="text">
              <string>---</string>
             </property>
@@ -1101,24 +1095,24 @@ font: 15pt bold;</string>
            </spacer>
           </item>
           <item>
-           <widget class="LED" name="ledStartSwitch31"/>
+           <widget class="LED" name="ledSw1_31"/>
           </item>
           <item>
-           <widget class="PushButton" name="btnBack31">
+           <widget class="PushButton" name="btnJog_Minus31">
             <property name="text">
              <string>&lt;</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="PushButton" name="btnForward31">
+           <widget class="PushButton" name="btnJog_Plus31">
             <property name="text">
              <string>&gt;</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="LED" name="ledEndSwitch31"/>
+           <widget class="LED" name="ledSw2_31"/>
           </item>
           <item>
            <spacer name="horizontalSpacer_2">
@@ -1158,6 +1152,32 @@ font: 15pt bold;</string>
         </item>
         <item row="3" column="0">
          <layout class="QGridLayout" name="gridLayout_10">
+          <item row="0" column="1">
+           <widget class="Slider" name="sldVelocity31">
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="tickPosition">
+             <enum>QSlider::TicksBelow</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="Slider" name="sldAcceleration31">
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="tickPosition">
+             <enum>QSlider::TicksBelow</enum>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_54">
             <property name="text">
@@ -1169,26 +1189,6 @@ font: 15pt bold;</string>
            <widget class="QLabel" name="label_53">
             <property name="text">
              <string>Скорость, мм/мин</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="Slider" name="sldSpeed31">
-            <property name="maximum">
-             <number>100</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="Slider" name="sldAccel31">
-            <property name="maximum">
-             <number>100</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
             </property>
            </widget>
           </item>
@@ -1252,6 +1252,9 @@ font: 15pt bold;</string>
             </property>
             <property name="text">
              <string>I</string>
+            </property>
+            <property name="indicator_HAL_pin_option" stdset="0">
+             <bool>false</bool>
             </property>
            </widget>
           </item>

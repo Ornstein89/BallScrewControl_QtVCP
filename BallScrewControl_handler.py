@@ -8,7 +8,7 @@
 import sys, os, configparser
 
 # пакеты linuxcnc
-import linuxcnc, hal
+import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
 
 # пакеты GUI
 from PyQt5 import QtCore, QtWidgets

@@ -1,1 +1,219 @@
 # net signal_sine siggen.0.sine BallScrewControl.siggen_test_read_pin
+
+### Форма 31
+
+net sw1 BallScrewControl.ledSw1_31# Цветовой индикатор (серый / красный)
+# заменить на ActionButton или отдавать команду из кода Python # net jog_minus BallScrewControl.btnJog_Minus# Кнопка
+# заменить на ActionButton или отдавать команду из кода Python # net jog_plus # Кнопка
+net sw2 BallScrewControl.ledSw2_31# Цветовой индикатор (серый / красный)
+# net device_on # Кнопка
+net pos_is_on # Цветовой индикатор (серый / жёлтый)
+# net device_off # Кнопка
+# net position # Числовой индикатор
+# net position_actual # Числовой индикатор
+# net velocity # Ползунок с возможностью тонкой настройки и индикацией значения
+# net acceleration # Ползунок с возможностью тонкой настройки и индикацией значения
+net pos_alarm # Цветовой индикатор (красный / зелёный)
+# net log_trigger # Кнопка
+# net time # 
+# net active_0 # 
+# net append_buffer # 
+# net append_file # 
+
+### Форма 32
+
+# is_running_ccw	BIT	IN	Цветовой индикатор (красный / зелёный)
+# start_ccw	BIT	OUT	Кнопка
+# stop	BIT	OUT	Кнопка
+# start_cw	BIT	OUT	Кнопка
+# is_running_cw	BIT	IN	Цветовой индикатор (красный / зелёный)
+# time_current	FLOAT	IN	Числовой индикатор
+# duration	FLOAT	IN	Числовой индикатор
+# torque_set	FLOAT	IN	Числовой индикатор
+# torque_actual	FLOAT	IN	Числовой индикатор
+# omega_actual	FLOAT	IN	Числовой индикатор
+# device_on	BIT	OUT	Кнопка
+# load_is_on	BIT	IN	Цветовой индикатор (серый / жёлтый)
+# pos_is_on	BIT	IN	Цветовой индикатор (серый / жёлтый)
+# device_off	BIT	OUT	Кнопка
+# load_active	BIT	OUT	Переключатель
+# enable	BIT	IN	Цветовой индикатор (красный / зелёный)
+# geartorque_error	BIT	IN	Цветовой индикатор (красный / зелёный)
+# braketorque_error	BIT	IN	Цветовой индикатор (красный / зелёный)
+# estop_ext	BIT	IN	Цветовой индикатор (красный / зелёный)
+# load_is_on	BIT	IN	Цветовой индикатор (красный / зелёный)
+# load_alarm	BIT	IN	Цветовой индикатор (красный / зелёный)
+# load_error	BIT	IN	Цветовой индикатор (красный / зелёный)
+# load_overheat	BIT	IN	Цветовой индикатор (красный / зелёный)
+# pos_is_on	BIT	IN	Цветовой индикатор (красный / зелёный)
+# pos_alarm	BIT	IN	Цветовой индикатор (красный / зелёный)
+# pos_overheat	BIT	IN	Цветовой индикатор (красный / зелёный)
+# geartorque_error_value / geartorque_error_value_max	FLOAT	IN	Числовой индикатор
+# brakeorque_error_value / braketorque_error_value_max	FLOAT	IN	Числовой индикатор
+# load_error_value / load_error_value_max	FLOAT	IN	Числовой индикатор
+# load_temperature / load_temperature_max	FLOAT	IN	Числовой индикатор
+# pos_temperature / pos_temperature_max	FLOAT	IN	Числовой индикатор
+# torque_actual	FLOAT	IN	Числовой индикатор на графике
+# torque_set	FLOAT	IN	Опорный объект графика  горизонтальная прямая
+# time_current, torque_actual	FLOAT	IN	Текущая точка графика
+# time_current	FLOAT	IN	Числовой индикатор на графике
+# = time_current - time_range	FLOAT	-	Числовой индикатор на графике
+# time	FLOAT	-	-
+# dir	BIT	IN	-
+# append_buffer	BIT	IN	-
+# append_file	BIT	IN	-
+# append_title	BIT	IN	-
+
+### Форма 33
+
+# home_sequence_start	BIT	OUT	Кнопка
+# is_homed	BIT	IN	Цветовой индикатор (красный / зелёный)
+# dsp_mode	BIT	OUT	Переключатель
+# jog_minus	BIT	OUT	Кнопка
+# on_position	BIT	IN	Цветовой индикатор (красный / зелёный)
+# jog_plus	BIT	OUT	Кнопка
+# position	FLOAT	IN	Числовой индикатор
+# position_actual	FLOAT	IN	Числовой индикатор
+# dsp_mode	BIT	OUT	Переключатель
+# at_load	BIT	IN	Цветовой индикатор (красный / зелёный)
+# load	FLOAT	IN	Числовой индикатор
+# load_actual	FLOAT	IN	Числовой индикатор
+# dsp_idle	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+# vel_idle	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+# accel_idle	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+# load	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+# pos_measure	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+# dsp_measure	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+# vel_measure	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+# accel_measure	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+# -	-	-	Кнопка
+# -	STRING	OUT	Поле ввода
+# command_run	BIT	OUT	Кнопка
+# -	-	-	Кнопка
+# -	-	-	Текстовое поле
+# command_run	BIT	OUT	Кнопка
+# command_stop	BIT	OUT	Кнопка
+# device_on	BIT	OUT	Кнопка
+# load_is_on	BIT	IN	Цветовой индикатор (серый / жёлтый)
+# pos_is_on	BIT	IN	Цветовой индикатор (серый / жёлтый)
+# device_off	BIT	OUT	Кнопка
+# enable	BIT	IN	Цветовой индикатор (красный / зелёный)
+# estop_ext	BIT	IN	Цветовой индикатор (красный / зелёный)
+# load_is_on	BIT	IN	Цветовой индикатор (красный / зелёный)
+# load_alarm	BIT	IN	Цветовой индикатор (красный / зелёный)
+# load_error	BIT	IN	Цветовой индикатор (красный / зелёный)
+# load_overload	BIT	IN	Цветовой индикатор (красный / зелёный)
+# load_overheat	BIT	IN	Цветовой индикатор (красный / зелёный)
+# pos_is_on	BIT	IN	Цветовой индикатор (красный / зелёный)
+# pos_alarm	BIT	IN	Цветовой индикатор (красный / зелёный)
+# pos_error	BIT	IN	Цветовой индикатор (красный / зелёный)
+# pos_overload	BIT	IN	Цветовой индикатор (красный / зелёный)
+# pos_overheat	BIT	IN	Цветовой индикатор (красный / зелёный)
+# slip	BIT	IN	Цветовой индикатор (красный / зелёный)
+# limits_excess	BIT	IN	Цветовой индикатор (красный / зелёный)
+# load_error_value / load_error_value_max	FLOAT	IN	Числовой индикатор
+# load_overload_value / load_overload_value_max	FLOAT	IN	Числовой индикатор
+# load_temperature / load_temperature_max	FLOAT	IN	Числовой индикатор
+# pos_error_value / pos_error_value_max	FLOAT	IN	Числовой индикатор
+# pos_overload_value / pos_overload_value_max	FLOAT	IN	Числовой индикатор
+# pos_temperature / pos_temperature_max	FLOAT	IN	Числовой индикатор
+# torque_extremal_last	FLOAT	IN	Числовой индикатор
+# torque_extremal_max	FLOAT	IN	Числовой индикатор
+# position_actual,
+# torque_actual	FLOAT	IN	Текущая точка графика
+# torque_estimated	FLOAT	IN	Опорный объект графика  горизонтальная прямая
+# torque_estimated	FLOAT	IN	Числовой индикатор на графике
+# torque_actual	FLOAT	IN	Числовой индикатор на графике
+# position_i,
+# torque_extremal_i	FLOAT	IN	Промежуточная точка графика с числовой индикацией
+# position_actual	FLOAT	IN	Числовой индикатор на графике
+# position	FLOAT	IN	Числовой индикатор на графике
+# plot_clear	BIT	OUT	Кнопка
+# time	FLOAT	-	-
+# torque_at_load	FLOAT	IN	-
+# append_buffer	BIT	IN	-
+# append_file	BIT	IN	-
+# active_0	BIT	IN	-
+# active_1	BIT	IN	-
+# active_2	BIT	IN	-
+# active_3	BIT	IN	-
+# active_4	BIT	IN	-
+# active_5	BIT	IN	-
+
+
+### Форма 34
+
+# home_sequence_start	BIT	OUT	Кнопка
+# is_homed	BIT	IN	Цветовой индикатор (красный / зелёный)
+# jog_minus	BIT	OUT	Кнопка
+# on_position	BIT	IN	Цветовой индикатор (красный / зелёный)
+# jog_plus	BIT	OUT	Кнопка
+# position	FLOAT	IN	Числовой индикатор
+# position_actual	FLOAT	IN	Числовой индикатор
+# dsp_mode	BIT	OUT	Переключатель
+# at_load	BIT	IN	Цветовой индикатор (красный / зелёный)
+# load	FLOAT	IN	Числовой индикатор
+# load_actual	FLOAT	IN	Числовой индикатор
+# log_permit	BIT	OUT	Флажок
+# -	-	-	Кнопка
+# dsp	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+# omg	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+# accel_coeff	INTEGER	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+# f1	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+# f2	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+# -	-	-	Кнопка
+# -	-	-	Кнопка
+# -	-	-	Текстовое поле
+# command_run	BIT	OUT	Кнопка
+# command_pause	BIT	OUT	Кнопка
+# command_stop	BIT	OUT	Кнопка
+# device_on	BIT	OUT	Кнопка
+# load_is_on	BIT	IN	Цветовой индикатор (серый / жёлтый)
+# pos_is_on	BIT	IN	Цветовой индикатор (серый / жёлтый)
+# device_off	BIT	OUT	Кнопка
+# enable	BIT	IN	Цветовой индикатор (красный / зелёный)
+# torque_error	BIT	IN	Цветовой индикатор (красный / зелёный)
+# torque1_error	BIT	IN	Цветовой индикатор (красный / зелёный)
+# estop_ext	BIT	IN	Цветовой индикатор (красный / зелёный)
+# load_is_on	BIT	IN	Цветовой индикатор (красный / зелёный)
+# load_alarm	BIT	IN	Цветовой индикатор (красный / зелёный)
+# load_error	BIT	IN	Цветовой индикатор (красный / зелёный)
+# load_overload	BIT	IN	Цветовой индикатор (красный / зелёный)
+# load_overheat	BIT	IN	Цветовой индикатор (красный / зелёный)
+# pos_is_on	BIT	IN	Цветовой индикатор (красный / зелёный)
+# pos_alarm	BIT	IN	Цветовой индикатор (красный / зелёный)
+# pos_error	BIT	IN	Цветовой индикатор (красный / зелёный)
+# pos_overload	BIT	IN	Цветовой индикатор (красный / зелёный)
+# pos_overheat	BIT	IN	Цветовой индикатор (красный / зелёный)
+# slip	BIT	IN	Цветовой индикатор (красный / зелёный)
+# limits_excess	BIT	IN	Цветовой индикатор (красный / зелёный)
+# torque_error_value /
+# torque_error_value_max	FLOAT	IN	Числовой индикатор
+# torque1_error_value /
+# torque1_error_value_max	FLOAT	IN	Числовой индикатор
+# load_error_value / load_error_value_max	FLOAT	IN	Числовой индикатор
+# load_overload_value / load_overload_value_max	FLOAT	IN	Числовой индикатор
+# load_temperature / load_temperature_max	FLOAT	IN	Числовой индикатор
+# pos_error_value / pos_error_value_max	FLOAT	IN	Числовой индикатор
+# pos_overload_value / pos_overload_value_max	FLOAT	IN	Числовой индикатор
+# pos_temperature / pos_temperature_max	FLOAT	IN	Числовой индикатор
+# i; N	INTEGER	IN	Числовой индикатор
+# torque_max	FLOAT	IN	Числовой индикатор
+# f1; f2	FLOAT	IN	Опорный объект графика  наклонная прямая
+# position_actual,
+# load_actual	FLOAT	IN	Текущая точка графика
+# -	-	-	Кривая графика
+# position_actual
+# (position)	FLOAT	IN	Числовой индикатор на графике
+# load_actual
+# (load)	FLOAT	IN	Числовой индикатор на графике
+# -	-	-	Кнопка
+# time	FLOAT	-	-
+# append_title	BIT	IN	-
+# append_buffer	BIT	IN	-
+# append_file	BIT	IN	-
+# active_0	BIT	IN	-
+# active_1	BIT	IN	-
+# active_2	BIT	IN	-
+# active_3	BIT	IN	-
+# active_4	BIT	IN	-
