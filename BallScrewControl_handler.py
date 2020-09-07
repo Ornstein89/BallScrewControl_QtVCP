@@ -55,14 +55,7 @@ class HandlerClass:
         self.hal = halcomp
         self.PATHS = paths
         self.w = widgets
-        self.positionPin = self.hal.newpin('position-pin', hal.HAL_FLOAT, hal.HAL_IN)
-        self.position_actualPin = self.hal.newpin('position_actual-pin', hal.HAL_FLOAT, hal.HAL_IN)
-        #print "*** hal.connect1 ", hal.connect("position-pin", "position")
-        #print "*** hal.connect2 ", hal.connect("position_actual-pin", "position_actual")
-        #self.siggen_test_read_pin = self.hal.newpin('siggen_test_read_pin',
-        #                                            hal.HAL_FLOAT, hal.HAL_IN) # тестовый пин для получения синусоиды с siggen http://linuxcnc.org/docs/2.8/html/hal/halmodule.html#_use_with_hal_glib_in_qtvcp_handler
-
-        #self.siggen_test_read_pin.value_changed.connect(lambda s: self.on_siggen_test_read_pin_value_changed(s)) # connect the pin to a callback http://linuxcnc.org/docs/2.8/html/hal/halmodule.html#_use_with_hal_glib_in_qtvcp_handler
+        self.init_pins()
 
     ##########################################
     # SPECIAL FUNCTIONS SECTION              #
@@ -73,11 +66,6 @@ class HandlerClass:
     # the HAL pins are built but HAL is not set ready
     # This is where you make HAL pins or initialize state of widgets etc
     def initialized__(self):
-        #self.positionPin.value_changed.connect(lambda s: self.pinCnagedCallback(s))
-        #self.position_actualPin.value_changed.connect(lambda s: self.pinCnagedCallback(s))
-        self.positionPin.value_changed.connect(lambda s: self.pinCnagedCallback(s))
-        self.position_actualPin.value_changed.connect(lambda s: self.pinCnagedCallback(s))
-
         database_file = 'База данных испытаний.xlsx'
         try:
             wb = openpyxl.load_workbook(filename = database_file, read_only = True)
@@ -143,6 +131,34 @@ class HandlerClass:
     #######################
     # CALLBACKS FROM FORM #
     #######################
+    def init_pins(self):
+        # создание HAL-пинов приложения
+        self.VCP_halpins = {
+        'position-pin31': None,
+        'position_actual-pin31': None,
+
+        'torque_set-pin32': None,
+        'torque_actual-pin32': None,
+        'omega_actual-pin32': None,
+        'geartorque_error_value-pin32': None,
+        'geartorque_error_value_max32': None, # ограничение по длине имени пина 47 символов
+        'brakeorque_error_value-pin32': None,
+        'braketorque_error_value_max32': None, # ограничение по длине имени пина 47 символов
+        'load_error_value-pin32': None,
+        'load_error_value_max-pin32': None,
+        'load_temperature-pin32': None,
+        'load_temperature_max-pin32': None,
+        'pos_temperature-pin32': None,
+        'pos_temperature_max-pin32': None,
+        'torque_actual-pin32': None,
+        'torque_set-pin32': None,
+        'torque_actual-pin32': None
+        }
+        # создание пинов и связывание событий изменения HAL с обработчиком
+        for key in self.VCP_halpins:
+            self.VCP_halpins[key] = self.hal.newpin(key, hal.HAL_FLOAT, hal.HAL_IN)
+            self.VCP_halpins[key].value_changed.connect(lambda s: self.pinCnagedCallback(s))
+        return
     
     def onBtnNext1(self):
         print "*** onBtnNext clicked"
@@ -158,6 +174,17 @@ class HandlerClass:
             self.load_ini(3)
             self.w.stackedWidget.setCurrentIndex(3)
         # self.close() только для случая многооконного интерфейса
+    def onBtnNext2(self):
+        #self.w.sender()
+        if(self.w.sender() == self.w.btnNext21):
+            pass
+        elif(self.w.sender() == self.w.btnNext22):
+            pass
+        elif(self.w.sender() == self.w.btnNext23):
+            pass
+        elif(self.w.sender() == self.w.btnNext24):
+            pass
+        return
     
     def onBtnTempShow1(self):
         self.w.stackedWidget.setCurrentIndex(0)
@@ -204,15 +231,13 @@ class HandlerClass:
         'position_actual-pin':self.w.lblPosition_Actual31
         }
         halpin_name = self.w.sender().text()
-        #print '*** pinCnagedCallback, self.w.sender().text()=', self.w.sender().text()
-        #print "*** hal[] = ", self.hal[halpin_name]
-        halpins_match_controls_dict[halpin_name].setText("{:.2f}".format(self.hal[halpin_name]))
-        #halpins_match_controls_dict[halpin_name].setText(data)
+        if(halpin_name in halpins_match_controls_dict):
+            halpin_value = self.hal[halpin_name]
+            halpins_match_controls_dict[halpin_name].setText("{:.2f}".format(halpin_value))
         return
-        #print "Test pin value changed to:" % (data)
+        #print "Test pin value changed to:" % (data) # ВЫВОДИТ ВСЕГДА 0 - ВИДИМО ОШИБКА В ДОКУМЕНТАЦИИ
         #print 'halpin object =', self.w.sender()
-        #print 'Halpin name: ',self.sender().text()
-        #print 'Halpin type: ',self.sender().get_type()
+        #print 'Halpin type: ',self.w.sender().get_type()
 
     def on_siggen_test_read_pin_value_changed(self, data):
         return

@@ -38,10 +38,117 @@ qproperty-diameter: 20;
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QPushButton" name="pushButton_23">
+        <property name="text">
+         <string>Тестовая
+кнопка
+отображения
+Ф_1</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_24">
+        <property name="text">
+         <string>Тестовая
+кнопка
+отображения
+Ф_2.1</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_25">
+        <property name="text">
+         <string>Тестовая
+кнопка
+отображения
+Ф_2.2</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_26">
+        <property name="text">
+         <string>Тестовая
+кнопка
+отображения
+Ф_2.3</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_27">
+        <property name="text">
+         <string>Тестовая
+кнопка
+отображения
+Ф_2.4</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_28">
+        <property name="text">
+         <string>Тестовая
+кнопка
+отображения
+Ф_3.1</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_29">
+        <property name="text">
+         <string>Тестовая
+кнопка
+отображения
+Ф_3.2</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_30">
+        <property name="text">
+         <string>Тестовая
+кнопка
+отображения
+Ф_3.3</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_31">
+        <property name="text">
+         <string>Тестовая
+кнопка
+отображения
+Ф_3.4</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
     <item row="0" column="1">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>5</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="page1">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -1307,7 +1414,7 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="LED" name="ledStatus31"/>
+           <widget class="LED" name="ledPos_Alarm31"/>
           </item>
          </layout>
         </item>
@@ -1328,7 +1435,343 @@ font: 15pt bold;</string>
       </widget>
       <widget class="QWidget" name="page32">
        <layout class="QGridLayout" name="gridLayout_37">
-        <item row="1" column="0">
+        <item row="0" column="2" colspan="2">
+         <widget class="QLabel" name="label_135">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(114, 159, 207);
+font: 15pt bold;</string>
+          </property>
+          <property name="text">
+           <string>3.2 Обкатка редуктора</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3" rowspan="9">
+         <layout class="QGridLayout" name="gridLayout_34">
+          <item row="0" column="0">
+           <layout class="QGridLayout" name="gridLayout_35">
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_128">
+              <property name="text">
+               <string>Нагрузка фактическая, Н*м</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_127">
+              <property name="text">
+               <string>Нагрузка заданная, Н*м</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_126">
+              <property name="text">
+               <string>Время работы</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_129">
+              <property name="text">
+               <string>Скорость фактическая, об/мин</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="label_82">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="label_138">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="label_139">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="label_140">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="0" column="1">
+           <layout class="QGridLayout" name="gridLayout_36">
+            <item row="1" column="1">
+             <widget class="LED" name="ledPos_Is_On32"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="LED" name="ledLoad_Is_On32"/>
+            </item>
+            <item row="0" column="0" colspan="2">
+             <widget class="PushButton" name="pushbutton_18">
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(138, 226, 52);</string>
+              </property>
+              <property name="text">
+               <string>|</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0" colspan="2">
+             <widget class="PushButton" name="pushbutton_19">
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(239, 41, 41);</string>
+              </property>
+              <property name="text">
+               <string>O</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0" colspan="2">
+           <layout class="QGridLayout" name="gridLayout_29">
+            <item row="3" column="0">
+             <widget class="LED" name="ledEstop_Ext32">
+              <property name="currentstate" stdset="0">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="0">
+             <widget class="LED" name="ledPos_Alarm32"/>
+            </item>
+            <item row="11" column="0" colspan="2">
+             <spacer name="verticalSpacer_9">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="4" column="0">
+             <widget class="LED" name="ledLoad_Is_On2_32"/>
+            </item>
+            <item row="10" column="1">
+             <widget class="QLabel" name="label_119">
+              <property name="text">
+               <string>П_температура</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="LED" name="ledBraketorque_Error32"/>
+            </item>
+            <item row="5" column="0">
+             <widget class="LED" name="ledLoad_Alarm32"/>
+            </item>
+            <item row="6" column="0">
+             <widget class="LED" name="ledLoad_Error32"/>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="label_117">
+              <property name="text">
+               <string>Сост. торм.</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="label_124">
+              <property name="text">
+               <string>АВОСТ</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLabel" name="label_114">
+              <property name="text">
+               <string>Н_питание</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="LED" name="ledLoad_Overheat32"/>
+            </item>
+            <item row="8" column="1">
+             <widget class="QLabel" name="label_123">
+              <property name="text">
+               <string>П_питание</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QLabel" name="label_118">
+              <property name="text">
+               <string>Н_температура</string>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="0">
+             <widget class="LED" name="ledPos_Overheat32"/>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLabel" name="label_120">
+              <property name="text">
+               <string>Н_состояние</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="LED" name="ledPos_Is_On_2_32"/>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="label_115">
+              <property name="text">
+               <string>Сост. ред</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QLabel" name="label_100">
+              <property name="text">
+               <string>Н_значение</string>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="1">
+             <widget class="QLabel" name="label_122">
+              <property name="text">
+               <string>П_состояние</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="LED" name="ledGeartorque_Error32">
+              <property name="color">
+               <color>
+                <red>255</red>
+                <green>0</green>
+                <blue>0</blue>
+               </color>
+              </property>
+              <property name="off_color" stdset="0">
+               <color>
+                <red>255</red>
+                <green>0</green>
+                <blue>0</blue>
+               </color>
+              </property>
+              <property name="currentstate" stdset="0">
+               <bool>true</bool>
+              </property>
+              <property name="flashing" stdset="0">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLabel" name="label_141">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="QLabel" name="label_142">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0" colspan="4">
+             <widget class="LED" name="ledEnable32">
+              <property name="diameter">
+               <number>100</number>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QLabel" name="label_143">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="3">
+             <widget class="QLabel" name="label_144">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="2">
+             <widget class="QLabel" name="label_145">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="2">
+             <widget class="QLabel" name="label_146">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="3">
+             <widget class="QLabel" name="label_147">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="3">
+             <widget class="QLabel" name="label_148">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="3">
+             <widget class="QLabel" name="label_149">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="2">
+             <widget class="QLabel" name="label_150">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="2">
          <layout class="QHBoxLayout" name="horizontalLayout_14">
           <item>
            <spacer name="horizontalSpacer_24">
@@ -1344,7 +1787,7 @@ font: 15pt bold;</string>
            </spacer>
           </item>
           <item>
-           <widget class="LED" name="led_40"/>
+           <widget class="LED" name="ledIs_Running_Ccw32"/>
           </item>
           <item>
            <widget class="PushButton" name="pushbutton_15">
@@ -1401,7 +1844,7 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item>
-           <widget class="LED" name="led_44"/>
+           <widget class="LED" name="ledIs_Running_Cw32"/>
           </item>
           <item>
            <spacer name="horizontalSpacer_25">
@@ -1418,280 +1861,80 @@ font: 15pt bold;</string>
           </item>
          </layout>
         </item>
-        <item row="1" column="1" rowspan="2">
-         <layout class="QGridLayout" name="gridLayout_34">
-          <item row="0" column="0">
-           <layout class="QGridLayout" name="gridLayout_35">
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_128">
-              <property name="text">
-               <string>Нагрузка фактическая, Н*м</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_127">
-              <property name="text">
-               <string>Нагрузка заданная, Н*м</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="StateLabel" name="statelabel_15">
-              <property name="text">
-               <string>---</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="StateLabel" name="statelabel_16">
-              <property name="text">
-               <string>---</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_126">
-              <property name="text">
-               <string>Время работы</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_129">
-              <property name="text">
-               <string>Скорость фактическая, об/мин</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="StateLabel" name="statelabel_17">
-              <property name="text">
-               <string>---</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="StateLabel" name="statelabel_18">
-              <property name="text">
-               <string>---</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
+        <item row="4" column="2">
+         <layout class="QGridLayout" name="gridLayout_38">
+          <item row="1" column="2">
+           <widget class="Slider" name="slider">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
           </item>
-          <item row="0" column="1">
-           <layout class="QGridLayout" name="gridLayout_36">
-            <item row="1" column="1">
-             <widget class="LED" name="led_61"/>
-            </item>
-            <item row="1" column="0">
-             <widget class="LED" name="led_62"/>
-            </item>
-            <item row="0" column="0" colspan="2">
-             <widget class="PushButton" name="pushbutton_18">
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(138, 226, 52);</string>
-              </property>
-              <property name="text">
-               <string>|</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0" colspan="2">
-             <widget class="PushButton" name="pushbutton_19">
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(239, 41, 41);</string>
-              </property>
-              <property name="text">
-               <string>O</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
+          <item row="0" column="2">
+           <widget class="QLabel" name="label_121">
+            <property name="text">
+             <string> Нагружение</string>
+            </property>
+           </widget>
           </item>
-          <item row="1" column="0" colspan="2">
-           <layout class="QGridLayout" name="gridLayout_29">
-            <item row="6" column="1">
-             <widget class="QLabel" name="label_100">
-              <property name="text">
-               <string>Н_температура</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="0">
-             <widget class="LED" name="led_47"/>
-            </item>
-            <item row="4" column="1">
-             <widget class="QLabel" name="label_114">
-              <property name="text">
-               <string>Н_значение</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0" colspan="2">
-             <widget class="LED" name="led_48"/>
-            </item>
-            <item row="13" column="0">
-             <widget class="LED" name="led_49"/>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLabel" name="label_115">
-              <property name="text">
-               <string>АВОСТ</string>
-              </property>
-             </widget>
-            </item>
-            <item row="10" column="0">
-             <widget class="LED" name="led_50"/>
-            </item>
-            <item row="11" column="0">
-             <widget class="LED" name="led_51"/>
-            </item>
-            <item row="9" column="0">
-             <widget class="LED" name="led_52"/>
-            </item>
-            <item row="11" column="1">
-             <widget class="QLabel" name="label_116">
-              <property name="text">
-               <string>П_температура</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLabel" name="label_117">
-              <property name="text">
-               <string>Н_питание</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="1">
-             <widget class="QLabel" name="label_118">
-              <property name="text">
-               <string>П_питание</string>
-              </property>
-             </widget>
-            </item>
-            <item row="10" column="1">
-             <widget class="QLabel" name="label_119">
-              <property name="text">
-               <string>П_перегрузка</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="1">
-             <widget class="QLabel" name="label_120">
-              <property name="text">
-               <string>Н_перегрузка</string>
-              </property>
-             </widget>
-            </item>
-            <item row="12" column="0">
-             <widget class="LED" name="led_53"/>
-            </item>
-            <item row="4" column="0">
-             <widget class="LED" name="led_54"/>
-            </item>
-            <item row="1" column="0">
-             <widget class="LED" name="led_55"/>
-            </item>
-            <item row="6" column="0">
-             <widget class="LED" name="led_56"/>
-            </item>
-            <item row="8" column="0">
-             <widget class="LED" name="led_57"/>
-            </item>
-            <item row="12" column="1">
-             <widget class="QLabel" name="label_121">
-              <property name="text">
-               <string>Проскальзывание</string>
-              </property>
-             </widget>
-            </item>
-            <item row="9" column="1">
-             <widget class="QLabel" name="label_122">
-              <property name="text">
-               <string>П_значение</string>
-              </property>
-             </widget>
-            </item>
-            <item row="8" column="1">
-             <widget class="QLabel" name="label_123">
-              <property name="text">
-               <string>П_состояние</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0">
-             <widget class="LED" name="led_58"/>
-            </item>
-            <item row="3" column="1">
-             <widget class="QLabel" name="label_124">
-              <property name="text">
-               <string>Н_состояние</string>
-              </property>
-             </widget>
-            </item>
-            <item row="13" column="1">
-             <widget class="QLabel" name="label_125">
-              <property name="text">
-               <string>Рабочая зона</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="LED" name="led_59"/>
-            </item>
-            <item row="3" column="0">
-             <widget class="LED" name="led_60"/>
-            </item>
-            <item row="14" column="0" colspan="2">
-             <spacer name="verticalSpacer_9">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
+          <item row="1" column="0">
+           <spacer name="horizontalSpacer_26">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="1" column="3">
+           <widget class="QLabel" name="label_125">
+            <property name="text">
+             <string>On</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="label_116">
+            <property name="text">
+             <string>Off</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <spacer name="horizontalSpacer_27">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </item>
-        <item row="2" column="0">
+        <item row="9" column="2">
          <widget class="PlotWidget" name="widget_4" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0" colspan="2">
-         <widget class="QLabel" name="label_135">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>50</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>50</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(114, 159, 207);
-font: 15pt bold;</string>
-          </property>
-          <property name="text">
-           <string>3.2 Обкатка редуктора</string>
           </property>
          </widget>
         </item>
@@ -1846,20 +2089,6 @@ font: 15pt bold;</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="4">
-             <widget class="StateLabel" name="statelabel_9">
-              <property name="text">
-               <string>---</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="4">
-             <widget class="StateLabel" name="statelabel_10">
-              <property name="text">
-               <string>---</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="0" rowspan="2">
              <widget class="PushButton" name="btnBack33">
               <property name="text">
@@ -1874,17 +2103,24 @@ font: 15pt bold;</string>
               </property>
              </widget>
             </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QGridLayout" name="gridLayout_30">
-            <item row="0" column="2">
-             <widget class="StateLabel" name="statelabel_12">
+            <item row="2" column="4">
+             <widget class="QLabel" name="label_153">
               <property name="text">
                <string>---</string>
               </property>
              </widget>
             </item>
+            <item row="1" column="4">
+             <widget class="QLabel" name="label_154">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridLayout_30">
             <item row="0" column="1">
              <widget class="QLabel" name="label_87">
               <property name="text">
@@ -1899,13 +2135,6 @@ font: 15pt bold;</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="2">
-             <widget class="StateLabel" name="statelabel_11">
-              <property name="text">
-               <string>---</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="1">
              <widget class="QLabel" name="label_86">
               <property name="text">
@@ -1915,6 +2144,20 @@ font: 15pt bold;</string>
             </item>
             <item row="1" column="0">
              <widget class="LED" name="led_27"/>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLabel" name="label_151">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLabel" name="label_152">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -3003,113 +3246,6 @@ font: 15pt bold;</string>
       </widget>
      </widget>
     </item>
-    <item row="0" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout_3">
-      <item>
-       <widget class="QPushButton" name="pushButton_23">
-        <property name="text">
-         <string>Тестовая
-кнопка
-отображения
-Ф_1</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_24">
-        <property name="text">
-         <string>Тестовая
-кнопка
-отображения
-Ф_2.1</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_25">
-        <property name="text">
-         <string>Тестовая
-кнопка
-отображения
-Ф_2.2</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_26">
-        <property name="text">
-         <string>Тестовая
-кнопка
-отображения
-Ф_2.3</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_27">
-        <property name="text">
-         <string>Тестовая
-кнопка
-отображения
-Ф_2.4</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_28">
-        <property name="text">
-         <string>Тестовая
-кнопка
-отображения
-Ф_3.1</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_29">
-        <property name="text">
-         <string>Тестовая
-кнопка
-отображения
-Ф_3.2</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_30">
-        <property name="text">
-         <string>Тестовая
-кнопка
-отображения
-Ф_3.3</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_31">
-        <property name="text">
-         <string>Тестовая
-кнопка
-отображения
-Ф_3.4</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="verticalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </item>
    </layout>
   </widget>
  </widget>
@@ -3152,8 +3288,8 @@ font: 15pt bold;</string>
    <slot>onBtnNext1()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>698</x>
-     <y>755</y>
+     <x>224</x>
+     <y>77</y>
     </hint>
     <hint type="destinationlabel">
      <x>614</x>
@@ -3305,6 +3441,22 @@ font: 15pt bold;</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btnNext24</sender>
+   <signal>clicked()</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onBtnNext2()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>657</x>
+     <y>711</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>83</x>
+     <y>768</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onBtnNext1()</slot>
@@ -3317,5 +3469,6 @@ font: 15pt bold;</string>
   <slot>onBtnTempShow33()</slot>
   <slot>onBtnTempShow32()</slot>
   <slot>onBtnTempShow31()</slot>
+  <slot>onBtnNext2()</slot>
  </slots>
 </ui>
