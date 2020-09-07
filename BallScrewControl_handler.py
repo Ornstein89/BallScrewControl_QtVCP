@@ -54,6 +54,8 @@ class HandlerClass:
     def __init__(self, halcomp,widgets,paths):
         self.hal = halcomp
         self.PATHS = paths
+        self.data = [[None for _ in range(10000)],[None for _ in range(10000)]]
+        self.current_plot_n = 0
         self.w = widgets
         self.init_pins()
 
@@ -66,6 +68,7 @@ class HandlerClass:
     # the HAL pins are built but HAL is not set ready
     # This is where you make HAL pins or initialize state of widgets etc
     def initialized__(self):
+        self.init_gui()
         database_file = 'База данных испытаний.xlsx'
         try:
             wb = openpyxl.load_workbook(filename = database_file, read_only = True)
@@ -225,19 +228,60 @@ class HandlerClass:
     #####################
     # GENERAL FUNCTIONS #
     #####################
+    def init_gui(self):
+        #TODO настройка осей графика
+        self.w.plt32.showGrid(x = True, y = True)
+        return
+
     def pinCnagedCallback(self, data):
         halpins_match_controls_dict = {
-        'position-pin':self.w.lblPosition31,
-        'position_actual-pin':self.w.lblPosition_Actual31
+        'position-pin31':self.w.lblPosition31,
+        'position_actual-pin31':self.w.lblPosition_Actual31,
+
+        'geartorque_error_value-pin32':self.w.lblGeartorque_Error_Value32,
+        'geartorque_error_value_max32':self.w.lblGeartorque_Error_Value_Max32,
+        'brakeorque_error_value-pin32':self.w.lblBraketorque_Error_Value32,
+        'braketorque_error_value_max32':self.w.lblBraketorque_Error_Value_Max32,
+        'load_error_value-pin32':self.w.lblLoad_Error_Value32,
+        'load_error_value_max-pin32':self.w.lblLoad_Error_Value_Max32,
+        'load_temperature-pin32':self.w.lblLoad_Temperature32,
+        'load_temperature_max-pin32':self.w.lblLoad_Temperature_Max32,
+        'pos_temperature-pin32':self.w.lblPos_Temperature32,
+        'pos_temperature_max-pin32':self.w.lblPos_Temperature_Max32
         }
         halpin_name = self.w.sender().text()
         if(halpin_name in halpins_match_controls_dict):
             halpin_value = self.hal[halpin_name]
-            halpins_match_controls_dict[halpin_name].setText("{:.2f}".format(halpin_value))
+            halpins_match_controls_dict[halpin_name].setText("{:10.2f}".format(halpin_value))
+        if(halpin_name == 'position-pin31'):
+            #print "*** update and plot"
+            self.append_data(self.current_plot_n, self.hal['position-pin31'])
+            self.update_plot()
         return
         #print "Test pin value changed to:" % (data) # ВЫВОДИТ ВСЕГДА 0 - ВИДИМО ОШИБКА В ДОКУМЕНТАЦИИ
         #print 'halpin object =', self.w.sender()
         #print 'Halpin type: ',self.w.sender().get_type()
+    def append_data(self, x, y):
+        self.data[0][self.current_plot_n] = x
+        self.data[1][self.current_plot_n] = y
+        self.current_plot_n += 1
+        if(self.current_plot_n >= 10000):
+            self.current_plot_n = 0 # логика кольцевого буфера
+        return
+
+    def update_plot(self):
+        if(self.current_plot_n < 20):
+            print "*** plot < 20"
+            self.w.plt32.plot(self.data[0][0:self.current_plot_n],
+                              self.data[1][0:self.current_plot_n],
+                              clear = True)
+        else:
+            print "*** plot >= 20"
+            self.w.plt32.plot(self.data[0][self.current_plot_n-20:self.current_plot_n],
+                              self.data[1][self.current_plot_n-20:self.current_plot_n],
+                              clear=True)
+
+        #self.w.plt32.getPlotItem().setdata()
 
     def on_siggen_test_read_pin_value_changed(self, data):
         return
