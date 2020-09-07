@@ -53,9 +53,12 @@ class HandlerClass:
     # at this point the widgets and hal pins are not instantiated
     def __init__(self, halcomp,widgets,paths):
         self.hal = halcomp
-        self.w = widgets
         self.PATHS = paths
-        
+        self.w = widgets
+        self.positionPin = self.hal.newpin('position-pin', hal.HAL_FLOAT, hal.HAL_IN)
+        self.position_actualPin = self.hal.newpin('position_actual-pin', hal.HAL_FLOAT, hal.HAL_IN)
+        #print "*** hal.connect1 ", hal.connect("position-pin", "position")
+        #print "*** hal.connect2 ", hal.connect("position_actual-pin", "position_actual")
         #self.siggen_test_read_pin = self.hal.newpin('siggen_test_read_pin',
         #                                            hal.HAL_FLOAT, hal.HAL_IN) # тестовый пин для получения синусоиды с siggen http://linuxcnc.org/docs/2.8/html/hal/halmodule.html#_use_with_hal_glib_in_qtvcp_handler
 
@@ -70,6 +73,11 @@ class HandlerClass:
     # the HAL pins are built but HAL is not set ready
     # This is where you make HAL pins or initialize state of widgets etc
     def initialized__(self):
+        #self.positionPin.value_changed.connect(lambda s: self.pinCnagedCallback(s))
+        #self.position_actualPin.value_changed.connect(lambda s: self.pinCnagedCallback(s))
+        self.positionPin.value_changed.connect(lambda s: self.pinCnagedCallback(s))
+        self.position_actualPin.value_changed.connect(lambda s: self.pinCnagedCallback(s))
+
         database_file = 'База данных испытаний.xlsx'
         try:
             wb = openpyxl.load_workbook(filename = database_file, read_only = True)
@@ -190,7 +198,22 @@ class HandlerClass:
     #####################
     # GENERAL FUNCTIONS #
     #####################
-    
+    def pinCnagedCallback(self, data):
+        halpins_match_controls_dict = {
+        'position-pin':self.w.lblPosition31,
+        'position_actual-pin':self.w.lblPosition_Actual31
+        }
+        halpin_name = self.w.sender().text()
+        #print '*** pinCnagedCallback, self.w.sender().text()=', self.w.sender().text()
+        #print "*** hal[] = ", self.hal[halpin_name]
+        halpins_match_controls_dict[halpin_name].setText("{:.2f}".format(self.hal[halpin_name]))
+        #halpins_match_controls_dict[halpin_name].setText(data)
+        return
+        #print "Test pin value changed to:" % (data)
+        #print 'halpin object =', self.w.sender()
+        #print 'Halpin name: ',self.sender().text()
+        #print 'Halpin type: ',self.sender().get_type()
+
     def on_siggen_test_read_pin_value_changed(self, data):
         return
         #print("*** siggen pin data: ", data)

@@ -2,18 +2,18 @@
 
 ### Форма 31
 
-net sw1 BallScrewControl.ledSw1_31# Цветовой индикатор (серый / красный)
+net sw1 => BallScrewControl.ledSw1_31# Цветовой индикатор (серый / красный)
 # заменить на ActionButton или отдавать команду из кода Python # net jog_minus BallScrewControl.btnJog_Minus# Кнопка
 # заменить на ActionButton или отдавать команду из кода Python # net jog_plus # Кнопка
-net sw2 BallScrewControl.ledSw2_31# Цветовой индикатор (серый / красный)
+net sw2 => BallScrewControl.ledSw2_31# Цветовой индикатор (серый / красный)
 # net device_on # Кнопка
-net pos_is_on # Цветовой индикатор (серый / жёлтый)
+#net pos_is_on # Цветовой индикатор (серый / жёлтый)
 # net device_off # Кнопка
-# net position # Числовой индикатор
-# net position_actual # Числовой индикатор
+net position => BallScrewControl.position-pin# Числовой индикатор
+net position_actual => BallScrewControl.position_actual-pin# Числовой индикатор
 # net velocity # Ползунок с возможностью тонкой настройки и индикацией значения
 # net acceleration # Ползунок с возможностью тонкой настройки и индикацией значения
-net pos_alarm # Цветовой индикатор (красный / зелёный)
+#net pos_alarm # Цветовой индикатор (красный / зелёный)
 # net log_trigger # Кнопка
 # net time # 
 # net active_0 # 

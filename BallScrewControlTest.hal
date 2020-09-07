@@ -1,14 +1,50 @@
 # создание тестовых сигналов на основе siggen для получения отклика LED в интерфейсе
 loadrt siggen
-loadrt wcomp
-#loadrt conv_float_s32
-#loadrt conv_float_s32
-#loadrt conv_s32_bit
-addf siggen.0.update base-thread
-addf wcomp.0 base-thread
+loadrt wcomp # компаратор для перевода изначального тестового float-сигнала в bin
+loadrt timedelay count=5 # задержки для повышения разнообразия тестовых сигналов
+loadrt threads name1=test-thread period1=10000000
+# loadrt conv_float_s32
+# loadrt conv_float_s32
+# loadrt conv_s32_bit
+
+addf siggen.0.update test-thread
+addf wcomp.0 test-thread
+addf timedelay.0 test-thread
+addf timedelay.1 test-thread
+addf timedelay.2 test-thread
+addf timedelay.3 test-thread
+addf timedelay.4 test-thread
 
 # преобразовать сигналы в bool
 setp wcomp.0.min 0.0
 setp wcomp.0.max 1.0
-net tmp_sine_to_wcomp wcomp.0.in <= siggen.0.sine
-net sw1 wcomp.0.out
+net position wcomp.0.in <= siggen.0.sine
+#net sw1 wcomp.0.out
+
+setp timedelay.0.on-delay 0.2
+setp timedelay.0.off-delay 0.2
+
+setp timedelay.1.on-delay 0.4
+setp timedelay.1.off-delay 0.4
+
+setp timedelay.2.on-delay 0.6
+setp timedelay.2.off-delay 0.6
+
+setp timedelay.3.on-delay 0.8
+setp timedelay.3.off-delay 0.8
+
+setp timedelay.4.on-delay 1.0
+setp timedelay.4.off-delay 1.0
+
+net sw1 wcomp.0.out => timedelay.0.in timedelay.1.in timedelay.2.in timedelay.3.in timedelay.4.in
+#net sig_todelay1 wcomp.0.out => timedelay.1.in
+#net sig_todelay2 wcomp.0.out => timedelay.2.in
+#net sig_todelay3 wcomp.0.out => timedelay.3.in
+#net sig_todelay4 wcomp.0.out => timedelay.4.in
+
+#net sw1 <= wcomp.0.out			# уже подкючён выше
+net sw2 <= timedelay.0.out
+net pos_is_on timedelay.1.out
+# net position siggen.0.sine	# уже подкючён выше
+net position_actual siggen.0.cosine
+net pos_alarm timedelay.2.out
