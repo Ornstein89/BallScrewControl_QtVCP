@@ -1,9 +1,0 @@
-<RCC>
-  <qresource prefix="images">
-    <file>stop.png</file>
-    <file>circular-arrow-left.png</file>
-    <file>circular-arrow-right.png</file>
-    <file>pause.png</file>
-    <file>play.png</file>
-  </qresource>
-</RCC>

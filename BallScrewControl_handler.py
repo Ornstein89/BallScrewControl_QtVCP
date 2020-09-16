@@ -12,6 +12,7 @@ import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
 
 # пакеты GUI
 from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtWidgets import QFileDialog
 #from qtvcp.widgets import FocusOverlay
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
 from qtvcp.widgets.gcode_editor import GcodeEditor as GCODE
@@ -224,6 +225,34 @@ class HandlerClass:
     def onBtnTempShow34(self):
         self.w.stackedWidget.setCurrentIndex(8)
         pass
+    def onBtnLoadFile33(self):
+        # код на основе btn_load и load_code из qtdragon
+        #fname = self.w.filemanager.getCurrentSelected()
+        fname = QFileDialog.getOpenFileName(self.w, 'Open GCode file',\
+        ".","NGC (*.ngc);;Text files (*.txt);;All Files (*.*)")
+        print fname
+        if fname[1] is None or fname[0] is None:
+            #TODO уведомление
+            return
+        if fname[0].endswith(".ngc"):
+            # self.w.cmb_gcode_history.addItem(fname) отобразить текущий файл в combobox
+            # self.w.cmb_gcode_history.setCurrentIndex(self.w.cmb_gcode_history.count() - 1) отобразить текущий файл в combobox
+            ACTION.OPEN_PROGRAM(fname)
+            #self.add_status("Loaded program file : {}".format(fname))
+            #self.w.main_tab_widget.setCurrentIndex(TAB_MAIN)
+            STATUS.emit('update-machine-log', "Loaded program file : {}".format(fname), 'TIME')
+            print "*** LOADED"
+        else:
+            self.add_status("Unknown or invalid filename")
+            STATUS.emit('update-machine-log', "Unknown or invalid filename", 'TIME')
+            print "*** ERROR LOAD FILE"
+
+    def onBtnLoadFile34(self):
+        # код из qtdragon
+        #fname = self.w.filemanager.getCurrentSelected()
+        #if fname[1] is True:
+        #    self.load_code(fname[0])
+        pass
 
     #####################
     # GENERAL FUNCTIONS #
@@ -271,17 +300,28 @@ class HandlerClass:
 
     def update_plot(self):
         if(self.current_plot_n < 20):
-            print "*** plot < 20"
+            #print "*** plot < 20"
             self.w.plt32.plot(self.data[0][0:self.current_plot_n],
                               self.data[1][0:self.current_plot_n],
                               clear = True)
         else:
-            print "*** plot >= 20"
+            #print "*** plot >= 20"
             self.w.plt32.plot(self.data[0][self.current_plot_n-20:self.current_plot_n],
                               self.data[1][self.current_plot_n-20:self.current_plot_n],
                               clear=True)
+        return
 
-        #self.w.plt32.getPlotItem().setdata()
+    def flush_to_log(self):
+        logfile = open('temp_log.log', 'w')
+        #Заголовок лога
+        logfile.write('Модель: ', self.MODEL, '\n')
+        logfile.write('Номер изделия: ', self.PART, '\n')
+        logfile.write('Дата: ', self.DATE, '\n')
+        logfile.write('\n')
+        for i in range(self.current_plot_n):
+            logfile.write(self.data[0][i], self.data[1][i])
+        logfile.close()
+        return
 
     def on_siggen_test_read_pin_value_changed(self, data):
         return

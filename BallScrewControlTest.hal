@@ -1,5 +1,6 @@
 # создание тестовых сигналов на основе siggen для получения отклика LED в интерфейсе
 loadrt siggen
+loadrt halscope
 loadrt wcomp # компаратор для перевода изначального тестового float-сигнала в bin
 loadrt timedelay count=5 # задержки для повышения разнообразия тестовых сигналов
 loadrt threads name1=test-thread period1=10000000
