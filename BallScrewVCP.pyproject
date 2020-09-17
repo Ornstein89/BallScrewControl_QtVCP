@@ -1,0 +1,3 @@
+{
+    "files": ["sample_gcode.ngc","BallScrewVCP_Test.hal","BallScrewVCP_handler.py","BallScrewVCP.ini","BallScrewVCP.qss","BallScrewVCP.ui","sample2_gcode(arcspiral from linuxcnc).ngc","simulated_home.hal","BallScrewVCP.pref","core_sim.hal","start_with_linuxcnc.sh","BallScrewVCP_postgui.hal","main.py","BallScrewVCP.var","start_with_qtvcp.sh","BallScrewVCP.qrc"]
+}

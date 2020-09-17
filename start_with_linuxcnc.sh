@@ -1,1 +1,1 @@
-linuxcnc ./BallScrewControl.ini
+linuxcnc ./BallScrewVCP.ini

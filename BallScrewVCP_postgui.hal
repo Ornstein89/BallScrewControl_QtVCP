@@ -1,19 +1,19 @@
-# net signal_sine siggen.0.sine BallScrewControl.siggen_test_read_pin
+# net signal_sine siggen.0.sine BallScrewVCP.siggen_test_read_pin
 
 ### Форма 31
 
-net sw1 => BallScrewControl.ledSw1_31# Цветовой индикатор (серый / красный)
-# заменить на ActionButton или отдавать команду из кода Python # net jog_minus BallScrewControl.btnJog_Minus# Кнопка
+net sw1 => BallScrewVCP.ledSw1_31# Цветовой индикатор (серый / красный)
+# заменить на ActionButton или отдавать команду из кода Python # net jog_minus BallScrewVCP.btnJog_Minus# Кнопка
 # заменить на ActionButton или отдавать команду из кода Python # net jog_plus # Кнопка
-net sw2 => BallScrewControl.ledSw2_31 # Цветовой индикатор (серый / красный)
+net sw2 => BallScrewVCP.ledSw2_31 # Цветовой индикатор (серый / красный)
 # net device_on # Кнопка
-net pos_is_on  => BallScrewControl.ledOn31 # Цветовой индикатор (серый / жёлтый)
+net pos_is_on  => BallScrewVCP.ledOn31 # Цветовой индикатор (серый / жёлтый)
 # net device_off # Кнопка
-net position => BallScrewControl.position-pin31# Числовой индикатор
-net position_actual => BallScrewControl.position_actual-pin31# Числовой индикатор
+net position => BallScrewVCP.position-pin31# Числовой индикатор
+net position_actual => BallScrewVCP.position_actual-pin31# Числовой индикатор
 # net velocity # Ползунок с возможностью тонкой настройки и индикацией значения
 # net acceleration # Ползунок с возможностью тонкой настройки и индикацией значения
-net pos_alarm => BallScrewControl.ledPos_Alarm31 # Цветовой индикатор (красный / зелёный)
+net pos_alarm => BallScrewVCP.ledPos_Alarm31 # Цветовой индикатор (красный / зелёный)
 # net log_trigger # Кнопка
 # net time # 
 # net active_0 # 
@@ -22,49 +22,49 @@ net pos_alarm => BallScrewControl.ledPos_Alarm31 # Цветовой индика
 
 ### Форма 32
 
-net is_running_ccw => BallScrewControl.ledIs_Running_Ccw32 # BIT	IN	Цветовой индикатор (красный / зелёный)
+net is_running_ccw => BallScrewVCP.ledIs_Running_Ccw32 # BIT	IN	Цветовой индикатор (красный / зелёный)
 # start_ccw	BIT	OUT	Кнопка
 # stop	BIT	OUT	Кнопка
 # start_cw	BIT	OUT	Кнопка
-net is_running_cw => BallScrewControl.ledIs_Running_Cw32 # BIT	IN	Цветовой индикатор (красный / зелёный)
+net is_running_cw => BallScrewVCP.ledIs_Running_Cw32 # BIT	IN	Цветовой индикатор (красный / зелёный)
 # time_current	FLOAT	IN	Числовой индикатор
 # duration	FLOAT	IN	Числовой индикатор
-net torque_set => BallScrewControl.torque_set-pin32 # FLOAT	IN	Числовой индикатор
-net torque_actual => BallScrewControl.torque_actual-pin32 #	FLOAT	IN	Числовой индикатор
-net omega_actual => BallScrewControl.omega_actual-pin32 #	FLOAT	IN	Числовой индикатор
+net torque_set => BallScrewVCP.torque_set-pin32 # FLOAT	IN	Числовой индикатор
+net torque_actual => BallScrewVCP.torque_actual-pin32 #	FLOAT	IN	Числовой индикатор
+net omega_actual => BallScrewVCP.omega_actual-pin32 #	FLOAT	IN	Числовой индикатор
 # device_on	BIT	OUT	Кнопка
-net load_is_on => BallScrewControl.ledLoad_Is_On32 #	BIT	IN	Цветовой индикатор (серый / жёлтый)
-net pos_is_on => BallScrewControl.ledPos_Is_On32 #	BIT	IN	Цветовой индикатор (серый / жёлтый)
+net load_is_on => BallScrewVCP.ledLoad_Is_On32 #	BIT	IN	Цветовой индикатор (серый / жёлтый)
+net pos_is_on => BallScrewVCP.ledPos_Is_On32 #	BIT	IN	Цветовой индикатор (серый / жёлтый)
 # device_off	BIT	OUT	Кнопка
 # load_active	BIT	OUT	Переключатель
 
-net enable => BallScrewControl.ledEnable32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
-net geartorque_error => BallScrewControl.ledGeartorque_Error32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
-net braketorque_error => BallScrewControl.ledBraketorque_Error32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
-net estop_ext => BallScrewControl.ledEstop_Ext32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
-net load_is_on => BallScrewControl.ledLoad_Is_On2_32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
-net load_alarm => BallScrewControl.ledLoad_Alarm32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
-net load_error => BallScrewControl.ledLoad_Error32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
-net load_overheat => BallScrewControl.ledLoad_Overheat32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
-net pos_is_on => BallScrewControl.ledPos_Is_On_2_32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
-net pos_alarm => BallScrewControl.ledPos_Alarm32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
-net pos_overheat => BallScrewControl.ledPos_Overheat32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
+net enable => BallScrewVCP.ledEnable32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
+net geartorque_error => BallScrewVCP.ledGeartorque_Error32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
+net braketorque_error => BallScrewVCP.ledBraketorque_Error32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
+net estop_ext => BallScrewVCP.ledEstop_Ext32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
+net load_is_on => BallScrewVCP.ledLoad_Is_On2_32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
+net load_alarm => BallScrewVCP.ledLoad_Alarm32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
+net load_error => BallScrewVCP.ledLoad_Error32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
+net load_overheat => BallScrewVCP.ledLoad_Overheat32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
+net pos_is_on => BallScrewVCP.ledPos_Is_On_2_32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
+net pos_alarm => BallScrewVCP.ledPos_Alarm32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
+net pos_overheat => BallScrewVCP.ledPos_Overheat32 #	BIT	IN	Цветовой индикатор (красный / зелёный)
 
-net geartorque_error_value  => BallScrewControl.geartorque_error_value-pin32 #
-net geartorque_error_value_max => BallScrewControl.geartorque_error_value_max32 # ограничение по длине имени пина 47 символов #	FLOAT	IN	Числовой индикатор
-net brakeorque_error_value  => BallScrewControl.brakeorque_error_value-pin32 #
-net braketorque_error_value_max => BallScrewControl.braketorque_error_value_max32 # ограничение по длине имени пина 47 символов #	FLOAT	IN	Числовой индикатор
-net load_error_value => BallScrewControl.load_error_value-pin32 #
-net load_error_value_max => BallScrewControl.load_error_value_max-pin32 #	FLOAT	IN	Числовой индикатор
-net load_temperature => BallScrewControl.load_temperature-pin32 #
-net load_temperature_max => BallScrewControl.load_temperature_max-pin32 #	FLOAT	IN	Числовой индикатор
-net pos_temperature => BallScrewControl.pos_temperature-pin32 #
-net pos_temperature_max => BallScrewControl.pos_temperature_max-pin32 #	FLOAT	IN	Числовой индикатор
-net torque_actual => BallScrewControl.torque_actual-pin32 #	FLOAT	IN	Числовой индикатор на графике
-net torque_set => BallScrewControl.torque_set-pin32 #	FLOAT	IN	Опорный объект графика  горизонтальная прямая
-# net time_current => BallScrewControl.time_current-pin #
-net torque_actual => BallScrewControl.torque_actual-pin32 #	FLOAT	IN	Текущая точка графика
-# net time_current => BallScrewControl.???????????????????-pin #	FLOAT	IN	Числовой индикатор на графике
+net geartorque_error_value  => BallScrewVCP.geartorque_error_value-pin32 #
+net geartorque_error_value_max => BallScrewVCP.geartorque_error_value_max32 # ограничение по длине имени пина 47 символов #	FLOAT	IN	Числовой индикатор
+net brakeorque_error_value  => BallScrewVCP.brakeorque_error_value-pin32 #
+net braketorque_error_value_max => BallScrewVCP.braketorque_error_value_max32 # ограничение по длине имени пина 47 символов #	FLOAT	IN	Числовой индикатор
+net load_error_value => BallScrewVCP.load_error_value-pin32 #
+net load_error_value_max => BallScrewVCP.load_error_value_max-pin32 #	FLOAT	IN	Числовой индикатор
+net load_temperature => BallScrewVCP.load_temperature-pin32 #
+net load_temperature_max => BallScrewVCP.load_temperature_max-pin32 #	FLOAT	IN	Числовой индикатор
+net pos_temperature => BallScrewVCP.pos_temperature-pin32 #
+net pos_temperature_max => BallScrewVCP.pos_temperature_max-pin32 #	FLOAT	IN	Числовой индикатор
+net torque_actual => BallScrewVCP.torque_actual-pin32 #	FLOAT	IN	Числовой индикатор на графике
+net torque_set => BallScrewVCP.torque_set-pin32 #	FLOAT	IN	Опорный объект графика  горизонтальная прямая
+# net time_current => BallScrewVCP.time_current-pin #
+net torque_actual => BallScrewVCP.torque_actual-pin32 #	FLOAT	IN	Текущая точка графика
+# net time_current => BallScrewVCP.???????????????????-pin #	FLOAT	IN	Числовой индикатор на графике
 # = time_current - time_range	FLOAT	-	Числовой индикатор на графике
 # time	FLOAT	-	-
 # dir	BIT	IN	-
@@ -228,4 +228,4 @@ net torque_actual => BallScrewControl.torque_actual-pin32 #	FLOAT	IN	Текущ�
 
 loadusr halscope
 
-net machine_on BallScrewControl.actionbutton_mdi-led <= halui.machine.is-on
+net machine_on BallScrewVCP.actionbutton_mdi-led <= halui.machine.is-on

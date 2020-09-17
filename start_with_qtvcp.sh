@@ -1,2 +1,2 @@
-halrun -U BallScrewControl
-qtvcp ./BallScrewControl.ui
+halrun -U BallScrewVCP
+qtvcp ./BallScrewVCP.ui

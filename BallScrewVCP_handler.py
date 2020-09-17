@@ -169,52 +169,6 @@ class HandlerClass:
             self.VCP_halpins[key] = self.hal.newpin(key, hal.HAL_FLOAT, hal.HAL_IN)
             self.VCP_halpins[key].value_changed.connect(lambda s: self.pinCnagedCallback(s))
         return
-    
-    def onBtnNext1(self):
-        print "*** onBtnNext clicked"
-        self.DRIVE = self.w.cmbDrive1.currentIndex()
-        self.NAME = self.w.edtName1.text()
-        self.DATE = self.w.edtDate1.text()
-        self.PART = self.w.edtPart1.text()
-        self.MODEL = self.w.cmbModel1.currentText()
-        if(self.w.cmbType1.currentIndex()<4):
-            self.load_ini(self.w.cmbType1.currentIndex())
-            self.w.stackedWidget.setCurrentIndex(self.w.cmbType1.currentIndex()+1)
-        else:
-            self.load_ini(3)
-            self.w.stackedWidget.setCurrentIndex(3)
-        # self.close() только для случая многооконного интерфейса
-    def onBtnNext2(self):
-        #self.w.sender()
-        if(self.w.sender() == self.w.btnNext21):
-            pass
-        elif(self.w.sender() == self.w.btnNext22):
-            pass
-        elif(self.w.sender() == self.w.btnNext23):
-            pass
-        elif(self.w.sender() == self.w.btnNext24):
-            pass
-        return
-    
-    def onBtnTempShow1(self):
-        self.w.stackedWidget.setCurrentIndex(0)
-        pass
-        
-    def onBtnTempShow21(self):
-        self.w.stackedWidget.setCurrentIndex(1)
-        pass
-        
-    def onBtnTempShow22(self):
-        self.w.stackedWidget.setCurrentIndex(2)
-        pass
-        
-    def onBtnTempShow23(self):
-        self.w.stackedWidget.setCurrentIndex(3)
-        pass
-        
-    def onBtnTempShow24(self):
-        self.w.stackedWidget.setCurrentIndex(4)
-        pass
         
     def onBtnTempShow31(self):
         self.w.stackedWidget.setCurrentIndex(5)
@@ -231,6 +185,7 @@ class HandlerClass:
     def onBtnTempShow34(self):
         self.w.stackedWidget.setCurrentIndex(8)
         pass
+
     def onBtnLoadFile33(self):
         # код на основе btn_load и load_code из qtdragon
         #fname = self.w.filemanager.getCurrentSelected()
@@ -254,10 +209,7 @@ class HandlerClass:
             print "*** ERROR LOAD FILE"
 
     def onBtnLoadFile34(self):
-        # код из qtdragon
-        #fname = self.w.filemanager.getCurrentSelected()
-        #if fname[1] is True:
-        #    self.load_code(fname[0])
+        # TODO по аналогии с onBtnLoadFile33
         pass
 
     #####################
