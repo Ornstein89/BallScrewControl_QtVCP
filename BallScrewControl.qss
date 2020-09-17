@@ -1,0 +1,4 @@
+LED {
+qproperty-color: green;
+qproperty-off_color: red;
+}

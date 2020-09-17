@@ -1,0 +1,83 @@
+[DIALOG_OPTIONS]
+EntryDialog_play_sound = True
+EntryDialog_sound_type = READY
+toolDialog_play_sound = True
+toolDialog_speak = True
+toolDialog_sound_type = READY
+MachineLogDialog_play_sound = True
+MachineLogDialog_sound_type = READY
+RunFromLineDialog_play_sound = True
+RunFromLineDialog_sound_type = READY
+
+[DIALOG_GEOMETRY]
+ToolChangeDialog-geometry = 0 0 640 480
+
+[SCREEN_OPTIONS]
+catch_errors = True
+desktop_notify = True
+shutdown_check = True
+sound_player_on = False
+mainwindow_geometry = 3 60 1440 860
+
+[MCH_MSG_OPTIONS]
+mchnMsg_play_sound = True
+mchnMsg_speak_errors = True
+mchnMsg_sound_type = RING
+
+[USR_MSG_OPTIONS]
+usermsg_play_sound = True
+userMsg_sound_type = RING
+userMsg_use_focusOverlay = True
+
+[SHUTDOWN_OPTIONS]
+shutdown_play_sound = True
+shutdown_alert_sound_type = READY
+shutdown_exit_sound_type = LOGOUT
+shutdown_msg_title = Do you want to Shutdown now?
+shutdown_msg_detail = 
+
+[NOTIFY_OPTIONS]
+notify_start_greeting = True
+notify_start_title = Welcome
+notify_start_detail = This option can be changed in the preference file
+notify_start_timeout = 5
+
+[BOOK_KEEPING]
+last_loaded_directory = /home/ornstein/linuxcnc/nc_files/examples
+last_loaded_file = /home/ornstein/linuxcnc/nc_files/examples/3dtest.ngc
+style_QSS_Path = DEFAULT
+
+[PROBE OPTIONS]
+Probe tool = 0
+Probe rapid = 10.0
+Probe max xy = 10.0
+Probe max z = 2.0
+Probe extra depth = 0.0
+Probe step off = 10.0
+Probe feed = 10.0
+Probe xy clearance = 10.0
+Probe z clearance = 10.0
+Probe edge width = 10.0
+
+[CUSTOM_FORM_ENTRIES]
+Tool to load = 0
+Laser X = 100.0
+Laser Y = -20.0
+Sensor X = 10.0
+Sensor Y = 10.0
+Work Height = 20.0
+Touch Height = 40.0
+Sensor Height = 40.0
+Search Velocity = 40.0
+Probe Velocity = 10.0
+Max Probe = 10.0
+Eoffset count = 0
+External offsets = False
+Reload program = False
+Reload tool = False
+Use keyboard = False
+Run from line = False
+Use virtual keyboard = False
+Use alpha display mode = False
+Inhibit display mouse selection = True
+

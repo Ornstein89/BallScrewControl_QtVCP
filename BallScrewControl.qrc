@@ -1,11 +1,11 @@
 <RCC>
     <qresource prefix="/">
-        <file>resources/circle.png</file>
         <file>resources/circular-arrow-left.png</file>
         <file>resources/circular-arrow-right.png</file>
         <file>resources/pause.png</file>
         <file>resources/play.png</file>
         <file>resources/stop.png</file>
         <file>resources/vertical_line.png</file>
+        <file>resources/circle.png</file>
     </qresource>
 </RCC>

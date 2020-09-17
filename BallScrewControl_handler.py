@@ -13,11 +13,13 @@ import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
 # пакеты GUI
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtCore import Qt
 #from qtvcp.widgets import FocusOverlay
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
 from qtvcp.widgets.gcode_editor import GcodeEditor as GCODE
 from qtvcp.lib.keybindings import Keylookup
-from qtvcp.core import Status, Action
+from qtvcp.lib.gcodes import GCodes
+from qtvcp.core import Status, Action, Info
 
 # пакеты для графиков
 import pyqtgraph as pg
@@ -40,6 +42,7 @@ LOG = logger.getLogger(__name__)
 
 KEYBIND = Keylookup()
 STATUS = Status()
+INFO = Info()
 ACTION = Action()
 ###################################
 # **** HANDLER CLASS SECTION **** #
@@ -55,6 +58,7 @@ class HandlerClass:
     def __init__(self, halcomp,widgets,paths):
         self.hal = halcomp
         self.PATHS = paths
+        self.gcodes = GCodes()
         self.data = [[None for _ in range(10000)],[None for _ in range(10000)]]
         self.current_plot_n = 0
         self.w = widgets
@@ -70,6 +74,8 @@ class HandlerClass:
     # This is where you make HAL pins or initialize state of widgets etc
     def initialized__(self):
         self.init_gui()
+        self.w.ledPos_Alarm31.setOffColor(Qt.yellow)
+        # self.gcodes.setup_list() инструкция нужна только для отображения справочного списка команд
         database_file = 'База данных испытаний.xlsx'
         try:
             wb = openpyxl.load_workbook(filename = database_file, read_only = True)
@@ -83,7 +89,7 @@ class HandlerClass:
             print("*** OK value 1", ws.cell(row = 1, column = 1).value)
             print("*** OK value 2", ws.cell(row = 2, column = 1).value)
             print("*** OK value 3", ws.cell(row = 3, column = 1).value)
-            
+
             while(ws.cell(row = row, column = 1).value is not None):
                 list_test_types.append(ws.cell(row = row, column = 1).value)
                 print("*** OK row=", row, " appended, value = ",
@@ -237,7 +243,7 @@ class HandlerClass:
         if fname[0].endswith(".ngc"):
             # self.w.cmb_gcode_history.addItem(fname) отобразить текущий файл в combobox
             # self.w.cmb_gcode_history.setCurrentIndex(self.w.cmb_gcode_history.count() - 1) отобразить текущий файл в combobox
-            ACTION.OPEN_PROGRAM(fname)
+            ACTION.OPEN_PROGRAM(fname[0])
             #self.add_status("Loaded program file : {}".format(fname))
             #self.w.main_tab_widget.setCurrentIndex(TAB_MAIN)
             STATUS.emit('update-machine-log', "Loaded program file : {}".format(fname), 'TIME')

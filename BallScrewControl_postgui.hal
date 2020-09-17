@@ -225,3 +225,7 @@ net torque_actual => BallScrewControl.torque_actual-pin32 #	FLOAT	IN	Текущ�
 # active_2	BIT	IN	-
 # active_3	BIT	IN	-
 # active_4	BIT	IN	-
+
+loadusr halscope
+
+net machine_on BallScrewControl.actionbutton_mdi-led <= halui.machine.is-on
