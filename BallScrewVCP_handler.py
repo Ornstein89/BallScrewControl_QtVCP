@@ -155,10 +155,42 @@ class HandlerClass:
     #####################
     def init_gui(self):
         #TODO настройка осей графика
+        self.TYPE = INFO.INI.findall("BALLASCREWPARAMS", "TYPE")[0]
+        self.w.stackedWidget.setCurrentIndex(int(self.TYPE)-1)
         self.w.plt32.showGrid(x = True, y = True)
         return
 
     def pinCnagedCallback(self, data):
+        in_control_match_dict = (
+        {
+            'NOM_VEL' : self.w.sldVelocity31,
+            'NOM_ACCEL' : self.w.sldAcceleration31
+        },
+        {},
+        {
+            'NOM_DSP_IDLE' : self.w.sldDsp_Idle33,
+            'NOM_VEL_IDLE' : self.w.sldVel_Idle33,
+            'NOM_ACCEL_IDLE' : self.w.sldAccel_Idle33,
+            'NOM_DSP_MEASURE' : self.w.sldDsp_Measure33,
+            'NOM_VEL_MEASURE' : self.w.sldVel_Measure33,
+            'NOM_ACCEL_MEASURE' : self.w.sldAccel_Measure33,
+            'NOM_LOAD' : self.w.sldLoad33,
+            'NOM_POS_MEASURE' : self.w.sldPos_Measure33
+        },
+        {
+            'NOM_TRAVEL' : self.w.sldDsp34,
+            'NOM_OMEGA' : self.w.sldOmg34,
+            'NOM_ACCEL_COEFF' : self.w.aldAccel_Coeff34,
+            'NOM_F1' : self.w.sldF1_34,
+            'NOM_F2' : self.w.sldF2_34
+        }
+        )
+
+        #self.TYPE = INFO.INI.findall("BALLASCREWPARAMS", "TYPE")[0]
+        #print "*** self.TYPE = ", self.TYPE
+        for key, slider in in_control_match_dict[int(self.TYPE)-1].items():
+            slider.setValue(float(INFO.INI.findall("BALLASCREWPARAMS", key)[0]))
+
         halpins_match_controls_dict = {
         'position-pin31':self.w.lblPosition31,
         'position_actual-pin31':self.w.lblPosition_Actual31,

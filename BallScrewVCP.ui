@@ -98,7 +98,7 @@ qproperty-diameter: 20;
     <item row="0" column="1">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="page31">
        <layout class="QGridLayout" name="gridLayout_8">
@@ -1118,31 +1118,6 @@ qproperty-diameter: 100;</string>
             </property>
            </spacer>
           </item>
-          <item row="1" column="1">
-           <widget class="ActionButton" name="actionbutton_5">
-            <property name="indicator_option" stdset="0">
-             <bool>true</bool>
-            </property>
-            <property name="indicator_status_option" stdset="0">
-             <bool>true</bool>
-            </property>
-            <property name="is_estopped_status" stdset="0">
-             <bool>false</bool>
-            </property>
-            <property name="is_homed_status" stdset="0">
-             <bool>true</bool>
-            </property>
-            <property name="estop_action" stdset="0">
-             <bool>false</bool>
-            </property>
-            <property name="home_action" stdset="0">
-             <bool>true</bool>
-            </property>
-            <property name="joint_number" stdset="0">
-             <number>-1</number>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
         <item row="0" column="0" colspan="2">
@@ -1186,9 +1161,30 @@ font: 15pt bold;</string>
              </spacer>
             </item>
             <item>
-             <widget class="PushButton" name="pushbutton_10">
+             <widget class="ActionButton" name="actionbutton_5">
               <property name="text">
                <string>В начало</string>
+              </property>
+              <property name="indicator_option" stdset="0">
+               <bool>true</bool>
+              </property>
+              <property name="indicator_status_option" stdset="0">
+               <bool>true</bool>
+              </property>
+              <property name="is_estopped_status" stdset="0">
+               <bool>false</bool>
+              </property>
+              <property name="is_homed_status" stdset="0">
+               <bool>true</bool>
+              </property>
+              <property name="estop_action" stdset="0">
+               <bool>false</bool>
+              </property>
+              <property name="home_action" stdset="0">
+               <bool>true</bool>
+              </property>
+              <property name="joint_number" stdset="0">
+               <number>-1</number>
               </property>
              </widget>
             </item>
@@ -1331,7 +1327,7 @@ font: 15pt bold;</string>
           <item>
            <layout class="QGridLayout" name="gridLayout_31">
             <item row="2" column="1">
-             <widget class="Slider" name="slider_10">
+             <widget class="Slider" name="sldAccel_Idle33">
               <property name="maximum">
                <number>100</number>
               </property>
@@ -1362,7 +1358,7 @@ font: 15pt bold;</string>
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="Slider" name="slider_12">
+             <widget class="Slider" name="sldVel_Idle33">
               <property name="maximum">
                <number>100</number>
               </property>
@@ -1372,7 +1368,7 @@ font: 15pt bold;</string>
              </widget>
             </item>
             <item row="5" column="1">
-             <widget class="Slider" name="slider_13">
+             <widget class="Slider" name="sldDsp_Measure33">
               <property name="maximum">
                <number>100</number>
               </property>
@@ -1389,7 +1385,7 @@ font: 15pt bold;</string>
              </widget>
             </item>
             <item row="4" column="1">
-             <widget class="Slider" name="slider_11">
+             <widget class="Slider" name="sldPos_Measure33">
               <property name="maximum">
                <number>100</number>
               </property>
@@ -1406,7 +1402,7 @@ font: 15pt bold;</string>
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="Slider" name="slider_8">
+             <widget class="Slider" name="sldLoad33">
               <property name="maximum">
                <number>100</number>
               </property>
@@ -1416,7 +1412,7 @@ font: 15pt bold;</string>
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="Slider" name="slider_9">
+             <widget class="Slider" name="sldDsp_Idle33">
               <property name="maximum">
                <number>100</number>
               </property>
@@ -1433,7 +1429,7 @@ font: 15pt bold;</string>
              </widget>
             </item>
             <item row="6" column="1">
-             <widget class="Slider" name="slider_14">
+             <widget class="Slider" name="sldVel_Measure33">
               <property name="maximum">
                <number>100</number>
               </property>
@@ -1443,7 +1439,7 @@ font: 15pt bold;</string>
              </widget>
             </item>
             <item row="7" column="1">
-             <widget class="Slider" name="slider_15">
+             <widget class="Slider" name="sldAccel_Measure33">
               <property name="maximum">
                <number>100</number>
               </property>
@@ -2128,7 +2124,7 @@ qproperty-flashRate: 200;</string>
           <item row="4" column="0">
            <layout class="QGridLayout" name="gridLayout_24">
             <item row="3" column="1">
-             <widget class="Slider" name="slider_6">
+             <widget class="Slider" name="sldF1_34">
               <property name="maximum">
                <number>100</number>
               </property>
@@ -2138,7 +2134,7 @@ qproperty-flashRate: 200;</string>
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="Slider" name="slider_3">
+             <widget class="Slider" name="sldDsp34">
               <property name="maximum">
                <number>100</number>
               </property>
@@ -2148,7 +2144,7 @@ qproperty-flashRate: 200;</string>
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="Slider" name="slider_5">
+             <widget class="Slider" name="aldAccel_Coeff34">
               <property name="maximum">
                <number>100</number>
               </property>
@@ -2158,7 +2154,7 @@ qproperty-flashRate: 200;</string>
              </widget>
             </item>
             <item row="4" column="1">
-             <widget class="Slider" name="slider_7">
+             <widget class="Slider" name="sldF2_34">
               <property name="maximum">
                <number>100</number>
               </property>
@@ -2168,7 +2164,7 @@ qproperty-flashRate: 200;</string>
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="Slider" name="slider_4">
+             <widget class="Slider" name="sldOmg34">
               <property name="maximum">
                <number>100</number>
               </property>

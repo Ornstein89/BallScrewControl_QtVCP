@@ -17,10 +17,11 @@ class BallScrew(QMainWindow):
         #self.load_ui()
 
     def onBtnFileSelect(self):
-        fname = QFileDialog.getSaveFileName(self, 'Save LinuxCNC INI file',
-        ".","LinuxCNC INI (*.ini);;All Files (*.*)")
+        fname = QFileDialog.getSaveFileName(self, 'Save log file',
+        ".","LOG (*.log);;Text (*.txt);;All Files (*.*)")
         #TODO не выбран
-        self.edtFileSelect.setText(fname[0])
+        self.LOGFILE = fname[0]
+        self.edtFileSelect.setText(self.LOGFILE)
 
     def onBtnNext1(self):
         print "*** onBtnNext clicked"
@@ -43,28 +44,37 @@ class BallScrew(QMainWindow):
     def onBtnNext2(self):
         #запись ini-файла
         self.save_ini(self.stackedWidget.currentIndex())
-        #TODO запуск linuxcnc с ini-файлом
+        #запуск linuxcnc с ini-файлом
+        os.system("linuxcnc ./"+self.NAME)
         return
 
     def onForm1DataChanged(self):
+        self.MODEL = self.cmbModel.currentText()
+        self.PART = self.edtPart.text()
+        self.TYPE = self.cmbType.currentText().replace(' ', '_')
+        self.DATE = self.edtDate.text()
+
+        self.edtName.setText(self.MODEL + '__' + self.PART + '__'
+                        + self.TYPE + '__' + self.DATE + '__.ini')
         self.checkGUI1()
 
     def onEdtFileChanged(self):
+        self.LOGFILE = self.edtFileSelect.text()
         self.checkGUI2()
 
     def initGUI(self):
+        self.stackedWidget.setCurrentIndex(0)
         self.btnNext1.setEnabled(False)
         self.btnNext2.setEnabled(False)
         self.wgtNext2.setVisible(False)
         self.loadExcelFile()
+        self.checkGUI1();
 
     def checkGUI1(self):  # проверка состояния формы 1 и разрешение перехода на форму 2
-        canNext = ( (self.cmbModel.currentIndex >= 0)
+        canNext = ( (self.MODEL != "")
             and (self.cmbDrive.currentIndex >= 0)
-            and (self.cmbType.currentIndex >= 0)
-            and (not self.edtPart.text()=="")
-            and (not self.edtDate.text()=="")
-            and (not self.edtName.text()=="") )
+            and (self.TYPE != "")
+            and (self.PART != ""))
         #TODO перенастроить на переменные self.TYPE и др.
         if canNext:
             self.btnNext1.setEnabled(True)
@@ -73,7 +83,7 @@ class BallScrew(QMainWindow):
             #TODO уведомление "Заполните поля корректными значениями"
 
     def checkGUI2(self):  # проверка состояния формы 2 и разрешение запуска linuxcnc (форма 3)
-        canNext2 = len(self.edtFileSelect.text()) > 0
+        canNext2 = self.edtFileSelect.endswith(".log")
         if canNext2:
             self.btnNext2.setEnabled(True)
         else:
@@ -139,13 +149,15 @@ class BallScrew(QMainWindow):
 
     def save_ini(self, n_form):
         # создать config из шаблона
-        config = configparser.ConfigParser(strict=False)
+        config = configparser.ConfigParser(strict=False) # strict=False - разрешение повторов имени ключа
+        config.optionxform = str # имена ключей не будут приведены к нижнему регистру
         config.read('BallScrewVCP_template.ini')
         # добавить значения из интерфейса в объект config
         config['BALLASCREWPARAMS'] = {}
-        for key in self.params_and_controls_dict[n_form]:
-            config['BALLASCREWPARAMS'][key] = str(self.params_and_controls_dict[n_form][key].value())
+        for key, control in self.params_and_controls_dict[n_form-1].items():
+            config['BALLASCREWPARAMS'][key] = str(control.value())
         config['BALLASCREWPARAMS']['TYPE']=str(n_form)
+        config['BALLASCREWPARAMS']['LOGFILE']=self.LOGFILE
         #TODO config['BALLASREWPARAMS']['HAL']=
         # запись заполненного config в ini-файл
         configfile = open(self.NAME, 'w')

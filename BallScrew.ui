@@ -76,7 +76,7 @@ qproperty-diameter: 20;
          <item>
           <widget class="QLineEdit" name="edtFileSelect">
            <property name="text">
-            <string>BallScrewVCP_test.ini</string>
+            <string>BallScrewVCP_test.log</string>
            </property>
            <property name="placeholderText">
             <string>Название испытания</string>
@@ -221,7 +221,7 @@ qproperty-diameter: 20;
        <enum>QFrame::Box</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page1">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -298,16 +298,6 @@ font: 15pt bold;</string>
           </property>
          </widget>
         </item>
-        <item row="5" column="5">
-         <widget class="QLineEdit" name="edtDate">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
-        </item>
         <item row="2" column="1">
          <widget class="QLabel" name="label">
           <property name="text">
@@ -339,8 +329,17 @@ font: 15pt bold;</string>
           </item>
           <item>
            <widget class="QLineEdit" name="edtName">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="inputMask">
-             <string>A__A__A__A__</string>
+             <string/>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="placeholderText">
+             <string>MODEL__PART__TYPE__DATE__</string>
             </property>
            </widget>
           </item>
@@ -436,6 +435,33 @@ font: 15pt bold;</string>
             <string>Обкатка ШВМ 1</string>
            </property>
           </item>
+         </widget>
+        </item>
+        <item row="5" column="5">
+         <widget class="QDateTimeEdit" name="edtDate">
+          <property name="dateTime">
+           <datetime>
+            <hour>8</hour>
+            <minute>0</minute>
+            <second>0</second>
+            <year>2020</year>
+            <month>9</month>
+            <day>15</day>
+           </datetime>
+          </property>
+          <property name="date">
+           <date>
+            <year>2020</year>
+            <month>9</month>
+            <day>15</day>
+           </date>
+          </property>
+          <property name="displayFormat">
+           <string>yyyy_MM_dd_HH_mm</string>
+          </property>
+          <property name="calendarPopup">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
        </layout>
@@ -1216,22 +1242,6 @@ font: 15pt bold;</string>
    </hints>
   </connection>
   <connection>
-   <sender>edtDate</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>BallScrewControlMainWindow</receiver>
-   <slot>onForm1DataChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>1029</x>
-     <y>189</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1094</x>
-     <y>245</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>edtName</sender>
    <signal>textChanged(QString)</signal>
    <receiver>BallScrewControlMainWindow</receiver>
@@ -1270,8 +1280,8 @@ font: 15pt bold;</string>
    <slot>onEdtFileChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>459</x>
-     <y>483</y>
+     <x>725</x>
+     <y>500</y>
     </hint>
     <hint type="destinationlabel">
      <x>333</x>
