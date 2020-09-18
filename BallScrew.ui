@@ -39,7 +39,7 @@ qproperty-diameter: 20;
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="1" column="1">
-     <widget class="QWidget" name="wgtNext" native="true">
+     <widget class="QWidget" name="wgtNext2" native="true">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QLabel" name="label_16">
@@ -75,6 +75,9 @@ qproperty-diameter: 20;
          </item>
          <item>
           <widget class="QLineEdit" name="edtFileSelect">
+           <property name="text">
+            <string>BallScrewVCP_test.ini</string>
+           </property>
            <property name="placeholderText">
             <string>Название испытания</string>
            </property>
@@ -118,7 +121,10 @@ qproperty-diameter: 20;
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="btnNext">
+          <widget class="QPushButton" name="btnNext2">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Далее</string>
            </property>
@@ -250,32 +256,14 @@ font: 15pt bold;</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="3">
-         <widget class="QComboBox" name="cmbType1">
-          <item>
-           <property name="text">
-            <string>Измерение хода</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Обкатка редуктора</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Измерение момента страгивания</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Обкатка ШВМ 1</string>
-           </property>
-          </item>
-         </widget>
-        </item>
         <item row="4" column="4">
          <widget class="QLabel" name="label_5">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string> Номер изделия</string>
           </property>
@@ -285,9 +273,9 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="4" column="5">
-         <widget class="QLineEdit" name="edtPart1">
+         <widget class="QLineEdit" name="edtPart">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -296,6 +284,12 @@ font: 15pt bold;</string>
         </item>
         <item row="5" column="4">
          <widget class="QLabel" name="label_6">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Дата</string>
           </property>
@@ -305,17 +299,14 @@ font: 15pt bold;</string>
          </widget>
         </item>
         <item row="5" column="5">
-         <widget class="QLineEdit" name="edtDate1">
+         <widget class="QLineEdit" name="edtDate">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
          </widget>
-        </item>
-        <item row="4" column="2">
-         <widget class="QComboBox" name="cmbModel1"/>
         </item>
         <item row="2" column="1">
          <widget class="QLabel" name="label">
@@ -347,7 +338,7 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="edtName1">
+           <widget class="QLineEdit" name="edtName">
             <property name="inputMask">
              <string>A__A__A__A__</string>
             </property>
@@ -355,22 +346,11 @@ font: 15pt bold;</string>
           </item>
          </layout>
         </item>
-        <item row="4" column="1">
-         <widget class="QComboBox" name="cmbDrive1">
-          <item>
-           <property name="text">
-            <string>Перпендикулярный</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Соосный</string>
-           </property>
-          </item>
-         </widget>
-        </item>
         <item row="8" column="1" colspan="5" alignment="Qt::AlignHCenter">
          <widget class="QPushButton" name="btnNext1">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Далее</string>
           </property>
@@ -391,6 +371,72 @@ font: 15pt bold;</string>
            </size>
           </property>
          </spacer>
+        </item>
+        <item row="4" column="2">
+         <widget class="QComboBox" name="cmbModel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QComboBox" name="cmbDrive">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="currentIndex">
+           <number>-1</number>
+          </property>
+          <item>
+           <property name="text">
+            <string>Перпендикулярный</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Соосный</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="4" column="3">
+         <widget class="QComboBox" name="cmbType">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="currentIndex">
+           <number>-1</number>
+          </property>
+          <item>
+           <property name="text">
+            <string>Измерение хода</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Обкатка редуктора</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Измерение момента страгивания</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Обкатка ШВМ 1</string>
+           </property>
+          </item>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -984,7 +1030,7 @@ font: 15pt bold;</string>
    <slot>onBtnTempShow1()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>76</x>
+     <x>51</x>
      <y>83</y>
     </hint>
     <hint type="destinationlabel">
@@ -1000,7 +1046,7 @@ font: 15pt bold;</string>
    <slot>onBtnTempShow21()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>127</x>
+     <x>51</x>
      <y>164</y>
     </hint>
     <hint type="destinationlabel">
@@ -1016,7 +1062,7 @@ font: 15pt bold;</string>
    <slot>onBtnTempShow22()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>127</x>
+     <x>51</x>
      <y>244</y>
     </hint>
     <hint type="destinationlabel">
@@ -1032,7 +1078,7 @@ font: 15pt bold;</string>
    <slot>onBtnTempShow23()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>127</x>
+     <x>51</x>
      <y>325</y>
     </hint>
     <hint type="destinationlabel">
@@ -1048,7 +1094,7 @@ font: 15pt bold;</string>
    <slot>onBtnTempShow24()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>127</x>
+     <x>51</x>
      <y>405</y>
     </hint>
     <hint type="destinationlabel">
@@ -1058,13 +1104,13 @@ font: 15pt bold;</string>
    </hints>
   </connection>
   <connection>
-   <sender>btnNext</sender>
+   <sender>btnNext2</sender>
    <signal>clicked()</signal>
    <receiver>BallScrewControlMainWindow</receiver>
-   <slot>onBtnNext()</slot>
+   <slot>onBtnNext2()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>626</x>
+     <x>588</x>
      <y>540</y>
     </hint>
     <hint type="destinationlabel">
@@ -1105,6 +1151,134 @@ font: 15pt bold;</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>cmbDrive</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onForm1DataChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>155</x>
+     <y>160</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>129</x>
+     <y>1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cmbModel</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onForm1DataChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>402</x>
+     <y>150</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>371</x>
+     <y>4</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cmbType</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onForm1DataChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>645</x>
+     <y>156</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>579</x>
+     <y>3</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>edtPart</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onForm1DataChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1058</x>
+     <y>163</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>937</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>edtDate</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onForm1DataChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1029</x>
+     <y>189</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1094</x>
+     <y>245</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>edtName</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onForm1DataChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1029</x>
+     <y>345</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1097</x>
+     <y>350</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_27</sender>
+   <signal>clicked()</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onBtnTempShow24()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>22</x>
+     <y>437</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>37</x>
+     <y>509</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>edtFileSelect</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onEdtFileChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>459</x>
+     <y>483</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>333</x>
+     <y>580</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onBtnNext2()</slot>
@@ -1113,11 +1287,9 @@ font: 15pt bold;</string>
   <slot>onBtnTempShow22()</slot>
   <slot>onBtnTempShow23()</slot>
   <slot>onBtnTempShow24()</slot>
-  <slot>onBtnTempShow34()</slot>
-  <slot>onBtnTempShow33()</slot>
-  <slot>onBtnTempShow32()</slot>
-  <slot>onBtnTempShow31()</slot>
   <slot>onBtnFileSelect()</slot>
   <slot>onBtnNext1()</slot>
+  <slot>onForm1DataChanged()</slot>
+  <slot>onEdtFileChanged()</slot>
  </slots>
 </ui>
