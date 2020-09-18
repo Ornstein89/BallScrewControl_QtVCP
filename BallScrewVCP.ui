@@ -41,7 +41,7 @@ qproperty-diameter: 20;
     <item row="0" column="0">
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
-       <widget class="QPushButton" name="pushButton_28">
+       <widget class="QPushButton" name="btnShow31">
         <property name="text">
          <string>Тестовая
 кнопка
@@ -51,7 +51,7 @@ qproperty-diameter: 20;
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_29">
+       <widget class="QPushButton" name="btnShow32">
         <property name="text">
          <string>Тестовая
 кнопка
@@ -61,7 +61,7 @@ qproperty-diameter: 20;
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_30">
+       <widget class="QPushButton" name="btnShow33">
         <property name="text">
          <string>Тестовая
 кнопка
@@ -71,7 +71,7 @@ qproperty-diameter: 20;
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_31">
+       <widget class="QPushButton" name="btnShow34">
         <property name="text">
          <string>Тестовая
 кнопка
@@ -2606,7 +2606,7 @@ qproperty-flashRate: 200;</string>
  </resources>
  <connections>
   <connection>
-   <sender>pushButton_31</sender>
+   <sender>btnShow34</sender>
    <signal>clicked()</signal>
    <receiver>BallScrewControlMainWindow</receiver>
    <slot>onBtnTempShow34()</slot>
@@ -2622,7 +2622,7 @@ qproperty-flashRate: 200;</string>
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_30</sender>
+   <sender>btnShow33</sender>
    <signal>clicked()</signal>
    <receiver>BallScrewControlMainWindow</receiver>
    <slot>onBtnTempShow33()</slot>
@@ -2638,7 +2638,7 @@ qproperty-flashRate: 200;</string>
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_29</sender>
+   <sender>btnShow32</sender>
    <signal>clicked()</signal>
    <receiver>BallScrewControlMainWindow</receiver>
    <slot>onBtnTempShow32()</slot>
@@ -2654,7 +2654,7 @@ qproperty-flashRate: 200;</string>
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_28</sender>
+   <sender>btnShow31</sender>
    <signal>clicked()</signal>
    <receiver>BallScrewControlMainWindow</receiver>
    <slot>onBtnTempShow31()</slot>
@@ -2676,8 +2676,8 @@ qproperty-flashRate: 200;</string>
    <slot>onBtnLoadGCode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>261</x>
-     <y>764</y>
+     <x>234</x>
+     <y>50</y>
     </hint>
     <hint type="destinationlabel">
      <x>252</x>
@@ -2689,43 +2689,11 @@ qproperty-flashRate: 200;</string>
    <sender>btnLoadGCode34</sender>
    <signal>clicked()</signal>
    <receiver>BallScrewControlMainWindow</receiver>
-   <slot>onBtnLoadFile33()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>234</x>
-     <y>50</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>91</x>
-     <y>754</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_31</sender>
-   <signal>clicked()</signal>
-   <receiver>BallScrewControlMainWindow</receiver>
-   <slot>onBtnTempShow34()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>83</x>
-     <y>331</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>84</x>
-     <y>403</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnLoadGCode34</sender>
-   <signal>clicked()</signal>
-   <receiver>BallScrewControlMainWindow</receiver>
    <slot>onBtnLoadGCode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>184</x>
-     <y>29</y>
+     <x>321</x>
+     <y>632</y>
     </hint>
     <hint type="destinationlabel">
      <x>13</x>

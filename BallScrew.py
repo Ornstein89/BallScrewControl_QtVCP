@@ -31,22 +31,33 @@ class BallScrew(QMainWindow):
         self.DATE = self.edtDate.text()
         self.PART = self.edtPart.text()
         self.MODEL = self.cmbModel.currentText()
-        if(self.cmbType.currentIndex()<4):
-            #self.load_ini(self.cmbType.currentIndex())
-            #TODO загрузить файл с min/max-значениями и применить из к spinEdit
-            self.stackedWidget.setCurrentIndex(self.cmbType.currentIndex()+1)
+        if (self.cmbType.currentIndex()<0):
+            pass
+        elif(self.cmbType.currentIndex()<4):
+            self.TYPE_N = self.cmbType.currentIndex()+1
+            print "*** currentIndex() = ", self.cmbType.currentIndex()
+            print "*** self.TYPE_N = ", self.TYPE_N
         else:
-            #self.load_ini(3)
-            #TODO загрузить файл с min/max-значениями и применить из к spinEdit
-            self.stackedWidget.setCurrentIndex(3)
-        # self.close() только для случая многооконного интерфейса
+            self.TYPE_N = 4
+        self.loadIni(self.TYPE_N)
+        self.stackedWidget.setCurrentIndex(self.TYPE_N)
+        self.checkGUI2()
+        self.onEdtFileChanged()
 
     def onBtnNext2(self):
         #запись ini-файла
         self.save_ini(self.stackedWidget.currentIndex())
         #запуск linuxcnc с ini-файлом
-        os.system("linuxcnc ./"+self.NAME)
+        #os.system(u"linuxcnc ./"+self.NAME.decode('utf-8'))
+        #os.system(u"linuxcnc ./"+self.NAME.encode('utf-8')) # вариант опробовать
+        os.system(("linuxcnc ./" + self.edtName.text()).encode('utf-8')) # вариант опробовать
+        # вариант опробовать os.system(u"linuxcnc ./"+unicode(self.NAME))
         return
+
+    def onBtnBack(self):
+        self.wgtNext2.hide()
+        self.stackedWidget.setCurrentIndex(0)
+        self.checkGUI1()
 
     def onForm1DataChanged(self):
         self.MODEL = self.cmbModel.currentText()
@@ -68,7 +79,7 @@ class BallScrew(QMainWindow):
         self.btnNext2.setEnabled(False)
         self.wgtNext2.setVisible(False)
         self.loadExcelFile()
-        self.checkGUI1();
+        self.checkGUI1()
 
     def checkGUI1(self):  # проверка состояния формы 1 и разрешение перехода на форму 2
         canNext = ( (self.MODEL != "")
@@ -83,7 +94,7 @@ class BallScrew(QMainWindow):
             #TODO уведомление "Заполните поля корректными значениями"
 
     def checkGUI2(self):  # проверка состояния формы 2 и разрешение запуска linuxcnc (форма 3)
-        canNext2 = self.edtFileSelect.endswith(".log")
+        canNext2 = self.edtFileSelect.text().endswith(".log")
         if canNext2:
             self.btnNext2.setEnabled(True)
         else:
@@ -114,6 +125,16 @@ class BallScrew(QMainWindow):
             print("*** OK ", addItems)
         except:
             print("*** Не удалось открыть файл базы данных \"", database_file, "\"")
+
+    def loadIni(self, n_form):
+        config = configparser.ConfigParser(strict=False) # strict=False - разрешение повторов имени ключа
+        config.optionxform = str # имена ключей не будут приведены к нижнему регистру
+        config.read('BallScrew.ini')
+        for key, control in self.params_and_controls_dict[n_form-1].items():
+            control.setMinimum(float(config['TYPE_'+str(n_form)][key+'_MIN']))
+            control.setMaximum(float(config['TYPE_'+str(n_form)][key+'_MAX']))
+            control.setValue(float(config['TYPE_'+str(n_form)][key]))
+
     def initParamsGUIMatch(self):
         self.params_and_controls_dict = (
             {'GEAR': self.spnGear21,
@@ -153,11 +174,11 @@ class BallScrew(QMainWindow):
         config.optionxform = str # имена ключей не будут приведены к нижнему регистру
         config.read('BallScrewVCP_template.ini')
         # добавить значения из интерфейса в объект config
-        config['BALLASCREWPARAMS'] = {}
+        config['BALLSCREWPARAMS'] = {}
         for key, control in self.params_and_controls_dict[n_form-1].items():
-            config['BALLASCREWPARAMS'][key] = str(control.value())
-        config['BALLASCREWPARAMS']['TYPE']=str(n_form)
-        config['BALLASCREWPARAMS']['LOGFILE']=self.LOGFILE
+            config['BALLSCREWPARAMS'][key] = str(control.value())
+        config['BALLSCREWPARAMS']['TYPE']=str(n_form)
+        config['BALLSCREWPARAMS']['LOGFILE']=self.LOGFILE
         #TODO config['BALLASREWPARAMS']['HAL']=
         # запись заполненного config в ini-файл
         configfile = open(self.NAME, 'w')

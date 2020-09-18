@@ -1,3 +1,3 @@
 {
-    "files": ["BallScrew.ui","BallScrew.py"]
+    "files": ["BallScrew.py","BallScrew.ui","BallScrew.ini"]
 }

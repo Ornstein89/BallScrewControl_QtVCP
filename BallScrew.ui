@@ -108,6 +108,13 @@ qproperty-diameter: 20;
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_7">
          <item>
+          <widget class="QPushButton" name="btnBack">
+           <property name="text">
+            <string>Назад</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <spacer name="horizontalSpacer_7">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -124,6 +131,9 @@ qproperty-diameter: 20;
           <widget class="QPushButton" name="btnNext2">
            <property name="enabled">
             <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(252, 233, 79);</string>
            </property>
            <property name="text">
             <string>Далее</string>
@@ -349,6 +359,9 @@ font: 15pt bold;</string>
          <widget class="QPushButton" name="btnNext1">
           <property name="enabled">
            <bool>false</bool>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(252, 233, 79);</string>
           </property>
           <property name="text">
            <string>Далее</string>
@@ -1136,8 +1149,8 @@ font: 15pt bold;</string>
    <slot>onBtnNext2()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>588</x>
-     <y>540</y>
+     <x>695</x>
+     <y>567</y>
     </hint>
     <hint type="destinationlabel">
      <x>644</x>
@@ -1289,6 +1302,22 @@ font: 15pt bold;</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btnBack</sender>
+   <signal>clicked()</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onBtnBack()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>179</x>
+     <y>539</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>152</x>
+     <y>583</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onBtnNext2()</slot>
@@ -1301,5 +1330,6 @@ font: 15pt bold;</string>
   <slot>onBtnNext1()</slot>
   <slot>onForm1DataChanged()</slot>
   <slot>onEdtFileChanged()</slot>
+  <slot>onBtnBack()</slot>
  </slots>
 </ui>
