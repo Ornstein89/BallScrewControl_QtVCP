@@ -129,12 +129,11 @@ class HandlerClass:
         self.w.stackedWidget.setCurrentIndex(8)
         pass
 
-    def onBtnLoadFile33(self):
+    def onBtnLoadGCode(self):
         # код на основе btn_load и load_code из qtdragon
         #fname = self.w.filemanager.getCurrentSelected()
-        fname = QFileDialog.getOpenFileName(self.w, 'Open GCode file',\
+        fname = QFileDialog.getOpenFileName(self.w, 'Open GCode file',
         ".","NGC (*.ngc);;Text files (*.txt);;All Files (*.*)")
-        print fname
         if fname[1] is None or fname[0] is None:
             #TODO уведомление
             return
@@ -150,10 +149,6 @@ class HandlerClass:
             self.add_status("Unknown or invalid filename")
             STATUS.emit('update-machine-log', "Unknown or invalid filename", 'TIME')
             print "*** ERROR LOAD FILE"
-
-    def onBtnLoadFile34(self):
-        # TODO по аналогии с onBtnLoadFile33
-        pass
 
     #####################
     # GENERAL FUNCTIONS #

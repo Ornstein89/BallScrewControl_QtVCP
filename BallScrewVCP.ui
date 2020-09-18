@@ -98,7 +98,7 @@ qproperty-diameter: 20;
     <item row="0" column="1">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="page31">
        <layout class="QGridLayout" name="gridLayout_8">
@@ -133,14 +133,34 @@ qproperty-diameter: 20;
           <item>
            <widget class="PushButton" name="btnJog_Minus31">
             <property name="text">
-             <string>&lt;</string>
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="BallScrewVCP.qrc">
+              <normaloff>:/resources/caret_left.png</normaloff>:/resources/caret_left.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
             </property>
            </widget>
           </item>
           <item>
            <widget class="PushButton" name="btnJog_Plus31">
             <property name="text">
-             <string>&gt;</string>
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="BallScrewVCP.qrc">
+              <normaloff>:/resources/caret_right.png</normaloff>:/resources/caret_right.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
             </property>
            </widget>
           </item>
@@ -830,8 +850,8 @@ qproperty-diameter: 100;</string>
              <string notr="true">background-color: rgb(138, 226, 52);</string>
             </property>
             <property name="icon">
-             <iconset>
-              <normaloff>:/images/circular-arrow-left.png</normaloff>:/images/circular-arrow-left.png</iconset>
+             <iconset resource="BallScrewVCP.qrc">
+              <normaloff>:/resources/circular-arrow-left.png</normaloff>:/resources/circular-arrow-left.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -853,8 +873,8 @@ qproperty-diameter: 100;</string>
              <string notr="true">background-color: rgb(239, 41, 41);</string>
             </property>
             <property name="icon">
-             <iconset>
-              <normaloff>:/images/stop.png</normaloff>:/images/stop.png</iconset>
+             <iconset resource="BallScrewVCP.qrc">
+              <normaloff>:/resources/stop.png</normaloff>:/resources/stop.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -879,8 +899,8 @@ qproperty-diameter: 100;</string>
              <string/>
             </property>
             <property name="icon">
-             <iconset>
-              <normaloff>:/images/circular-arrow-right.png</normaloff>:/images/circular-arrow-right.png</iconset>
+             <iconset resource="BallScrewVCP.qrc">
+              <normaloff>:/resources/circular-arrow-right.png</normaloff>:/resources/circular-arrow-right.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -1198,7 +1218,17 @@ font: 15pt bold;</string>
             <item row="1" column="2" rowspan="2">
              <widget class="PushButton" name="btnForward33">
               <property name="text">
-               <string>&gt;</string>
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="BallScrewVCP.qrc">
+                <normaloff>:/resources/caret_right.png</normaloff>:/resources/caret_right.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>40</width>
+                <height>40</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -1219,7 +1249,17 @@ font: 15pt bold;</string>
             <item row="1" column="0" rowspan="2">
              <widget class="PushButton" name="btnBack33">
               <property name="text">
-               <string>&lt;</string>
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="BallScrewVCP.qrc">
+                <normaloff>:/resources/caret_left.png</normaloff>:/resources/caret_left.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>40</width>
+                <height>40</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -1494,7 +1534,7 @@ font: 15pt bold;</string>
           <item>
            <layout class="QGridLayout" name="gridLayout_15">
             <item row="0" column="0" alignment="Qt::AlignLeft">
-             <widget class="QPushButton" name="btnLoadFile33">
+             <widget class="QPushButton" name="btnLoadGCode33">
               <property name="text">
                <string>Загрузить УП</string>
               </property>
@@ -2198,7 +2238,7 @@ qproperty-flashRate: 200;</string>
              <widget class="GcodeEditor" name="gcode_editor34"/>
             </item>
             <item row="0" column="0" colspan="3">
-             <widget class="QPushButton" name="pushButton_15">
+             <widget class="QPushButton" name="btnLoadGCode34">
               <property name="text">
                <string>Загрузить УП</string>
               </property>
@@ -2577,7 +2617,7 @@ qproperty-flashRate: 200;</string>
    <hints>
     <hint type="sourcelabel">
      <x>127</x>
-     <y>727</y>
+     <y>363</y>
     </hint>
     <hint type="destinationlabel">
      <x>1147</x>
@@ -2593,7 +2633,7 @@ qproperty-flashRate: 200;</string>
    <hints>
     <hint type="sourcelabel">
      <x>127</x>
-     <y>646</y>
+     <y>273</y>
     </hint>
     <hint type="destinationlabel">
      <x>1129</x>
@@ -2609,7 +2649,7 @@ qproperty-flashRate: 200;</string>
    <hints>
     <hint type="sourcelabel">
      <x>127</x>
-     <y>566</y>
+     <y>183</y>
     </hint>
     <hint type="destinationlabel">
      <x>1090</x>
@@ -2625,7 +2665,7 @@ qproperty-flashRate: 200;</string>
    <hints>
     <hint type="sourcelabel">
      <x>127</x>
-     <y>485</y>
+     <y>93</y>
     </hint>
     <hint type="destinationlabel">
      <x>1066</x>
@@ -2634,14 +2674,14 @@ qproperty-flashRate: 200;</string>
    </hints>
   </connection>
   <connection>
-   <sender>btnLoadFile33</sender>
+   <sender>btnLoadGCode33</sender>
    <signal>clicked()</signal>
    <receiver>BallScrewControlMainWindow</receiver>
-   <slot>onBtnLoadFile33()</slot>
+   <slot>onBtnLoadGCode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>225</x>
-     <y>630</y>
+     <x>261</x>
+     <y>764</y>
     </hint>
     <hint type="destinationlabel">
      <x>252</x>
@@ -2650,14 +2690,14 @@ qproperty-flashRate: 200;</string>
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_15</sender>
+   <sender>btnLoadGCode34</sender>
    <signal>clicked()</signal>
    <receiver>BallScrewControlMainWindow</receiver>
-   <slot>onBtnLoadFile34()</slot>
+   <slot>onBtnLoadFile33()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>325</x>
-     <y>575</y>
+     <x>234</x>
+     <y>50</y>
     </hint>
     <hint type="destinationlabel">
      <x>91</x>
@@ -2665,20 +2705,44 @@ qproperty-flashRate: 200;</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_31</sender>
+   <signal>clicked()</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onBtnTempShow34()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>83</x>
+     <y>331</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>84</x>
+     <y>403</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnLoadGCode34</sender>
+   <signal>clicked()</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onBtnLoadGCode()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>184</x>
+     <y>29</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>13</x>
+     <y>737</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
-  <slot>onBtnNext1()</slot>
-  <slot>onBtnTempShow1()</slot>
-  <slot>onBtnTempShow21()</slot>
-  <slot>onBtnTempShow22()</slot>
-  <slot>onBtnTempShow23()</slot>
-  <slot>onBtnTempShow24()</slot>
   <slot>onBtnTempShow34()</slot>
   <slot>onBtnTempShow33()</slot>
   <slot>onBtnTempShow32()</slot>
   <slot>onBtnTempShow31()</slot>
-  <slot>onBtnNext2()</slot>
-  <slot>onBtnLoadFile33()</slot>
-  <slot>onBtnLoadFile34()</slot>
+  <slot>onBtnLoadGCode()</slot>
  </slots>
 </ui>
