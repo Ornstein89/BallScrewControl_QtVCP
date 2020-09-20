@@ -2,7 +2,8 @@
 import sys, os, configparser
 
 from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QPushButton
+from PyQt5.QtWidgets import QLayout, QSizePolicy
 from PyQt5.QtCore import QFile
 
 # пакет для xlsx
@@ -74,10 +75,12 @@ class BallScrew(QMainWindow):
         self.checkGUI2()
 
     def initGUI(self):
+        #видимость/невидимость, активность/неактивность
         self.stackedWidget.setCurrentIndex(0)
         self.btnNext1.setEnabled(False)
         self.btnNext2.setEnabled(False)
         self.wgtNext2.setVisible(False)
+
         self.loadExcelFile()
         self.checkGUI1()
 
@@ -131,9 +134,21 @@ class BallScrew(QMainWindow):
         config.optionxform = str # имена ключей не будут приведены к нижнему регистру
         config.read('BallScrew.ini')
         for key, control in self.params_and_controls_dict[n_form-1].items():
+            val_string = config['TYPE_'+str(n_form)][key]
             control.setMinimum(float(config['TYPE_'+str(n_form)][key+'_MIN']))
             control.setMaximum(float(config['TYPE_'+str(n_form)][key+'_MAX']))
-            control.setValue(float(config['TYPE_'+str(n_form)][key]))
+            control.setValue(float(val_string))
+            #создать рядом с элементом управления кнопку сброса
+            parent = control.parentWidget()
+            layout = control.parentWidget().layout()
+            index = layout.indexOf(control);
+            button = QPushButton(val_string, parent)
+            #button.setMaximumSize(control.size())
+            button.setMaximumHeight(control.height())
+            button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+            location = layout.getItemPosition(index)
+            control.parentWidget().layout().addWidget(button,location[0],location[1]+1)
+            button.clicked.connect(lambda state, p_control=control, v=float(val_string): p_control.setValue(v))
 
     def initParamsGUIMatch(self):
         self.params_and_controls_dict = (
@@ -177,7 +192,12 @@ class BallScrew(QMainWindow):
         config['BALLSCREWPARAMS'] = {}
         for key, control in self.params_and_controls_dict[n_form-1].items():
             config['BALLSCREWPARAMS'][key] = str(control.value())
-        config['BALLSCREWPARAMS']['TYPE']=str(n_form)
+            config['BALLSCREWPARAMS'][key+'_MIN'] = str(control.minimum())
+            config['BALLSCREWPARAMS'][key+'_MAX'] = str(control.maximum())
+        config['BALLSCREWPARAMS']['TYPE']=str(n_form) #TODO
+        config['BALLSCREWPARAMS']['DATE']=self.DATE
+        config['BALLSCREWPARAMS']['MODEL']="TODO change on release" #self.MODEL
+        config['BALLSCREWPARAMS']['PART']=self.PART
         config['BALLSCREWPARAMS']['LOGFILE']=self.LOGFILE
         #TODO config['BALLASREWPARAMS']['HAL']=
         # запись заполненного config в ini-файл

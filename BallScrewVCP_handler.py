@@ -72,6 +72,7 @@ class HandlerClass:
     def initialized__(self):
         self.init_gui()
         self.w.ledPos_Alarm31.setOffColor(Qt.yellow)
+        self.start_log(self.DATALOGFILENAME)
         # self.gcodes.setup_list() инструкция нужна только для отображения справочного списка команд
 
         #fov = FocusOverlay(self)
@@ -154,8 +155,45 @@ class HandlerClass:
     # GENERAL FUNCTIONS #
     #####################
     def init_gui(self):
+        #TODO настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
+        diodes_redgreen = [
+        self.w.ledIs_Running_Ccw32,
+        self.w.ledIs_Running_Cw32,
+        self.w.ledGeartorque_Error32,#.setOffColor(Qt.red)
+        self.w.ledGeartorque_Error32,#.setColor(Qt.green)
+        self.w.ledBraketorque_Error32,
+        self.w.ledEstop_Ext32,
+        self.w.ledLoad_Is_On2_32,
+        self.w.ledLoad_Alarm32,
+        self.w.ledLoad_Error32,
+        self.w.ledLoad_Overheat32,
+        self.w.ledPos_Is_On_2_32,
+        self.w.ledPos_Alarm32,
+        self.w.ledPos_Overheat32,
+
+        ledEstop_Ext33,
+        ledOn_Position33,
+        ledAt_Load33,
+        ledEnable33,
+        ledEstop_Ext33,
+        ledLoad_Is_On2_33,
+        ledLoad_Alarm33,
+        ledLoad_Error33,
+        ledLoad_Overload33,
+        ledLoad_Overheat33,
+        lepPos_Is_On33,
+        ledPos_Alarm33,
+        ledPos_Error33,
+        ledPos_Overload33,
+        ledPos_Overheat33,
+        ledPos_Sip33,
+        ledLimits_Excess33,
+
+        ]
+
         #TODO настройка осей графика
         self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
+        self.DATALOGFILENAME = INFO.INI.findall("BALLSCREWPARAMS", "LOGFILE")[0]
         self.w.stackedWidget.setCurrentIndex(int(self.TYPE)-1)
         self.load_ini(int(self.TYPE))
         self.w.plt32.showGrid(x = True, y = True)
@@ -228,6 +266,13 @@ class HandlerClass:
         #print("*** siggen pin: ", self.siggen_test_read_pin.get())
         #print("*** siggen.0.sine directly", hal.get_value("siggen.0.sine"))
 
+    def start_log(self, logfilename):
+        self.datalog = None
+        self.datalog = open(logfilename,"w")
+        self.datalog.write("Модель: " + self.MODEL + "\n")
+        self.datalog.write("Номер изделия: " + self.PART + "\n")
+        self.datalog.write("Дата: " + self.DATE + "\n")
+
     #TODO в принципе функция не нужна, т.к. linuxcnc сам поддерживает передачу параметров из ini
     def load_ini(self, n_form):
         ini_control_match_dict = (
@@ -257,7 +302,14 @@ class HandlerClass:
 
         #self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
         #print "*** self.TYPE = ", self.TYPE
+        self.MODEL = INFO.INI.findall("BALLSCREWPARAMS", "MODEL")[0]
+        self.DATE = INFO.INI.findall("BALLSCREWPARAMS", "DATE")[0]
+        self.PART = INFO.INI.findall("BALLSCREWPARAMS", "PART")[0]
+        #self.datalog.write("Номер изделия: " + self.PART + "\n")
+        #self.datalog.write("Дата: " + self.DATE + "\n")
         for key, sldr in ini_control_match_dict[int(self.TYPE)-1].items():
+            sldr.setMinimum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MIN')[0]))
+            sldr.setMaximum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MAX')[0]))
             sldr.setValue(float(INFO.INI.findall("BALLSCREWPARAMS", key)[0]))
         #TODO обработка ошибок и исключений: 1) нет файла - сообщение и заполнение по умолчанию, создание конфига
         #TODO обработка ошибок и исключений: 2) нет ключей в конфиге - сообщение и заполнение по умолчанию
