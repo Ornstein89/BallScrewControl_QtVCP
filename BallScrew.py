@@ -13,6 +13,7 @@ class BallScrew(QMainWindow):
     def __init__(self):
         super(BallScrew, self).__init__()
         uic.loadUi("BallScrew.ui", self)
+        self.loadIni()
         self.initGUI()
         self.initParamsGUIMatch()
         #self.load_ui()
@@ -40,7 +41,8 @@ class BallScrew(QMainWindow):
             print "*** self.TYPE_N = ", self.TYPE_N
         else:
             self.TYPE_N = 4
-        self.loadIni(self.TYPE_N)
+        self.set_default_values(self.TYPE_N)
+        self.add_default_buttons(self.TYPE_N)
         self.stackedWidget.setCurrentIndex(self.TYPE_N)
         self.checkGUI2()
         self.onEdtFileChanged()
@@ -73,6 +75,10 @@ class BallScrew(QMainWindow):
     def onEdtFileChanged(self):
         self.LOGFILE = self.edtFileSelect.text()
         self.checkGUI2()
+
+    def onBtnDefaultAll(self):
+        self.set_default_values(self.stackedWidget.currentIndex())
+        pass
 
     def initGUI(self):
         #видимость/невидимость, активность/неактивность
@@ -129,16 +135,14 @@ class BallScrew(QMainWindow):
         except:
             print("*** Не удалось открыть файл базы данных \"", database_file, "\"")
 
-    def loadIni(self, n_form):
-        config = configparser.ConfigParser(strict=False) # strict=False - разрешение повторов имени ключа
-        config.optionxform = str # имена ключей не будут приведены к нижнему регистру
-        config.read('BallScrew.ini')
+    def loadIni(self):
+        self.config = configparser.ConfigParser(strict=False) # strict=False - разрешение повторов имени ключа
+        self.config.optionxform = str # имена ключей не будут приведены к нижнему регистру
+        self.config.read('BallScrew.ini')
+
+    def add_default_buttons(self, n_form): #создать рядом с элементом управления кнопку сброса
         for key, control in self.params_and_controls_dict[n_form-1].items():
-            val_string = config['TYPE_'+str(n_form)][key]
-            control.setMinimum(float(config['TYPE_'+str(n_form)][key+'_MIN']))
-            control.setMaximum(float(config['TYPE_'+str(n_form)][key+'_MAX']))
-            control.setValue(float(val_string))
-            #создать рядом с элементом управления кнопку сброса
+            val_string = self.config['TYPE_'+str(n_form)][key]
             parent = control.parentWidget()
             layout = control.parentWidget().layout()
             index = layout.indexOf(control);
@@ -149,6 +153,13 @@ class BallScrew(QMainWindow):
             location = layout.getItemPosition(index)
             control.parentWidget().layout().addWidget(button,location[0],location[1]+1)
             button.clicked.connect(lambda state, p_control=control, v=float(val_string): p_control.setValue(v))
+
+    def set_default_values(self, n_form):
+        for key, control in self.params_and_controls_dict[n_form-1].items():
+            val_string = self.config['TYPE_'+str(n_form)][key]
+            control.setMinimum(float(self.config['TYPE_'+str(n_form)][key+'_MIN']))
+            control.setMaximum(float(self.config['TYPE_'+str(n_form)][key+'_MAX']))
+            control.setValue(float(val_string))
 
     def initParamsGUIMatch(self):
         self.params_and_controls_dict = (

@@ -464,7 +464,15 @@ font: 15pt bold;</string>
           <item row="0" column="1">
            <layout class="QGridLayout" name="gridLayout_36">
             <item row="1" column="0">
-             <widget class="LED" name="ledLoad_Is_On32"/>
+             <widget class="LED" name="ledLoad_Is_On32">
+              <property name="color">
+               <color>
+                <red>252</red>
+                <green>233</green>
+                <blue>79</blue>
+               </color>
+              </property>
+             </widget>
             </item>
             <item row="0" column="0" colspan="2">
              <widget class="ActionButton" name="btnDevice_On32">
@@ -487,7 +495,15 @@ font: 15pt bold;</string>
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="LED" name="ledPos_Is_On32"/>
+             <widget class="LED" name="ledPos_Is_On32">
+              <property name="color">
+               <color>
+                <red>252</red>
+                <green>233</green>
+                <blue>79</blue>
+               </color>
+              </property>
+             </widget>
             </item>
             <item row="2" column="0" colspan="2">
              <widget class="ActionButton" name="btnDevice_Off32">
@@ -1001,7 +1017,15 @@ qproperty-diameter: 100;</string>
            </spacer>
           </item>
           <item row="1" column="3">
-           <widget class="LED" name="ledLoad_Is_On33"/>
+           <widget class="LED" name="ledLoad_Is_On33">
+            <property name="color">
+             <color>
+              <red>252</red>
+              <green>233</green>
+              <blue>79</blue>
+             </color>
+            </property>
+           </widget>
           </item>
           <item row="0" column="3" colspan="2">
            <widget class="ActionButton" name="btnDevice_On33">
@@ -1033,7 +1057,15 @@ qproperty-diameter: 100;</string>
            </widget>
           </item>
           <item row="1" column="4">
-           <widget class="LED" name="ledPos_Is_On33"/>
+           <widget class="LED" name="ledPos_Is_On33">
+            <property name="color">
+             <color>
+              <red>252</red>
+              <green>233</green>
+              <blue>79</blue>
+             </color>
+            </property>
+           </widget>
           </item>
           <item row="0" column="0">
            <spacer name="horizontalSpacer_16">
@@ -1810,7 +1842,7 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item row="8" column="0">
-           <widget class="LED" name="led_15"/>
+           <widget class="LED" name="ledLoad_Overheat34"/>
           </item>
           <item row="8" column="3">
            <widget class="QLabel" name="label_15">
@@ -1851,7 +1883,7 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item row="5" column="0">
-           <widget class="LED" name="led_12"/>
+           <widget class="LED" name="ledLoad_Alarm34"/>
           </item>
           <item row="1" column="3">
            <widget class="QLabel" name="label_2">
@@ -1861,7 +1893,7 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item row="6" column="0">
-           <widget class="LED" name="led_13"/>
+           <widget class="LED" name="ledLoad_Error34"/>
           </item>
           <item row="14" column="1">
            <widget class="QLabel" name="label_71">
@@ -1874,7 +1906,7 @@ font: 15pt bold;</string>
            <widget class="LED" name="ledLimits_Excess34"/>
           </item>
           <item row="4" column="0">
-           <widget class="LED" name="led_11"/>
+           <widget class="LED" name="ledLoad_Is_On_2_34"/>
           </item>
           <item row="10" column="1">
            <widget class="QLabel" name="label_67">
@@ -1972,7 +2004,7 @@ qproperty-flashRate: 200;</string>
            </widget>
           </item>
           <item row="7" column="0">
-           <widget class="LED" name="led_14"/>
+           <widget class="LED" name="ledLoad_Overload34"/>
           </item>
           <item row="11" column="3">
            <widget class="QLabel" name="label_17">
@@ -1982,10 +2014,10 @@ qproperty-flashRate: 200;</string>
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="LED" name="led_8"/>
+           <widget class="LED" name="ledTorque_Error34"/>
           </item>
           <item row="3" column="0">
-           <widget class="LED" name="led_10"/>
+           <widget class="LED" name="ledEstop_Ext34"/>
           </item>
           <item row="11" column="0">
            <widget class="LED" name="ledPos_Error34"/>
@@ -2050,7 +2082,7 @@ qproperty-flashRate: 200;</string>
            <widget class="LED" name="ledPos_Overheat34"/>
           </item>
           <item row="2" column="0">
-           <widget class="LED" name="led_9"/>
+           <widget class="LED" name="ledTorque1_Error34"/>
           </item>
           <item row="11" column="1">
            <widget class="QLabel" name="label_68">
@@ -2091,13 +2123,6 @@ qproperty-flashRate: 200;</string>
         </item>
         <item row="5" column="2">
          <layout class="QGridLayout" name="gridLayout_23">
-          <item row="0" column="1">
-           <widget class="StateLabel" name="statelabel_5">
-            <property name="text">
-             <string>---</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_74">
             <property name="text">
@@ -2112,8 +2137,15 @@ qproperty-flashRate: 200;</string>
             </property>
            </widget>
           </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_22">
+            <property name="text">
+             <string>---</string>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="1">
-           <widget class="StateLabel" name="statelabel_6">
+           <widget class="QLabel" name="label_40">
             <property name="text">
              <string>---</string>
             </property>
@@ -2123,67 +2155,6 @@ qproperty-flashRate: 200;</string>
         </item>
         <item row="1" column="0" rowspan="6">
          <layout class="QGridLayout" name="gridLayout_14">
-          <item row="0" column="0">
-           <layout class="QHBoxLayout" name="horizontalLayout_17">
-            <item>
-             <spacer name="horizontalSpacer_21">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="ActionButton" name="btnHome33_3">
-              <property name="text">
-               <string>В начало</string>
-              </property>
-              <property name="indicator_option" stdset="0">
-               <bool>true</bool>
-              </property>
-              <property name="indicator_status_option" stdset="0">
-               <bool>true</bool>
-              </property>
-              <property name="is_estopped_status" stdset="0">
-               <bool>false</bool>
-              </property>
-              <property name="is_homed_status" stdset="0">
-               <bool>true</bool>
-              </property>
-              <property name="estop_action" stdset="0">
-               <bool>false</bool>
-              </property>
-              <property name="home_action" stdset="0">
-               <bool>true</bool>
-              </property>
-              <property name="joint_number" stdset="0">
-               <number>-1</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="LED" name="ledIs_Homed34"/>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_20">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
           <item row="4" column="0">
            <layout class="QGridLayout" name="gridLayout_24">
             <item row="3" column="1">
@@ -2291,6 +2262,67 @@ qproperty-flashRate: 200;</string>
             </item>
            </layout>
           </item>
+          <item row="0" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout_17">
+            <item>
+             <spacer name="horizontalSpacer_21">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="ActionButton" name="btnHome33_3">
+              <property name="text">
+               <string>В начало</string>
+              </property>
+              <property name="indicator_option" stdset="0">
+               <bool>true</bool>
+              </property>
+              <property name="indicator_status_option" stdset="0">
+               <bool>true</bool>
+              </property>
+              <property name="is_estopped_status" stdset="0">
+               <bool>false</bool>
+              </property>
+              <property name="is_homed_status" stdset="0">
+               <bool>true</bool>
+              </property>
+              <property name="estop_action" stdset="0">
+               <bool>false</bool>
+              </property>
+              <property name="home_action" stdset="0">
+               <bool>true</bool>
+              </property>
+              <property name="joint_number" stdset="0">
+               <number>-1</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="LED" name="ledIs_Homed34"/>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_20">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
           <item row="7" column="0">
            <layout class="QGridLayout" name="gridLayout_18">
             <item row="1" column="0" rowspan="3">
@@ -2343,6 +2375,13 @@ qproperty-flashRate: 200;</string>
              </widget>
             </item>
            </layout>
+          </item>
+          <item row="5" column="0" alignment="Qt::AlignHCenter">
+           <widget class="QPushButton" name="btnSaveGCode34">
+            <property name="text">
+             <string>Обновить УП</string>
+            </property>
+           </widget>
           </item>
           <item row="1" column="0">
            <layout class="QGridLayout" name="gridLayout_16">
@@ -2426,13 +2465,6 @@ qproperty-flashRate: 200;</string>
              </widget>
             </item>
            </layout>
-          </item>
-          <item row="5" column="0" alignment="Qt::AlignHCenter">
-           <widget class="QPushButton" name="btnSaveGCode34">
-            <property name="text">
-             <string>Обновить УП</string>
-            </property>
-           </widget>
           </item>
           <item row="2" column="0">
            <layout class="QGridLayout" name="gridLayout_25">
@@ -2532,10 +2564,26 @@ qproperty-flashRate: 200;</string>
         <item row="1" column="2">
          <layout class="QGridLayout" name="gridLayout_12">
           <item row="2" column="2">
-           <widget class="LED" name="ledPos_Is_On34"/>
+           <widget class="LED" name="ledPos_Is_On34">
+            <property name="color">
+             <color>
+              <red>252</red>
+              <green>233</green>
+              <blue>79</blue>
+             </color>
+            </property>
+           </widget>
           </item>
           <item row="2" column="1">
-           <widget class="LED" name="ledLoad_Is_On34"/>
+           <widget class="LED" name="ledLoad_Is_On34">
+            <property name="color">
+             <color>
+              <red>252</red>
+              <green>233</green>
+              <blue>79</blue>
+             </color>
+            </property>
+           </widget>
           </item>
           <item row="2" column="3">
            <spacer name="horizontalSpacer_15">
@@ -2604,22 +2652,6 @@ qproperty-flashRate: 200;</string>
            </spacer>
           </item>
          </layout>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="page">
-       <layout class="QGridLayout" name="gridLayout_39">
-        <item row="3" column="1">
-         <widget class="GcodeEditor" name="gcode_editor"/>
-        </item>
-        <item row="1" column="0">
-         <widget class="MDIHistory" name="mdihistory"/>
-        </item>
-        <item row="1" column="1">
-         <widget class="GcodeDisplay" name="gcode_display_2"/>
-        </item>
-        <item row="0" column="0">
-         <widget class="MDILine" name="mdiline_2"/>
         </item>
        </layout>
       </widget>
@@ -2747,21 +2779,10 @@ Machine on</string>
    <header>qtvcp.widgets.simple_widgets</header>
   </customwidget>
   <customwidget>
-   <class>GcodeDisplay</class>
-   <extends>QFrame</extends>
-   <header>qtvcp.widgets.gcode_editor</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>GcodeEditor</class>
    <extends>QWidget</extends>
    <header>qtvcp.widgets.gcode_editor</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>MDIHistory</class>
-   <extends>QWidget</extends>
-   <header>qtvcp.widgets.mdi_history</header>
   </customwidget>
   <customwidget>
    <class>ActionButton</class>

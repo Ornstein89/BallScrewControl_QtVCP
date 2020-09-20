@@ -157,6 +157,10 @@ class HandlerClass:
     def init_gui(self):
         #TODO настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
         diodes_redgreen = [
+        self.w.ledSw1_31,
+        self.w.ledSw2_31,
+        self.w.ledPos_Alarm31,
+
         self.w.ledIs_Running_Ccw32,
         self.w.ledIs_Running_Cw32,
         self.w.ledGeartorque_Error32,#.setOffColor(Qt.red)
@@ -171,25 +175,45 @@ class HandlerClass:
         self.w.ledPos_Alarm32,
         self.w.ledPos_Overheat32,
 
-        ledEstop_Ext33,
-        ledOn_Position33,
-        ledAt_Load33,
-        ledEnable33,
-        ledEstop_Ext33,
-        ledLoad_Is_On2_33,
-        ledLoad_Alarm33,
-        ledLoad_Error33,
-        ledLoad_Overload33,
-        ledLoad_Overheat33,
-        lepPos_Is_On33,
-        ledPos_Alarm33,
-        ledPos_Error33,
-        ledPos_Overload33,
-        ledPos_Overheat33,
-        ledPos_Sip33,
-        ledLimits_Excess33,
+        self.w.ledEstop_Ext33,
+        self.w.ledOn_Position33,
+        self.w.ledAt_Load33,
+        self.w.ledEnable33,
+        self.w.ledEstop_Ext33,
+        self.w.ledLoad_Is_On2_33,
+        self.w.ledLoad_Alarm33,
+        self.w.ledLoad_Error33,
+        self.w.ledLoad_Overload33,
+        self.w.ledLoad_Overheat33,
+        self.w.lepPos_Is_On33,
+        self.w.ledPos_Alarm33,
+        self.w.ledPos_Error33,
+        self.w.ledPos_Overload33,
+        self.w.ledPos_Overheat33,
+        self.w.ledPos_Sip33,
+        self.w.ledLimits_Excess33,
 
-        ]
+        self.w.ledIs_Homed34,
+        self.w.ledOn_Position34,
+        self.w.ledAt_Load34,
+        self.w.ledTorque_Error34,
+        self.w.ledTorque1_Error34,
+        self.w.ledEstop_Ext34,
+        self.w.ledLoad_Is_On_2_34,
+        self.w.ledLoad_Alarm34,
+        self.w.ledLoad_Error34,
+        self.w.ledLoad_Overload34,
+        self.w.ledLoad_Overheat34,
+        self.w.ledPos_Is_On_2_34,
+        self.w.ledPoa_Alarm34,
+        self.w.ledPos_Error34,
+        self.w.ledPos_Overload34,
+        self.w.ledPos_Overheat34,
+        self.w.ledSlip34,
+        self.w.ledLimits_Excess34]
+        for led in diodes_redgreen:
+            led.setColor(Qt.green)
+            led.setOffColor(Qt.green)
 
         #TODO настройка осей графика
         self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
