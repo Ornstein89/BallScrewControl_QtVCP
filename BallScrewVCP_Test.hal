@@ -1,5 +1,6 @@
-#  HAL-файл исключительно для тестирования - создаёт тестовые сигналы, запускает halscope и пр.
-# создание тестовых сигналов на основе siggen для получения отклика LED в интерфейсе
+#  HAL-файл исключительно для тестирования - создаёт тестовые сигналы с помощью siggen, запускает halscope и пр.
+
+# создание компонентов для тестирования
 loadrt siggen
 loadrt wcomp # компаратор для перевода изначального тестового float-сигнала в bin
 loadrt timedelay count=5 # задержки для повышения разнообразия тестовых сигналов
@@ -8,6 +9,7 @@ loadrt threads name1=test-thread period1=10000000
 # loadrt conv_float_s32
 # loadrt conv_s32_bit
 
+# ниже - размещение компонентов в специальном тестовом потоке
 addf siggen.0.update test-thread
 addf wcomp.0 test-thread
 addf timedelay.0 test-thread
@@ -16,12 +18,7 @@ addf timedelay.2 test-thread
 addf timedelay.3 test-thread
 addf timedelay.4 test-thread
 
-# преобразовать сигналы в bool
-setp wcomp.0.min 0.0
-setp wcomp.0.max 1.0
-net position wcomp.0.in <= siggen.0.sine
-#net sw1 wcomp.0.out
-
+# настройки констант
 setp timedelay.0.on-delay 0.2
 setp timedelay.0.off-delay 0.2
 
@@ -37,15 +34,31 @@ setp timedelay.3.off-delay 0.8
 setp timedelay.4.on-delay 1.0
 setp timedelay.4.off-delay 1.0
 
-net sw1 wcomp.0.out => timedelay.0.in timedelay.1.in timedelay.2.in timedelay.3.in timedelay.4.in
+setp wcomp.0.min 0.0 # нижний уровень сигнала компаратора
+setp wcomp.0.max 1.0 # верхний уровень сигнала компаратора
+
+net position wcomp.0.in <= siggen.0.sine # вход компаратора, который будет из синуса выдавать логический сигнал, а также сигнал на форму 31
+net position_actual siggen.0.cosine # для формы 31
+
+# 1) булев сигнал компаратора на задержки 2) попутно создаётся сигнал синусоиды для sw
+# ИСХОДНАЯ СТРОКА, ВЕРНУТЬ ОБРАТНО ПРИ СБОЕ!!! net sw1 wcomp.0.out => timedelay.0.in timedelay.1.in timedelay.2.in timedelay.3.in timedelay.4.in
+net sw1 wcomp.0.out => timedelay.0.in   # для формы 31
+net sw1 => timedelay.1.in
+net sw1 => timedelay.2.in
+net sw1 => timedelay.3.in
+net sw1 => timedelay.4.in
+
+net sw2 <= timedelay.0.out          # для формы 31
+net pos_is_on timedelay.1.out       # для формы 31
+net pos_alarm timedelay.2.out       # для формы 31
+
+net is_running_ccw timedelay.3.out  # для формы 32
+net is_running_cw timedelay.4.out   # для формы 32
+
+
+#---------------------------------------------
+# Нельзя создать несколько сигналов от одного выхода! Если нужно подключать несколько входов к одному выходу, нужно это делать в одной строке
 #net sig_todelay1 wcomp.0.out => timedelay.1.in
 #net sig_todelay2 wcomp.0.out => timedelay.2.in
 #net sig_todelay3 wcomp.0.out => timedelay.3.in
 #net sig_todelay4 wcomp.0.out => timedelay.4.in
-
-#net sw1 <= wcomp.0.out			# уже подкючён выше
-net sw2 <= timedelay.0.out
-net pos_is_on timedelay.1.out
-# net position siggen.0.sine	# уже подкючён выше
-net position_actual siggen.0.cosine
-net pos_alarm timedelay.2.out

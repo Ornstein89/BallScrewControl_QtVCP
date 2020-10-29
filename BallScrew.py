@@ -4,7 +4,7 @@ import sys, os, configparser
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QPushButton
 from PyQt5.QtWidgets import QLayout, QSizePolicy
-from PyQt5.QtCore import QFile
+from PyQt5.QtCore import QFile, QDateTime
 
 # пакет для xlsx
 import openpyxl
@@ -13,9 +13,10 @@ class BallScrew(QMainWindow):
     def __init__(self):
         super(BallScrew, self).__init__()
         uic.loadUi("BallScrew.ui", self)
+        self.initParamsGUIMatch()
         self.loadIni()
         self.initGUI()
-        self.initParamsGUIMatch()
+
         #self.load_ui()
 
     def onBtnFileSelect(self):
@@ -42,7 +43,8 @@ class BallScrew(QMainWindow):
         else:
             self.TYPE_N = 4
         self.set_default_values(self.TYPE_N)
-        self.add_default_buttons(self.TYPE_N)
+        self.edtFileSelect.setText(self.MODEL + '__' + self.PART + '__'
+        + self.TYPE + '__' + self.DATE + '__.log')
         self.stackedWidget.setCurrentIndex(self.TYPE_N)
         self.checkGUI2()
         self.onEdtFileChanged()
@@ -53,8 +55,8 @@ class BallScrew(QMainWindow):
         #запуск linuxcnc с ini-файлом
         #os.system(u"linuxcnc ./"+self.NAME.decode('utf-8'))
         #os.system(u"linuxcnc ./"+self.NAME.encode('utf-8')) # вариант опробовать
-        os.system(("linuxcnc ./" + self.edtName.text()).encode('utf-8')) # вариант опробовать
         # вариант опробовать os.system(u"linuxcnc ./"+unicode(self.NAME))
+        os.system(("linuxcnc ./" + self.edtName.text()).encode('utf-8')) # вариант опробовать
         return
 
     def onBtnBack(self):
@@ -67,7 +69,6 @@ class BallScrew(QMainWindow):
         self.PART = self.edtPart.text()
         self.TYPE = self.cmbType.currentText().replace(' ', '_')
         self.DATE = self.edtDate.text()
-
         self.edtName.setText(self.MODEL + '__' + self.PART + '__'
                         + self.TYPE + '__' + self.DATE + '__.ini')
         self.checkGUI1()
@@ -86,8 +87,10 @@ class BallScrew(QMainWindow):
         self.btnNext1.setEnabled(False)
         self.btnNext2.setEnabled(False)
         self.wgtNext2.setVisible(False)
-
+        self.wgtTest.setVisible(False)
+        self.add_default_buttons()
         self.loadExcelFile()
+        self.edtDate.setDateTime( QDateTime.currentDateTime())
         self.checkGUI1()
 
     def checkGUI1(self):  # проверка состояния формы 1 и разрешение перехода на форму 2
@@ -102,14 +105,14 @@ class BallScrew(QMainWindow):
             self.btnNext1.setEnabled(False)
             #TODO уведомление "Заполните поля корректными значениями"
 
-    def checkGUI2(self):  # проверка состояния формы 2 и разрешение запуска linuxcnc (форма 3)
+    def checkGUI2(self): # проверка состояния формы 2 и разрешение запуска linuxcnc (форма 3)
         canNext2 = self.edtFileSelect.text().endswith(".log")
         if canNext2:
             self.btnNext2.setEnabled(True)
         else:
             self.btnNext2.setEnabled(False)
 
-    def loadExcelFile(self):
+    def loadExcelFile(self): #TODO переписать когда будет выдана библиотека в excel
         database_file = 'База данных испытаний.xlsx'
         try:
             wb = openpyxl.load_workbook(filename = database_file, read_only = True)
@@ -131,6 +134,7 @@ class BallScrew(QMainWindow):
                 row = row + 1
             print("*** list_test_types = ", list_test_types)
             self.cmbModel.addItems(list_test_types)
+            self.cmbModel.setCurrentIndex(-1)
             print("*** OK ", addItems)
         except:
             print("*** Не удалось открыть файл базы данных \"", database_file, "\"")
@@ -140,22 +144,28 @@ class BallScrew(QMainWindow):
         self.config.optionxform = str # имена ключей не будут приведены к нижнему регистру
         self.config.read('BallScrew.ini')
 
-    def add_default_buttons(self, n_form): #создать рядом с элементом управления кнопку сброса
-        for key, control in self.params_and_controls_dict[n_form-1].items():
-            val_string = self.config['TYPE_'+str(n_form)][key]
-            parent = control.parentWidget()
-            layout = control.parentWidget().layout()
-            index = layout.indexOf(control);
-            button = QPushButton(val_string, parent)
-            #button.setMaximumSize(control.size())
-            button.setMaximumHeight(control.height())
-            button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-            location = layout.getItemPosition(index)
-            control.parentWidget().layout().addWidget(button,location[0],location[1]+1)
-            button.clicked.connect(lambda state, p_control=control, v=float(val_string): p_control.setValue(v))
+    def add_default_buttons(self): #создать рядом с элементом управления кнопку сброса
+        #assert 0 < n_form < 5, "Номер формы (типа испытания) не входит в пределы 1..4 и равен " + str(n_form)
+        for n_form in range(1, 5):
+            for key, control in self.params_and_controls_dict[n_form-1].items():
+                val_string = self.config['TYPE_'+str(n_form)][key]
+                parent = control.parentWidget()
+                layout = control.parentWidget().layout()
+                index = layout.indexOf(control)
+                #print "key = ", key, "; index = ", index
+                button = QPushButton(val_string, parent)
+                #button.setMaximumSize(control.size())
+                button.setMaximumHeight(control.height())
+                button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+                location = control.parentWidget().layout().getItemPosition(index) #TODO здесь возникает ошибка!!
+                control.parentWidget().layout().addWidget(button, location[0], location[1]+1)
+                button.clicked.connect(lambda state, p_control=control, v=float(val_string): p_control.setValue(v))
 
     def set_default_values(self, n_form):
+        assert 0 < n_form < 5, "Номер формы (типа испытания) не входит в пределы 1..4 и равен " + str(n_form)
         for key, control in self.params_and_controls_dict[n_form-1].items():
+            if 'TYPE_'+str(n_form) not in self.config:
+                return
             val_string = self.config['TYPE_'+str(n_form)][key]
             control.setMinimum(float(self.config['TYPE_'+str(n_form)][key+'_MIN']))
             control.setMaximum(float(self.config['TYPE_'+str(n_form)][key+'_MAX']))
@@ -220,6 +230,7 @@ class BallScrew(QMainWindow):
         #TODO предупреждение о перезаписи
         return
 
+    # тестовые кнопки для переключения страниц, удаляются/скрываются на релизе
     def onBtnTempShow1(self):
         self.stackedWidget.setCurrentIndex(0)
         pass
@@ -240,7 +251,7 @@ class BallScrew(QMainWindow):
         self.stackedWidget.setCurrentIndex(4)
         pass
 
-    # для PySide
+    # если используется PySide вместо PyQt
     # def load_ui(self):
     #     loader = QUiLoader()
     #     path = os.path.join(os.path.dirname(__file__), "BallScrew.ui")

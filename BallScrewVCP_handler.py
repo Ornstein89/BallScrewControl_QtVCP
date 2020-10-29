@@ -1,6 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# правила оформления кода в проекте
+# 1) цифры в конце пинов и графических компонентов означают отношение к форме с заданным номером:
+# 2) названия графических компонентов, которые соотосятся с пинами, образованы от названия пина
+# 3) тип графического компонента указан в начале его названия (led, btn, chk и пр.)
+# Пример: ledPos_Alarm31 - светодиод, который привязан к пину pos_alarm и находится на форме 3.1
+
+
 ############################
 # **** IMPORT SECTION **** #
 ############################
@@ -87,10 +94,11 @@ class HandlerClass:
     #######################
     def init_pins(self):
         # создание HAL-пинов приложения
-        self.VCP_halpins = {
+        self.VCP_halpins_float = {
         'position-pin31': None,
         'position_actual-pin31': None,
-
+        'time_current-pin32': None,
+        'duration-pin32':None,
         'torque_set-pin32': None,
         'torque_actual-pin32': None,
         'omega_actual-pin32': None,
@@ -108,10 +116,23 @@ class HandlerClass:
         'torque_set-pin32': None,
         'torque_actual-pin32': None
         }
+        self.VCP_halpins_bit = {
+        'active_0-pin':None,
+        'active_1-pin':None,
+        'active_2-pin':None,
+        'active_3-pin':None,
+        'active_4-pin':None,
+        'active_5-pin':None
+        }
+
         # создание пинов и связывание событий изменения HAL с обработчиком
-        for key in self.VCP_halpins:
-            self.VCP_halpins[key] = self.hal.newpin(key, hal.HAL_FLOAT, hal.HAL_IN)
-            self.VCP_halpins[key].value_changed.connect(lambda s: self.pinCnagedCallback(s))
+        for key in self.VCP_halpins_float:
+            self.VCP_halpins_float[key] = self.hal.newpin(key, hal.HAL_FLOAT, hal.HAL_IN)
+            self.VCP_halpins_float[key].value_changed.connect(lambda s: self.pinCnagedCallback(s))
+            # создание пинов и связывание событий изменения HAL с обработчиком
+        for key in self.VCP_halpins_bit:
+            self.VCP_halpins_bit[key] = self.hal.newpin(key, hal.HAL_BIT, hal.HAL_IN)
+            self.VCP_halpins_bit[key].value_changed.connect(lambda s: self.pinCnagedCallback(s))
         return
         
     def onBtnTempShow31(self):
@@ -151,14 +172,23 @@ class HandlerClass:
             STATUS.emit('update-machine-log', "Unknown or invalid filename", 'TIME')
             print "*** ERROR LOAD FILE"
 
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Left:
+            print '*** Qt.Key_Left'
+            return
+        if event.key() == Qt.Key_Right:
+            print '*** Qt.Key_Right'
+            return
+        return
+
     #####################
     # GENERAL FUNCTIONS #
     #####################
     def init_gui(self):
         #TODO настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
-        diodes_redgreen = [
-        self.w.ledSw1_31,
-        self.w.ledSw2_31,
+        diodes_colors = (
+        #self.w.ledSw1_31,
+        #self.w.ledSw2_31,
         self.w.ledPos_Alarm31,
 
         self.w.ledIs_Running_Ccw32,
@@ -210,7 +240,9 @@ class HandlerClass:
         self.w.ledPos_Overload34,
         self.w.ledPos_Overheat34,
         self.w.ledSlip34,
-        self.w.ledLimits_Excess34]
+        self.w.ledLimits_Excess34)
+
+
         for led in diodes_redgreen:
             led.setColor(Qt.green)
             led.setOffColor(Qt.green)
@@ -224,10 +256,85 @@ class HandlerClass:
         return
 
     def pinCnagedCallback(self, data):
-        halpins_match_controls_dict = {
-            'position-pin31':self.w.lblPosition31,
-            'position_actual-pin31':self.w.lblPosition_Actual31,
+        halpin_name = self.w.sender().text()
+        # отдельный пин, поставляющий float-параметр для построения графика
+        if(halpin_name == 'position-pin31'):
+            #print "*** update and plot"
+            self.append_data(self.current_plot_n, self.hal['position-pin31']) # добавить точку к буферу графика
+            self.update_plot() # обновить график
+            return
 
+        # отдельные пины, отвечающий за активность графических компонентов
+        if(halpin_name == 'active_0-pin'):
+            self.w.sldVelocity31.setEnabled(self.hal['active_0-pin'])
+            self.w.sldAcceleration31.setEnabled(self.hal['active_0-pin'])
+            return
+
+        # отдельные пины, отвечающий за активность графических компонентов
+        if(halpin_name == 'active_1-pin'):
+            self.w.btnJog_Plus33.setEnabled(self.hal['active_1-pin'])
+            self.w.btnJog_Minus33.setEnabled(self.hal['active_1-pin'])
+            self.w.btnJog_Plus34.setEnabled(self.hal['active_1-pin'])
+            self.w.btnJog_Minus34.setEnabled(self.hal['active_1-pin'])
+            return
+
+        # отдельные пины, отвечающий за активность графических компонентов
+        if(halpin_name == 'active_2-pin'):
+            self.w.chkDsp_Mode33.setEnabled(self.hal['active_2-pin'])
+            #TODO на форме 33 два dsp_mode self.w.rbDsp_Mode33.setEnabled(self.hal['active_2-pin'])
+            self.w.chkDsp_Mode34.setEnabled(self.hal['active_2-pin'])
+            return
+
+        # отдельные пины, отвечающий за активность графических компонентов
+        if(halpin_name == 'active_3-pin'):
+            self.w.sldDsp_Idle33.setEnabled(self.hal['active_3-pin'])
+            self.w.sldVel_Idle33.setEnabled(self.hal['active_3-pin'])
+            self.w.sldAccel_Idle33.setEnabled(self.hal['active_3-pin'])
+            self.w.sldLoad33.setEnabled(self.hal['active_3-pin'])
+            self.w.sldPos_Measure33.setEnabled(self.hal['active_3-pin'])
+            self.w.sldDsp_Measure33.setEnabled(self.hal['active_3-pin'])
+            self.w.sldVel_Measure33.setEnabled(self.hal['active_3-pin'])
+            self.w.sldAccel_Measure33.setEnabled(self.hal['active_3-pin'])
+            self.w.btnSaveGCode33.setEnabled(self.hal['active_3-pin'])
+
+            self.w.sldDsp34.setEnabled(self.hal['active_3-pin'])
+            self.w.sldOmg34.setEnabled(self.hal['active_3-pin'])
+            self.w.sldAccel_Coeff34.setEnabled(self.hal['active_3-pin'])
+            self.w.sldF1_34.setEnabled(self.hal['active_3-pin'])
+            self.w.sldF2_34.setEnabled(self.hal['active_3-pin'])
+            self.w.btnSaveGCode34.setEnabled(self.hal['active_3-pin'])
+
+            return
+
+        # отдельные пины, отвечающий за активность графических компонентов
+        if(halpin_name == 'active_4-pin'):
+            self.w.mdiline33.setEnabled(self.hal['active_4-pin'])
+            self.w.btnLoadGCode34.setEnabled(self.hal['active_4-pin'])
+            self.w.btnProgram_Run34.setEnabled(self.hal['active_4-pin'])
+            self.w.btnProgram_Pause34.setEnabled(self.hal['active_4-pin'])
+            self.w.btnProgram_Stop34.setEnabled(self.hal['active_4-pin'])
+            return
+
+        # отдельные пины, отвечающий за активность графических компонентов
+        if(halpin_name == 'active_5-pin'):
+            self.w.btnLoadGCode33.setEnabled(self.hal['active_5-pin'])
+            self.w.btnCommand_Run33.setEnabled(self.hal['active_5-pin'])
+            self.w.btnCommand_Stop33.setEnabled(self.hal['active_5-pin'])
+
+            return
+
+        # соответствие пинов float и табличек, на которых нужно отображать значение
+        halpins_labels_match_precision2 = { # отображать с точностью 2 знака после запятой
+            'position-pin31':(self.w.lblPosition31, 2),
+            'position_actual-pin31':(self.w.lblPosition_Actual31, 2)
+            }
+        halpins_labels_match_precision1 = { # отображать с точностью 1 знак после запятой
+            # На форме 3.2
+            'torque_set-pin32':(self.w.lblTorque_Set32, 1),
+            'torque_actual-pin32':(self.w.lblTorque_Actual32, 1),
+            'omega_actual-pin32':(self.w.lblOmega_Actual32, 1),
+
+            # "таблица" с диодами и надписями на Форме 3.2
             'geartorque_error_value-pin32':self.w.lblGeartorque_Error_Value32,
             'geartorque_error_value_max32':self.w.lblGeartorque_Error_Value_Max32,
             'brakeorque_error_value-pin32':self.w.lblBraketorque_Error_Value32,
@@ -237,16 +344,39 @@ class HandlerClass:
             'load_temperature-pin32':self.w.lblLoad_Temperature32,
             'load_temperature_max-pin32':self.w.lblLoad_Temperature_Max32,
             'pos_temperature-pin32':self.w.lblPos_Temperature32,
-            'pos_temperature_max-pin32':self.w.lblPos_Temperature_Max32
+            'pos_temperature_max-pin32':self.w.lblPos_Temperature_Max32,
+
+            # На форме 3.3
+            'position':self.w.lblPosition33,
+            'position_actual':self.w.lblPosition_Actual33,
+            'load':self.w.lblLoad33,
+            'load_actual':self.w.lblLoadActual33,
+
+            # "таблица" с диодами и надписями на Форме 3.3
+            'load_error_value':self.w.lblLoad_Error_Value33,
+            'load_error_value_max':self.w.lblLoad_Error_Value_Max33,
+            'load_overload_value':self.w.lblLoad_Overload_Value33,
+            'load_overload_value_max':self.w.lblLoad_Overload_Value_Max33,
+            'load_temperature':self.w.lblLoad_Temperature33,
+            'load_temperature_max':self.w.lblLoad_Temperature_Max33,
+
+            'pos_error_value':self.w.lblPos_Error_Value33,
+            'pos_error_value_max':self.w.lblPos_Error_Value_max33,
+            'pos_overload_value':self.w.lblPos_Overload_Value33,
+            'pos_overload_value_max':self.w.lblPos_Overload_Value_max33,
+            'pos_temperature':self.w.lblPos_Temperature33,
+            'pos_temperature_max':self.w.lblPos_Temperature_Max33,
+            'torque_extremal_last':self.w.lblTorque_Extremal_Last33,
+            'torque_extremal_max':self.w.lblTorque_Extremal_Max33,
+
+            #TODO для формы 3.4
         }
-        halpin_name = self.w.sender().text()
+
         if(halpin_name in halpins_match_controls_dict):
             halpin_value = self.hal[halpin_name]
             halpins_match_controls_dict[halpin_name].setText("{:10.2f}".format(halpin_value))
-        if(halpin_name == 'position-pin31'):
-            #print "*** update and plot"
-            self.append_data(self.current_plot_n, self.hal['position-pin31'])
-            self.update_plot()
+            return
+
         return
         #print "Test pin value changed to:" % (data) # ВЫВОДИТ ВСЕГДА 0 - ВИДИМО ОШИБКА В ДОКУМЕНТАЦИИ
         #print 'halpin object =', self.w.sender()

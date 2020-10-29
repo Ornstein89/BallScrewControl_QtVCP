@@ -41,7 +41,7 @@ qproperty-diameter: 20;
     <item row="0" column="1">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>3</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="page31">
        <layout class="QGridLayout" name="gridLayout_8">
@@ -74,7 +74,7 @@ qproperty-diameter: 20;
            </widget>
           </item>
           <item>
-           <widget class="ActionButton" name="btnLeft31">
+           <widget class="PushButton" name="btnJog_Minus31">
             <property name="icon">
              <iconset resource="BallScrewVCP.qrc">
               <normaloff>:/resources/caret_left.png</normaloff>:/resources/caret_left.png</iconset>
@@ -85,13 +85,10 @@ qproperty-diameter: 20;
               <height>40</height>
              </size>
             </property>
-            <property name="jog_joint_neg_action" stdset="0">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
-           <widget class="ActionButton" name="btnRight31">
+           <widget class="PushButton" name="btnJog_Plus31">
             <property name="icon">
              <iconset resource="BallScrewVCP.qrc">
               <normaloff>:/resources/caret_right.png</normaloff>:/resources/caret_right.png</iconset>
@@ -101,9 +98,6 @@ qproperty-diameter: 20;
               <width>40</width>
               <height>40</height>
              </size>
-            </property>
-            <property name="jog_joint_pos_action" stdset="0">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -410,6 +404,34 @@ font: 15pt bold;</string>
               </property>
              </widget>
             </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_129">
+              <property name="text">
+               <string>Скорость фактическая, об/мин</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="lblTorque_Actual32">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="label_82">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="lblOmega_Actual32">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
             <item row="1" column="0">
              <widget class="QLabel" name="label_127">
               <property name="text">
@@ -424,36 +446,8 @@ font: 15pt bold;</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_129">
-              <property name="text">
-               <string>Скорость фактическая, об/мин</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLabel" name="label_82">
-              <property name="text">
-               <string>---</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="1">
-             <widget class="QLabel" name="label_138">
-              <property name="text">
-               <string>---</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLabel" name="label_139">
-              <property name="text">
-               <string>---</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QLabel" name="label_140">
+             <widget class="QLabel" name="lblTorque_Set32">
               <property name="text">
                <string>---</string>
               </property>
@@ -899,26 +893,27 @@ qproperty-diameter: 100;</string>
         </item>
         <item row="4" column="2">
          <layout class="QGridLayout" name="gridLayout_38">
-          <item row="1" column="2">
-           <widget class="Slider" name="slider">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximum">
-             <number>1</number>
-            </property>
-            <property name="pageStep">
-             <number>1</number>
-            </property>
+          <item row="1" column="3">
+           <spacer name="horizontalSpacer_27">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="1" column="1">
+           <widget class="RadioButton" name="Load_Active_Off32">
+            <property name="text">
+             <string>Off</string>
+            </property>
            </widget>
           </item>
-          <item row="0" column="2">
+          <item row="0" column="1" colspan="2">
            <widget class="QLabel" name="label_121">
             <property name="text">
              <string> Нагружение</string>
@@ -938,32 +933,12 @@ qproperty-diameter: 100;</string>
             </property>
            </spacer>
           </item>
-          <item row="1" column="3">
-           <widget class="QLabel" name="label_125">
+          <item row="1" column="2">
+           <widget class="RadioButton" name="Load_Active_On32">
             <property name="text">
              <string>On</string>
             </property>
            </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLabel" name="label_116">
-            <property name="text">
-             <string>Off</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="4">
-           <spacer name="horizontalSpacer_27">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
           </item>
          </layout>
         </item>
@@ -1170,63 +1145,18 @@ font: 15pt bold;</string>
           </item>
           <item>
            <layout class="QGridLayout" name="gridLayout_17">
-            <item row="2" column="3">
-             <widget class="QLabel" name="label_83">
-              <property name="text">
-               <string>Положение фактическое, мм</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0" colspan="3">
-             <widget class="QLabel" name="label_85">
-              <property name="text">
-               <string>Перемещение</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1" rowspan="2">
-             <widget class="LED" name="ledOn_Position33"/>
-            </item>
-            <item row="1" column="4">
-             <widget class="QLabel" name="label_154">
+            <item row="1" column="5">
+             <widget class="QLabel" name="lblPosition33">
               <property name="text">
                <string>---</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="3">
-             <widget class="QLabel" name="label_84">
-              <property name="text">
-               <string>Положение расчётное, мм</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="4">
-             <widget class="QLabel" name="label_153">
-              <property name="text">
-               <string>---</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0" rowspan="2">
-             <widget class="ActionButton" name="btnLeft33">
-              <property name="icon">
-               <iconset resource="BallScrewVCP.qrc">
-                <normaloff>:/resources/caret_left.png</normaloff>:/resources/caret_left.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="jog_joint_neg_action" stdset="0">
-               <bool>true</bool>
               </property>
              </widget>
             </item>
             <item row="1" column="2" rowspan="2">
-             <widget class="ActionButton" name="btnRight33">
+             <widget class="QPushButton" name="btnJog_Plus33">
+              <property name="text">
+               <string/>
+              </property>
               <property name="icon">
                <iconset resource="BallScrewVCP.qrc">
                 <normaloff>:/resources/caret_right.png</normaloff>:/resources/caret_right.png</iconset>
@@ -1237,8 +1167,50 @@ font: 15pt bold;</string>
                 <height>40</height>
                </size>
               </property>
-              <property name="jog_joint_pos_action" stdset="0">
-               <bool>true</bool>
+             </widget>
+            </item>
+            <item row="1" column="1" rowspan="2">
+             <widget class="LED" name="ledOn_Position33"/>
+            </item>
+            <item row="1" column="4">
+             <widget class="QLabel" name="label_84">
+              <property name="text">
+               <string>Положение расчётное, мм</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0" colspan="3">
+             <widget class="QLabel" name="label_85">
+              <property name="text">
+               <string>Перемещение</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="4">
+             <widget class="QLabel" name="label_83">
+              <property name="text">
+               <string>Положение фактическое, мм</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="5">
+             <widget class="QLabel" name="lblPosition_Actual33">
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" rowspan="2">
+             <widget class="PushButton" name="btnJog_Minus33">
+              <property name="icon">
+               <iconset resource="BallScrewVCP.qrc">
+                <normaloff>:/resources/caret_left.png</normaloff>:/resources/caret_left.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>40</width>
+                <height>40</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -1254,7 +1226,7 @@ font: 15pt bold;</string>
              </widget>
             </item>
             <item row="0" column="0">
-             <widget class="QCheckBox" name="checkBox_3">
+             <widget class="QCheckBox" name="chkDsp_Mode34">
               <property name="text">
                <string>Нагружение</string>
               </property>
@@ -1271,14 +1243,14 @@ font: 15pt bold;</string>
              <widget class="LED" name="ledAt_Load33"/>
             </item>
             <item row="0" column="2">
-             <widget class="QLabel" name="label_151">
+             <widget class="QLabel" name="lblLoad33">
               <property name="text">
                <string>---</string>
               </property>
              </widget>
             </item>
             <item row="1" column="2">
-             <widget class="QLabel" name="label_152">
+             <widget class="QLabel" name="lblLoadActual33">
               <property name="text">
                <string>---</string>
               </property>
@@ -1288,39 +1260,22 @@ font: 15pt bold;</string>
           </item>
           <item>
            <layout class="QGridLayout" name="gridLayout_31">
+            <item row="8" column="0" colspan="2" alignment="Qt::AlignHCenter">
+             <widget class="QPushButton" name="btnSaveGCode33">
+              <property name="text">
+               <string>Обновить УП</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_92">
+              <property name="text">
+               <string>Положение для измерения, мм</string>
+              </property>
+             </widget>
+            </item>
             <item row="2" column="1">
              <widget class="Slider" name="sldAccel_Idle33">
-              <property name="maximum">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_89">
-              <property name="text">
-               <string>Скорость (ХХ), мм/мин</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_90">
-              <property name="text">
-               <string>Ускорение (ХХ), мм/с&lt;sup&gt;2&lt;sup&gt;</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_88">
-              <property name="text">
-               <string>Ход, мм</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="Slider" name="sldVel_Idle33">
               <property name="maximum">
                <number>100</number>
               </property>
@@ -1339,69 +1294,15 @@ font: 15pt bold;</string>
               </property>
              </widget>
             </item>
-            <item row="8" column="0" colspan="2" alignment="Qt::AlignHCenter">
-             <widget class="QPushButton" name="btnSaveGCode33">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_88">
               <property name="text">
-               <string>Обновить УП</string>
+               <string>Ход, мм</string>
               </property>
              </widget>
             </item>
             <item row="4" column="1">
              <widget class="Slider" name="sldPos_Measure33">
-              <property name="maximum">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_91">
-              <property name="text">
-               <string>Нагрузка, кгс</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="Slider" name="sldLoad33">
-              <property name="maximum">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="Slider" name="sldDsp_Idle33">
-              <property name="maximum">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="label_92">
-              <property name="text">
-               <string>Положение для измерения, мм</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="1">
-             <widget class="Slider" name="sldVel_Measure33">
-              <property name="maximum">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="1">
-             <widget class="Slider" name="sldAccel_Measure33">
               <property name="maximum">
                <number>100</number>
               </property>
@@ -1417,10 +1318,37 @@ font: 15pt bold;</string>
               </property>
              </widget>
             </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="label_112">
+            <item row="6" column="1">
+             <widget class="Slider" name="sldVel_Measure33">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_89">
               <property name="text">
-               <string>Скорость (ИЗМ), мм/мин</string>
+               <string>Скорость (ХХ), мм/мин</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_91">
+              <property name="text">
+               <string>Нагрузка, кгс</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="Slider" name="sldAccel_Measure33">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
@@ -1431,10 +1359,54 @@ font: 15pt bold;</string>
               </property>
              </widget>
             </item>
+            <item row="0" column="1">
+             <widget class="Slider" name="sldDsp_Idle33">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="Slider" name="sldLoad33">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="Slider" name="sldVel_Idle33">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_90">
+              <property name="text">
+               <string>Ускорение (ХХ), мм/с&lt;sup&gt;2&lt;sup&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="label_112">
+              <property name="text">
+               <string>Скорость (ИЗМ), мм/мин</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
           <item>
-           <widget class="MDILine" name="mdiline">
+           <widget class="MDILine" name="mdiline33">
             <property name="frame">
              <bool>true</bool>
             </property>
@@ -1566,10 +1538,75 @@ font: 15pt bold;</string>
         </item>
         <item row="2" column="1">
          <layout class="QGridLayout" name="gridLayout_22">
-          <item row="6" column="1">
-           <widget class="QLabel" name="label_95">
+          <item row="3" column="1">
+           <widget class="QLabel" name="label_99">
             <property name="text">
-             <string>Н_температура</string>
+             <string>Н_состояние</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="LED" name="ledLoad_Is_On2_33"/>
+          </item>
+          <item row="10" column="1">
+           <widget class="QLabel" name="label_105">
+            <property name="text">
+             <string>П_перегрузка</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="1">
+           <widget class="QLabel" name="label_107">
+            <property name="text">
+             <string>Проскальзывание</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QLabel" name="label_106">
+            <property name="text">
+             <string>Н_перегрузка</string>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="0">
+           <widget class="LED" name="ledPos_Overheat33"/>
+          </item>
+          <item row="4" column="3">
+           <widget class="QLabel" name="lblLoad_Error_Value_Max33">
+            <property name="text">
+             <string>---</string>
+            </property>
+           </widget>
+          </item>
+          <item row="13" column="1">
+           <widget class="QLabel" name="label_98">
+            <property name="text">
+             <string>Рабочая зона</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QLabel" name="label_108">
+            <property name="text">
+             <string>П_состояние</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="0">
+           <widget class="LED" name="ledPos_Sip33"/>
+          </item>
+          <item row="11" column="1">
+           <widget class="QLabel" name="label_97">
+            <property name="text">
+             <string>П_температура</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QLabel" name="label_101">
+            <property name="text">
+             <string>П_значение</string>
             </property>
            </widget>
           </item>
@@ -1583,7 +1620,104 @@ font: 15pt bold;</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="0" colspan="2">
+          <item row="9" column="0">
+           <widget class="LED" name="ledPos_Error33"/>
+          </item>
+          <item row="8" column="0">
+           <widget class="LED" name="ledPos_Alarm33"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="LED" name="ledEstop_Ext33"/>
+          </item>
+          <item row="3" column="0">
+           <widget class="LED" name="ledLoad_Alarm33"/>
+          </item>
+          <item row="10" column="0">
+           <widget class="LED" name="ledPos_Overload33"/>
+          </item>
+          <item row="13" column="0">
+           <widget class="LED" name="ledLimits_Excess33"/>
+          </item>
+          <item row="5" column="0">
+           <widget class="LED" name="ledLoad_Overload33"/>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLabel" name="label_96">
+            <property name="text">
+             <string>Н_питание</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="LED" name="ledLoad_Error33"/>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="label_104">
+            <property name="text">
+             <string>АВОСТ</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="LED" name="ledLoad_Overheat33"/>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLabel" name="label_95">
+            <property name="text">
+             <string>Н_температура</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QLabel" name="label_102">
+            <property name="text">
+             <string>П_питание</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="2">
+           <widget class="QLabel" name="lblLoad_Error_Value33">
+            <property name="text">
+             <string>---</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="3">
+           <widget class="QLabel" name="lblLoad_Overload_Value_Max33">
+            <property name="text">
+             <string>---</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="2">
+           <widget class="QLabel" name="lblLoad_Overload_Value33">
+            <property name="text">
+             <string>---</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="2">
+           <widget class="QLabel" name="lblLoad_Temperature33">
+            <property name="text">
+             <string>---</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="3">
+           <widget class="QLabel" name="lblLoad_Temperature_Max33">
+            <property name="text">
+             <string>---</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="2">
+           <widget class="QLabel" name="lblPos_Error_Value33">
+            <property name="text">
+             <string>---</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" colspan="4">
            <widget class="LED" name="ledEnable33">
             <property name="minimumSize">
              <size>
@@ -1611,125 +1745,47 @@ qproperty-diameter: 100;</string>
             </property>
            </widget>
           </item>
-          <item row="13" column="0">
-           <widget class="LED" name="ledLimits_Excess33"/>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLabel" name="label_104">
+          <item row="9" column="3">
+           <widget class="QLabel" name="lblPos_Error_Value_max33">
             <property name="text">
-             <string>АВОСТ</string>
+             <string>---</string>
             </property>
            </widget>
           </item>
-          <item row="10" column="0">
-           <widget class="LED" name="ledPos_Overload33"/>
-          </item>
-          <item row="11" column="0">
-           <widget class="LED" name="ledPos_Overheat33"/>
-          </item>
-          <item row="9" column="0">
-           <widget class="LED" name="ledPos_Error33"/>
-          </item>
-          <item row="11" column="1">
-           <widget class="QLabel" name="label_97">
+          <item row="10" column="2">
+           <widget class="QLabel" name="lblPos_Overload_Value33">
             <property name="text">
-             <string>П_температура</string>
+             <string>---</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QLabel" name="label_96">
+          <item row="10" column="3">
+           <widget class="QLabel" name="lblPos_Overload_Value_max33">
             <property name="text">
-             <string>Н_питание</string>
+             <string>---</string>
             </property>
            </widget>
           </item>
-          <item row="7" column="1">
-           <widget class="QLabel" name="label_102">
+          <item row="11" column="2">
+           <widget class="QLabel" name="lblPos_Temperature33">
             <property name="text">
-             <string>П_питание</string>
+             <string>---</string>
             </property>
            </widget>
           </item>
-          <item row="10" column="1">
-           <widget class="QLabel" name="label_105">
+          <item row="11" column="3">
+           <widget class="QLabel" name="lblPos_Temperature_Max33">
             <property name="text">
-             <string>П_перегрузка</string>
+             <string>---</string>
             </property>
            </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QLabel" name="label_106">
-            <property name="text">
-             <string>Н_перегрузка</string>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="0">
-           <widget class="LED" name="ledPos_Sip33"/>
-          </item>
-          <item row="4" column="0">
-           <widget class="LED" name="ledLoad_Error33"/>
-          </item>
-          <item row="1" column="0">
-           <widget class="LED" name="ledEstop_Ext33"/>
-          </item>
-          <item row="6" column="0">
-           <widget class="LED" name="ledLoad_Overheat33"/>
-          </item>
-          <item row="12" column="1">
-           <widget class="QLabel" name="label_107">
-            <property name="text">
-             <string>Проскальзывание</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="1">
-           <widget class="QLabel" name="label_101">
-            <property name="text">
-             <string>П_значение</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="0">
-           <widget class="LED" name="ledPos_Alarm33"/>
-          </item>
-          <item row="8" column="1">
-           <widget class="QLabel" name="label_108">
-            <property name="text">
-             <string>П_состояние</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QLabel" name="label_99">
-            <property name="text">
-             <string>Н_состояние</string>
-            </property>
-           </widget>
-          </item>
-          <item row="13" column="1">
-           <widget class="QLabel" name="label_98">
-            <property name="text">
-             <string>Рабочая зона</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="LED" name="ledLoad_Overload33"/>
-          </item>
-          <item row="2" column="0">
-           <widget class="LED" name="ledLoad_Is_On2_33"/>
-          </item>
-          <item row="3" column="0">
-           <widget class="LED" name="ledLoad_Alarm33"/>
           </item>
          </layout>
         </item>
         <item row="3" column="1">
          <layout class="QGridLayout" name="gridLayout_33">
           <item row="0" column="1">
-           <widget class="StateLabel" name="statelabel_13">
+           <widget class="StateLabel" name="lblTorque_Extremal_Last33">
             <property name="text">
              <string>---</string>
             </property>
@@ -1750,7 +1806,7 @@ qproperty-diameter: 100;</string>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="StateLabel" name="statelabel_14">
+           <widget class="StateLabel" name="lblTorque_Extremal_Max33">
             <property name="text">
              <string>---</string>
             </property>
@@ -2336,7 +2392,7 @@ qproperty-flashRate: 200;</string>
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="ActionButton" name="actionbutton_2">
+             <widget class="ActionButton" name="btnProgram_Run34">
               <property name="styleSheet">
                <string notr="true">background-color: rgb(138, 226, 52);</string>
               </property>
@@ -2349,7 +2405,7 @@ qproperty-flashRate: 200;</string>
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="ActionButton" name="actionbutton_3">
+             <widget class="ActionButton" name="btnProgram_Pause34">
               <property name="styleSheet">
                <string notr="true">background-color: rgb(114, 159, 207);</string>
               </property>
@@ -2362,7 +2418,7 @@ qproperty-flashRate: 200;</string>
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="ActionButton" name="actionbutton_4">
+             <widget class="ActionButton" name="btnProgram_Stop34">
               <property name="styleSheet">
                <string notr="true">background-color: rgb(239, 41, 41);</string>
               </property>
@@ -2694,7 +2750,10 @@ Machine on</string>
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="btnShow31">
+       <widget class="QPushButton" name="btnTestShow31">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(114, 159, 207);</string>
+        </property>
         <property name="text">
          <string>Тестовая
 кнопка
@@ -2704,7 +2763,10 @@ Machine on</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnShow32">
+       <widget class="QPushButton" name="btnTestShow32">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(114, 159, 207);</string>
+        </property>
         <property name="text">
          <string>Тестовая
 кнопка
@@ -2714,7 +2776,10 @@ Machine on</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnShow33">
+       <widget class="QPushButton" name="btnTestShow33">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(114, 159, 207);</string>
+        </property>
         <property name="text">
          <string>Тестовая
 кнопка
@@ -2724,12 +2789,96 @@ Machine on</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnShow34">
+       <widget class="QPushButton" name="btnTestShow34">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(114, 159, 207);</string>
+        </property>
         <property name="text">
          <string>Тестовая
 кнопка
 отображения
 Ф_3.4</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="PushButton" name="btnTestActive0">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(252, 233, 79);</string>
+        </property>
+        <property name="text">
+         <string>active_0</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked_state_text_option" stdset="0">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="PushButton" name="btnTestActive1">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(252, 233, 79);</string>
+        </property>
+        <property name="text">
+         <string>active_1</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="PushButton" name="btnTestActive2">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(252, 233, 79);</string>
+        </property>
+        <property name="text">
+         <string>active_2</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="PushButton" name="btnTestActive3">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(252, 233, 79);</string>
+        </property>
+        <property name="text">
+         <string>active_3</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="PushButton" name="btnTestActive4">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(252, 233, 79);</string>
+        </property>
+        <property name="text">
+         <string>active_4</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="PushButton" name="btnTestActive5">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(252, 233, 79);</string>
+        </property>
+        <property name="text">
+         <string>active_5</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -2774,6 +2923,11 @@ Machine on</string>
    <header>qtvcp.widgets.simple_widgets</header>
   </customwidget>
   <customwidget>
+   <class>RadioButton</class>
+   <extends>QRadioButton</extends>
+   <header>qtvcp.widgets.simple_widgets</header>
+  </customwidget>
+  <customwidget>
    <class>PushButton</class>
    <extends>QPushButton</extends>
    <header>qtvcp.widgets.simple_widgets</header>
@@ -2801,14 +2955,14 @@ Machine on</string>
  </resources>
  <connections>
   <connection>
-   <sender>btnShow34</sender>
+   <sender>btnTestShow34</sender>
    <signal>clicked()</signal>
    <receiver>BallScrewControlMainWindow</receiver>
    <slot>onBtnTempShow34()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>127</x>
-     <y>363</y>
+     <y>495</y>
     </hint>
     <hint type="destinationlabel">
      <x>1147</x>
@@ -2817,14 +2971,14 @@ Machine on</string>
    </hints>
   </connection>
   <connection>
-   <sender>btnShow33</sender>
+   <sender>btnTestShow33</sender>
    <signal>clicked()</signal>
    <receiver>BallScrewControlMainWindow</receiver>
    <slot>onBtnTempShow33()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>127</x>
-     <y>273</y>
+     <y>405</y>
     </hint>
     <hint type="destinationlabel">
      <x>1129</x>
@@ -2833,14 +2987,14 @@ Machine on</string>
    </hints>
   </connection>
   <connection>
-   <sender>btnShow32</sender>
+   <sender>btnTestShow32</sender>
    <signal>clicked()</signal>
    <receiver>BallScrewControlMainWindow</receiver>
    <slot>onBtnTempShow32()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>127</x>
-     <y>183</y>
+     <y>315</y>
     </hint>
     <hint type="destinationlabel">
      <x>1090</x>
@@ -2849,14 +3003,14 @@ Machine on</string>
    </hints>
   </connection>
   <connection>
-   <sender>btnShow31</sender>
+   <sender>btnTestShow31</sender>
    <signal>clicked()</signal>
    <receiver>BallScrewControlMainWindow</receiver>
    <slot>onBtnTempShow31()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>127</x>
-     <y>93</y>
+     <y>225</y>
     </hint>
     <hint type="destinationlabel">
      <x>1066</x>
@@ -2871,8 +3025,8 @@ Machine on</string>
    <slot>onBtnLoadGCode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>234</x>
-     <y>50</y>
+     <x>261</x>
+     <y>764</y>
     </hint>
     <hint type="destinationlabel">
      <x>252</x>
@@ -2903,5 +3057,6 @@ Machine on</string>
   <slot>onBtnTempShow32()</slot>
   <slot>onBtnTempShow31()</slot>
   <slot>onBtnLoadGCode()</slot>
+  <slot>onBtnTestActive0(bool)</slot>
  </slots>
 </ui>
