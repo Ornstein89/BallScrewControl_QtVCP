@@ -1,3 +1,3 @@
 {
-    "files": ["sample_gcode.ngc","BallScrewVCP_Test.hal","BallScrewVCP_handler.py","BallScrewVCP.ini","BallScrewVCP.qss","BallScrewVCP.ui","sample2_gcode(arcspiral from linuxcnc).ngc","simulated_home.hal","BallScrewVCP.pref","core_sim.hal","start_with_linuxcnc.sh","BallScrewVCP_postgui.hal","main.py","BallScrewVCP.var","start_with_qtvcp.sh","BallScrewVCP.qrc"]
+    "files": ["BallScrewVCP1.ui","BallScrewVCP3.ui","BallScrewVCP.qss","BallScrewVCP.qrc","BallScrewVCP_Test.hal","BallScrewVCP2_handler.py","core_sim.hal","BallScrewVCP4.ui","BallScrewVCP3_handler.py","main.py","simulated_home.hal","sample_gcode.ngc","BallScrewVCP1_postgui.hal","BallScrewVCP2.ui","start_with_qtvcp.sh","start_with_linuxcnc.sh","BallScrewVCP.var","BallScrewVCP.pref","BallScrewVCP1_handler.py","sample2_gcode(arcspiral from linuxcnc).ngc","BallScrewVCP4_handler.py","BallScrewVCP2_postgui.hal","BallScrewVCP3_postgui.hal","BallScrewVCP4_postgui.hal"]
 }

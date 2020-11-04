@@ -37,23 +37,28 @@ setp timedelay.4.off-delay 1.0
 setp wcomp.0.min 0.0 # нижний уровень сигнала компаратора
 setp wcomp.0.max 1.0 # верхний уровень сигнала компаратора
 
-net position wcomp.0.in <= siggen.0.sine # вход компаратора, который будет из синуса выдавать логический сигнал, а также сигнал на форму 31
-net position_actual siggen.0.cosine # для формы 31
+net sine0 wcomp.0.in <= siggen.0.sine # вход компаратора, который будет из синуса выдавать логический сигнал, а также сигнал на форму 31
+net cosine0 <= siggen.0.cosine # для формы 31
 
 # 1) булев сигнал компаратора на задержки 2) попутно создаётся сигнал синусоиды для sw
 # ИСХОДНАЯ СТРОКА, ВЕРНУТЬ ОБРАТНО ПРИ СБОЕ!!! net sw1 wcomp.0.out => timedelay.0.in timedelay.1.in timedelay.2.in timedelay.3.in timedelay.4.in
-net sw1 wcomp.0.out => timedelay.0.in   # для формы 31
-net sw1 => timedelay.1.in
-net sw1 => timedelay.2.in
-net sw1 => timedelay.3.in
-net sw1 => timedelay.4.in
+net bit0 wcomp.0.out => timedelay.0.in   # для формы 31
+net bit0 => timedelay.1.in
+net bit0 => timedelay.2.in
+net bit0 => timedelay.3.in
+net bit0 => timedelay.4.in
 
-net sw2 <= timedelay.0.out          # для формы 31
-net pos_is_on timedelay.1.out       # для формы 31
-net pos_alarm timedelay.2.out       # для формы 31
+net bit1 <= timedelay.0.out          # для формы 31
+net bit2 <= timedelay.1.out          # для формы 31
+net bit3 <= timedelay.2.out          # для формы 31
+net bit4 <= timedelay.3.out          # для формы 31
+net bit5 <= timedelay.4.out          # для формы 31
 
-net is_running_ccw timedelay.3.out  # для формы 32
-net is_running_cw timedelay.4.out   # для формы 32
+#net pos_is_on <= timedelay.0.out       # для формы 31
+#net pos_alarm <= timedelay.0.out       # для формы 31
+
+#net is_running_ccw timedelay.0.out  # для формы 32
+#net is_running_cw timedelay.0.out   # для формы 32
 
 
 #---------------------------------------------

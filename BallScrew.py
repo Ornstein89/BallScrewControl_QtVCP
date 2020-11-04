@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-import sys, os, configparser
+import sys, os, configparser, codecs
 
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QPushButton
@@ -30,7 +30,7 @@ class BallScrew(QMainWindow):
         print "*** onBtnNext clicked"
         self.wgtNext2.show()
         self.DRIVE = self.cmbDrive.currentIndex()
-        self.NAME = self.edtName.text()
+        self.NAME = self.edtName.text().encode('utf-8')
         self.DATE = self.edtDate.text()
         self.PART = self.edtPart.text()
         self.MODEL = self.cmbModel.currentText()
@@ -51,6 +51,8 @@ class BallScrew(QMainWindow):
 
     def onBtnNext2(self):
         #запись ini-файла
+        self.LOGFILE = self.edtFileSelect.text().encode('utf-8')
+        print '***self.LOGFILE=', self.LOGFILE
         self.save_ini(self.stackedWidget.currentIndex())
         #запуск linuxcnc с ini-файлом
         #os.system(u"linuxcnc ./"+self.NAME.decode('utf-8'))
@@ -74,7 +76,8 @@ class BallScrew(QMainWindow):
         self.checkGUI1()
 
     def onEdtFileChanged(self):
-        self.LOGFILE = self.edtFileSelect.text()
+        self.LOGFILE = self.edtFileSelect.text().encode('utf-8')
+        print '***self.LOGFILE=', self.LOGFILE
         self.checkGUI2()
 
     def onBtnDefaultAll(self):
@@ -205,24 +208,38 @@ class BallScrew(QMainWindow):
             'LOG_FREQ' : self.spnLog_Freq24} )
 
     def save_ini(self, n_form):
+        assert 0 < n_form < 5, "Номер формы (типа испытания) не входит в пределы 1..4 и равен " + str(n_form)
         # создать config из шаблона
         config = configparser.ConfigParser(strict=False) # strict=False - разрешение повторов имени ключа
         config.optionxform = str # имена ключей не будут приведены к нижнему регистру
-        config.read('BallScrewVCP_template.ini')
+        config.read('BallScrewVCP_template.ini', encoding='utf-8')
         # добавить значения из интерфейса в объект config
         config['BALLSCREWPARAMS'] = {}
         for key, control in self.params_and_controls_dict[n_form-1].items():
             config['BALLSCREWPARAMS'][key] = str(control.value())
             config['BALLSCREWPARAMS'][key+'_MIN'] = str(control.minimum())
             config['BALLSCREWPARAMS'][key+'_MAX'] = str(control.maximum())
-        config['BALLSCREWPARAMS']['TYPE']=str(n_form) #TODO
-        config['BALLSCREWPARAMS']['DATE']=self.DATE
-        config['BALLSCREWPARAMS']['MODEL']="TODO change on release" #self.MODEL
-        config['BALLSCREWPARAMS']['PART']=self.PART
-        config['BALLSCREWPARAMS']['LOGFILE']=self.LOGFILE
-        #TODO config['BALLASREWPARAMS']['HAL']=
+        config['BALLSCREWPARAMS']['TYPE'] = str(n_form) #TODO
+        config['BALLSCREWPARAMS']['DATE'] = self.DATE
+        config['BALLSCREWPARAMS']['MODEL'] = "TODO_change_on_release" #self.MODEL
+        config['BALLSCREWPARAMS']['PART'] = self.PART
+        print '***self.LOGFILE=', self.LOGFILE
+        config['BALLSCREWPARAMS']['LOGFILE']= self.LOGFILE # "TempLogFile.log" # TODO вызывает ошибку строка в utf-8 с кириллицей
+
+        # после разбивки на 4 отдельных файла
+        config['EMC']['MACHINE'] = 'BallScrewVCP' + str(n_form)
+        config['HAL']['POSTGUI_HALFILE'] = 'BallScrewVCP' + str(n_form)+'_postgui.hal'
+        config['DISPLAY']['VCP'] = 'BallScrewVCP' + str(n_form)
+        config['DISPLAY']['DISPLAY'] = 'qtvcp BallScrewVCP' + str(n_form)
+
         # запись заполненного config в ini-файл
-        configfile = open(self.NAME, 'w')
+        #.encode('utf-8')
+        print '***self.NAME=', self.NAME
+        # configfile = open(self.NAME, 'w')
+        # config.write(configfile)
+        # configfile.close()
+
+        configfile = codecs.open(self.NAME,'wb+','utf-8')
         config.write(configfile)
         configfile.close()
 

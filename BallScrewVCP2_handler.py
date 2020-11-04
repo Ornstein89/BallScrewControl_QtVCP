@@ -185,10 +185,9 @@ class HandlerClass:
     # GENERAL FUNCTIONS #
     #####################
     def init_gui(self):
-        #TODO настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
-        diodes_colors = (
-        #self.w.ledSw1_31,
-        #self.w.ledSw2_31,
+        # настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
+        diodes_redgreen = (
+
         self.w.ledPos_Alarm31,
 
         self.w.ledIs_Running_Ccw32,
@@ -253,6 +252,17 @@ class HandlerClass:
         self.w.stackedWidget.setCurrentIndex(int(self.TYPE)-1)
         self.load_ini(int(self.TYPE))
         self.w.plt32.showGrid(x = True, y = True)
+        self.w.plt32.setBackground('w')
+        pen = pg.mkPen(color=(255, 0, 0), width=2)
+        self.w.plt32.setPen(pen)
+        styles = {'color':'r', 'font-size':'20px'}
+        self.w.plt32.setLabel('left', 'Момент [Н*м]', **styles)
+        self.w.plt32.setLabel('bottom', 'Время', **styles)
+        # self.graphWidget.setXRange(5, 20, padding=0)
+        # self.graphWidget.setYRange(30, 40, padding=0)
+        # курсор на графике https://stackoverflow.com/questions/50512391/can-i-share-the-crosshair-with-two-graph-in-pyqtgraph-pyqt5
+        # https://stackoverflow.com/questions/52410731/drawing-and-displaying-objects-and-labels-over-the-axis-in-pyqtgraph-how-to-do
+d
         return
 
     def pinCnagedCallback(self, data):
@@ -318,21 +328,26 @@ class HandlerClass:
         # отдельные пины, отвечающий за активность графических компонентов
         if(halpin_name == 'active_5-pin'):
             self.w.btnLoadGCode33.setEnabled(self.hal['active_5-pin'])
-            self.w.btnCommand_Run33.setEnabled(self.hal['active_5-pin'])
-            self.w.btnCommand_Stop33.setEnabled(self.hal['active_5-pin'])
+            self.w.btnProgram_Run33.setEnabled(self.hal['active_5-pin'])
+            self.w.btnProgram_Stop33.setEnabled(self.hal['active_5-pin'])
 
             return
 
         # соответствие пинов float и табличек, на которых нужно отображать значение
         halpins_labels_match_precision2 = { # отображать с точностью 2 знака после запятой
-            'position-pin31':(self.w.lblPosition31, 2),
-            'position_actual-pin31':(self.w.lblPosition_Actual31, 2)
+            'position-pin31':self.w.lblPosition31,
+            'position_actual-pin31':self.w.lblPosition_Actual31,
             }
+
+        if(halpin_name in halpins_labels_match_precision2):
+            halpin_value = self.hal[halpin_name]
+            halpins_labels_match_precision2[halpin_name].setText("{:10.2f}".format(halpin_value))
+
         halpins_labels_match_precision1 = { # отображать с точностью 1 знак после запятой
             # На форме 3.2
-            'torque_set-pin32':(self.w.lblTorque_Set32, 1),
-            'torque_actual-pin32':(self.w.lblTorque_Actual32, 1),
-            'omega_actual-pin32':(self.w.lblOmega_Actual32, 1),
+            'torque_set-pin32':self.w.lblTorque_Set32,
+            'torque_actual-pin32':self.w.lblTorque_Actual32,
+            'omega_actual-pin32':self.w.lblOmega_Actual32,
 
             # "таблица" с диодами и надписями на Форме 3.2
             'geartorque_error_value-pin32':self.w.lblGeartorque_Error_Value32,
@@ -370,17 +385,40 @@ class HandlerClass:
             'torque_extremal_max':self.w.lblTorque_Extremal_Max33,
 
             #TODO для формы 3.4
+            'position':self.w.lblPosition34,
+            'position_actual':self.w.lblPosition_Actual34,
+            'load':self.w.lblLoad34,
+            'load_actual':self.w.lblLoad_Actual34,
+
+            # "таблица" с диодами и надписями на Форме 3.4
+            'torque_error_value':self.w.lblTorque_Error_Value34,
+            'torque_error_value_max':self.w.lblTorque_Error_Value_Max34,
+            'torque1_error_value':self.w.lblTorque1_Error_Value34,
+            'torque1_error_value_max':self.w.lblTorque1_Error_Value_Max34,
+            'load_error_value':self.w.lblLoad_Error_Value34,
+            'load_error_value_max':self.w.lblLoad_Error_Value_Max34,
+            'load_overload_value':self.w.lblLoad_Overload_Value34,
+            'load_overload_value_max':self.w.lblLoad_Overload_Value_Max34,
+            'load_temperature':self.w.lblLoad_Temperature34,
+            'load_temperature_max':self.w.lblLoad_Temperature_Max34,
+            'pos_error_value':self.w.lblPos_Error_Value34,
+            'pos_error_value_max':self.w.lblPos_Error_Value_Max34,
+            'pos_overload_value':self.w.lblPos_Overload_Value34,
+            'pos_overload_value_max':self.w.lblPos_Overload_Value_Max34,
+            'pos_temperature':self.w.lblPos_Temperature34,
+            'pos_temperature_max':self.w.lblPos_Temperature_Max34,
+            'torque_max':self.w.lblTorque_Max34,
         }
 
-        if(halpin_name in halpins_match_controls_dict):
+        if(halpin_name in halpins_labels_match_precision1):
             halpin_value = self.hal[halpin_name]
-            halpins_match_controls_dict[halpin_name].setText("{:10.2f}".format(halpin_value))
-            return
+            halpins_labels_match_precision1[halpin_name].setText("{:10.1f}".format(halpin_value))
 
         return
         #print "Test pin value changed to:" % (data) # ВЫВОДИТ ВСЕГДА 0 - ВИДИМО ОШИБКА В ДОКУМЕНТАЦИИ
         #print 'halpin object =', self.w.sender()
         #print 'Halpin type: ',self.w.sender().get_type()
+
     def append_data(self, x, y):
         self.data[0][self.current_plot_n] = x
         self.data[1][self.current_plot_n] = y
@@ -430,11 +468,14 @@ class HandlerClass:
     #TODO в принципе функция не нужна, т.к. linuxcnc сам поддерживает передачу параметров из ini
     def load_ini(self, n_form):
         ini_control_match_dict = (
+        # для формы 3.1
         {
             'NOM_VEL' : self.w.sldVelocity31,
             'NOM_ACCEL' : self.w.sldAcceleration31
         },
+        # для формы 3.2
         {},
+        # для формы 3.3
         {
             'NOM_DSP_IDLE' : self.w.sldDsp_Idle33,
             'NOM_VEL_IDLE' : self.w.sldVel_Idle33,
@@ -445,10 +486,11 @@ class HandlerClass:
             'NOM_LOAD' : self.w.sldLoad33,
             'NOM_POS_MEASURE' : self.w.sldPos_Measure33
         },
+        # для формы 3.4
         {
             'NOM_TRAVEL' : self.w.sldDsp34,
             'NOM_OMEGA' : self.w.sldOmg34,
-            'NOM_ACCEL_COEFF' : self.w.aldAccel_Coeff34,
+            'NOM_ACCEL_COEFF' : self.w.sldAccel_Coeff34,
             'NOM_F1' : self.w.sldF1_34,
             'NOM_F2' : self.w.sldF2_34
         }
