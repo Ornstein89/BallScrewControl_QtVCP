@@ -3,12 +3,9 @@
 ## Перед подключением сигнала к GUI убедиться, что сигнал существует (генерируется тестовым генератором или оборудованием)
 
 # Тестовые кнопки для активации пинов
-net active_0 => BallScrewVCP1.btnTestActive0
-net active_1 => BallScrewVCP1.btnTestActive1
-net active_2 => BallScrewVCP1.btnTestActive2
-net active_3 => BallScrewVCP1.btnTestActive3
-net active_4 => BallScrewVCP1.btnTestActive4
-net active_5 => BallScrewVCP1.btnTestActive5
+net active_0 <= BallScrewVCP1.btnTestActive0
+net append_buffer <= BallScrewVCP1.btnTestAppend_Buffer31
+net append_file <= BallScrewVCP1.btnTestAppend_File31
 
 ### Форма 31
 
@@ -34,13 +31,15 @@ net cosine0 => BallScrewVCP1.position_actual-pin31   # Числовой инди
 
 net velocity <= BallScrewVCP1.sldVelocity31-f  # Ползунок с возможностью тонкой настройки и индикацией значения
 net acceleration <= BallScrewVCP1.sldAcceleration31-f  # Ползунок с возможностью тонкой настройки и индикацией значения
+
 #net pos_alarm => BallScrewVCP1.ledPos_Alarm31        # Цветовой индикатор (красный / зелёный)
 net bit2 => BallScrewVCP1.ledPos_Alarm31        # Цветовой индикатор (красный / зелёный)
-# net log_trigger # Кнопка
-# net time # 
+
+net log_trigger <= BallScrewVCP1.btnLog_Trigger31 # Кнопка
+net time => BallScrewVCP1.time-pin31 #
 net active_0 => BallScrewVCP1.active_0-pin #
-# net append_buffer # ??? хз зачем привязывать к сигналу
-# net append_file # ??? хз зачем привязывать к сигналу
+net append_buffer => BallScrewVCP1.append_buffer-pin31 # ??? хз зачем привязывать к сигналу
+net append_file => BallScrewVCP1.append_file-pin31 # ??? хз зачем привязывать к сигналу
 
 loadusr halscope
 

@@ -66,6 +66,9 @@ class HandlerClass:
         self.data = [[None for _ in range(10000)],[None for _ in range(10000)]]
         self.current_plot_n = 0
         self.w = widgets
+        self.position_buffer = []
+        self.load_ini()
+        self.start_log()
         self.init_pins()
 
     ##########################################
@@ -79,7 +82,7 @@ class HandlerClass:
     def initialized__(self):
         self.init_gui()
         self.w.ledPos_Alarm31.setOffColor(Qt.yellow)
-        self.start_log(self.DATALOGFILENAME)
+
         # self.gcodes.setup_list() инструкция нужна только для отображения справочного списка команд
 
         #fov = FocusOverlay(self)
@@ -95,27 +98,26 @@ class HandlerClass:
     def init_pins(self):
         # создание HAL-пинов приложения
         self.VCP_halpins_float = {
-        'position-pin31': None,
-        'position_actual-pin31': None,
+        'position-pin31': [None, self.onPositionChanged],
+        'position_actual-pin31': [None, self.onPosition_ActualChanged],
+        'time-pin31':[None, self.onTimeChanged]
         }
         self.VCP_halpins_bit = {
-        'active_0-pin':None,
-        'active_1-pin':None,
-        'active_2-pin':None,
-        'active_3-pin':None,
-        'active_4-pin':None,
-        'active_5-pin':None
+        'active_0-pin':[None, self.onActive0Changed],
+        'append_buffer-pin31': [None, self.onAppend_BufferChanged],
+        'append_file-pin31': [None, self.onAppend_FileChanged]
         }
 
         # создание пинов и связывание событий изменения HAL с обработчиком
-
         for key in self.VCP_halpins_float:
-            self.VCP_halpins_float[key] = self.hal.newpin(key, hal.HAL_FLOAT, hal.HAL_IN)
-            self.VCP_halpins_float[key].value_changed.connect(lambda s: self.pinCnagedCallback(s))
+            tmpPin = self.hal.newpin(key, hal.HAL_FLOAT, hal.HAL_IN)
+            self.VCP_halpins_float[key][0] = tmpPin
+            tmpPin.value_changed.connect(self.VCP_halpins_float[key][1])
             # создание пинов и связывание событий изменения HAL с обработчиком
         for key in self.VCP_halpins_bit:
-            self.VCP_halpins_bit[key] = self.hal.newpin(key, hal.HAL_BIT, hal.HAL_IN)
-            self.VCP_halpins_bit[key].value_changed.connect(lambda s: self.pinCnagedCallback(s))
+            tmpPin = self.hal.newpin(key, hal.HAL_BIT, hal.HAL_IN)
+            self.VCP_halpins_bit[key][0] = tmpPin
+            tmpPin.value_changed.connect(self.VCP_halpins_bit[key][1])
 
         return
         
@@ -156,37 +158,108 @@ class HandlerClass:
         # настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
         diodes_redgreen = ( self.w.ledPos_Alarm31, )
 
-
         for led in diodes_redgreen:
             led.setColor(Qt.green)
             led.setOffColor(Qt.green)
+        ini_control_match_dict = {
+            'NOM_VEL' : (self.w.sldVelocity31, self.w.spnVelocity31),
+            'NOM_ACCEL' : (self.w.sldAcceleration31, self.w.sldAcceleration31)
+        }
+        for key, controls in ini_control_match_dict.items():
+            for control in controls:
+                control.setMinimum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MIN')[0]))
+                control.setMaximum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MAX')[0]))
+                control.setValue(float(INFO.INI.findall("BALLSCREWPARAMS", key)[0]))
+            controls[0].valueChanged.connect(controls[1].setValue)
+            controls[1].valueChanged.connect(controls[0].setValue)
 
-        #TODO настройка осей графика
-        self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0] # TODO обработка ошибки
-        self.DATALOGFILENAME = INFO.INI.findall("BALLSCREWPARAMS", "LOGFILE")[0] # TODO обработка ошибки
-        self.load_ini(int(self.TYPE))
         return
 
-    def pinCnagedCallback(self, data):
-        halpin_name = self.w.sender().text()
+    def onPositionChanged(self, data):
+        halpin_value = self.hal['position-pin31']
+        self.w.lblPosition31.setText("{:10.2f}".format(halpin_value))
+        pass
 
-        # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_0-pin'):
-            self.w.sldVelocity31.setEnabled(self.hal['active_0-pin'])
-            self.w.sldAcceleration31.setEnabled(self.hal['active_0-pin'])
+    def onPosition_ActualChanged(self, data):
+        halpin_value = self.hal['position_actual-pin31']
+        print '*** onPosition_ActualChanged, data=', data
+        self.w.lblPosition_Actual31.setText("{:10.2f}".format(halpin_value))
+        self.current_position = self.hal['position_actual-pin31']
+        pass
+
+    def onActive0Changed(self, data):
+        if not STATUS.machine_is_on():
             return
+        self.w.sldVelocity31.setEnabled(self.hal['active_0-pin'])
+        self.w.sldAcceleration31.setEnabled(self.hal['active_0-pin'])
+        pass
 
-        # соответствие пинов float и табличек, на которых нужно отображать значение
-        halpins_labels_match_precision2 = { # отображать с точностью 2 знака после запятой
-            'position-pin31':self.w.lblPosition31,
-            'position_actual-pin31':self.w.lblPosition_Actual31,
-            }
+    def onTimeChanged(self, data):
+        #TODO
+        self.current_time = self.hal['time-pin31']
+        pass
 
-        if(halpin_name in halpins_labels_match_precision2):
-            halpin_value = self.hal[halpin_name]
-            halpins_labels_match_precision2[halpin_name].setText("{:10.2f}".format(halpin_value))
+    def onAppend_BufferChanged(self, data):
+        # запись показаний производится в буфер для повышения производительности
+        #TODO улучшить менеджмент памяти - выделять блоками (либо за этим следит интерпретатор питона)
+        #TODO ограничение на длину???
+        if not self.hal['append_buffer']: # исключить обратный фронт сигнала
+            return
+        self.position_buffer.append([self.current_time, self.current_position]) # значения без лишнего обращения к пинам, для улучшения производительности
+        # self.position_buffer.append([self.hal['position_actual-pin31'], self.hal['time-pin31']]) # получение значений с hal-пинов, может снижать производительность
 
-        return
+        # форма 3.3, Вектор параметров состояния: (time; pos_measure; load; torque_at_load; torque_extremal)
+        # self.position_buffer.append([time, pos_measure, load, torque_at_load, torque_extremal])
+        # форма 3.4
+        pass
+
+    def onAppend_FileChanged(self, data):
+        if not self.hal['append_file']: # исключить обратный фронт сигнала
+            return
+        #записать показания в файл
+        for rec in self.position_buffer:
+            self.logfile.write('Фактический ход:\t' + str(rec[0]))
+            self.logfile.write('Время:\t' + str(rec[1]))
+            self.logfile.write('\n')
+        # форма 3.2 Вектор параметров состояния: (time_current; torque_actual; omega_actual)
+
+        # форма 3.3, Вектор параметров состояния: (time; pos_measure; load; torque_at_load; torque_extremal)
+        # for rec in self.position_buffer:
+        #     self.logfile.write('Время измерения:\t'  time)
+        #     self.logfile.write('Положение измерения:\t'  pos_measure)
+        #     self.logfile.write('Нагрузка:\t'  load)
+        #     self.logfile.write('Приведённый момент от нагрузки:\t'  torque_at_load)
+        #     self.logfile.write('Момент страгивания:\t'  torque_extremal)
+        #     self.logfile.write('\n')
+
+        # форма 3.4 Вектор параметров состояния: (time_current; position_actual; omega_actual; load_actual; torque_actual)
+        #TODO
+        self.position_buffer = [] # очистить буфер после записи
+        pass
+
+    #def pinCnagedCallback(self, data):
+    #    """
+    #    Один общий слот под все сигналы - снижает производительность
+    #    """
+    #    halpin_name = self.w.sender().text()
+    #
+    #    # отдельные пины, отвечающий за активность графических компонентов
+    #    if(halpin_name == 'active_0-pin'):
+    #        self.w.sldVelocity31.setEnabled(self.hal['active_0-pin'])
+    #        self.w.sldAcceleration31.setEnabled(self.hal['active_0-pin'])
+    #        return
+    #
+    #    # соответствие пинов float и табличек, на которых нужно отображать значение
+    #    halpins_labels_match_precision2 = { # отображать с точностью 2 знака после запятой
+    #        'position-pin31':self.w.lblPosition31,
+    #        'position_actual-pin31':self.w.lblPosition_Actual31,
+    #        }
+    #
+    #    if(halpin_name in halpins_labels_match_precision2):
+    #        halpin_value = self.hal[halpin_name]
+    #        halpins_labels_match_precision2[halpin_name].setText("{:10.2f}".format(halpin_value))
+    #
+    #    return
         #print "Test pin value changed to:" % (data) # ВЫВОДИТ ВСЕГДА 0 - ВИДИМО ОШИБКА В ДОКУМЕНТАЦИИ
         #print 'halpin object =', self.w.sender()
         #print 'Halpin type: ',self.w.sender().get_type()
@@ -199,16 +272,26 @@ class HandlerClass:
             self.current_plot_n = 0 # логика кольцевого буфера
         return
 
-    def flush_to_log(self):
-        logfile = open('temp_log.log', 'w')
+    def start_log(self):
+        self.logfile = open(self.LOGFILE, 'w')
         #Заголовок лога
-        logfile.write('Модель: ', self.MODEL, '\n')
-        logfile.write('Номер изделия: ', self.PART, '\n')
-        logfile.write('Дата: ', self.DATE, '\n')
-        logfile.write('\n')
-        # for i in range(self.current_plot_n):
-        #     logfile.write(self.data[0][i], self.data[1][i])
-        logfile.close()
+        self.logfile.write('Модель:\t' + self.MODEL + '\n')
+        self.logfile.write('Номер изделия: ' + self.PART + '\n')
+        self.logfile.write('Дата: ' + self.DATE + '\n')
+        self.logfile.write('\n')
+
+        self.logfile.write('Проектный ход: ' + self.TRAVEL + '\n')
+
+        #if False: # форма 3.2
+        #     self.logfile.write('Нагрузка:\t', self.BRAKE_TORQUE)
+        #     self.logfile.write('Частота вращения:\t', self.NOM_VEL)
+        #if False: # форма 3.3
+        #    self.logfile.write('Нагрузка:\t', self.BRAKE_TORQUE)
+        #    self.logfile.write('Частота вращения:\t', self.NOM_VEL)
+        #if False:  # форма 3.4
+        #    self.logfile.write('Количество циклов:\t', self.N)
+
+        self.logfile.write('\n')
         return
 
     def on_siggen_test_read_pin_value_changed(self, data):
@@ -217,32 +300,17 @@ class HandlerClass:
         #print("*** siggen pin: ", self.siggen_test_read_pin.get())
         #print("*** siggen.0.sine directly", hal.get_value("siggen.0.sine"))
 
-    def start_log(self, logfilename):
-        self.datalog = None
-        self.datalog = open(logfilename,"w")
-        self.datalog.write("Модель: " + self.MODEL + "\n")
-        self.datalog.write("Номер изделия: " + self.PART + "\n")
-        self.datalog.write("Дата: " + self.DATE + "\n")
-
     #TODO в принципе функция не нужна, т.к. linuxcnc сам поддерживает передачу параметров из ini
-    def load_ini(self, n_form):
-        ini_control_match_dict = {
-            'NOM_VEL' : self.w.sldVelocity31,
-            'NOM_ACCEL' : self.w.sldAcceleration31
-        }
-
-        #self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
+    def load_ini(self):
+        self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
         #print "*** self.TYPE = ", self.TYPE
         self.MODEL = INFO.INI.findall("BALLSCREWPARAMS", "MODEL")[0]
         self.DATE = INFO.INI.findall("BALLSCREWPARAMS", "DATE")[0]
         self.PART = INFO.INI.findall("BALLSCREWPARAMS", "PART")[0]
         self.LOGFILE = INFO.INI.findall("BALLSCREWPARAMS", "LOGFILE")[0]
+        self.TRAVEL = INFO.INI.findall("BALLSCREWPARAMS", "TRAVEL")[0]
         #self.datalog.write("Номер изделия: " + self.PART + "\n")
         #self.datalog.write("Дата: " + self.DATE + "\n")
-        for key, sldr in ini_control_match_dict.items():
-            sldr.setMinimum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MIN')[0]))
-            sldr.setMaximum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MAX')[0]))
-            sldr.setValue(float(INFO.INI.findall("BALLSCREWPARAMS", key)[0]))
         #TODO обработка ошибок и исключений: 1) нет файла - сообщение и заполнение по умолчанию, создание конфига
         #TODO обработка ошибок и исключений: 2) нет ключей в конфиге - сообщение и заполнение по умолчанию
 

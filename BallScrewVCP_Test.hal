@@ -4,6 +4,7 @@
 loadrt siggen
 loadrt wcomp # компаратор для перевода изначального тестового float-сигнала в bin
 loadrt timedelay count=5 # задержки для повышения разнообразия тестовых сигналов
+loadrt sum2 count=1
 loadrt threads name1=test-thread period1=10000000
 # loadrt conv_float_s32
 # loadrt conv_float_s32
@@ -11,6 +12,7 @@ loadrt threads name1=test-thread period1=10000000
 
 # ниже - размещение компонентов в специальном тестовом потоке
 addf siggen.0.update test-thread
+addf sum2.0 test-thread
 addf wcomp.0 test-thread
 addf timedelay.0 test-thread
 addf timedelay.1 test-thread
@@ -36,6 +38,9 @@ setp timedelay.4.off-delay 1.0
 
 setp wcomp.0.min 0.0 # нижний уровень сигнала компаратора
 setp wcomp.0.max 1.0 # верхний уровень сигнала компаратора
+
+setp sum2.0.in0 0.01
+net time sum2.0.out sum2.0.in1
 
 net sine0 wcomp.0.in <= siggen.0.sine # вход компаратора, который будет из синуса выдавать логический сигнал, а также сигнал на форму 31
 net cosine0 <= siggen.0.cosine # для формы 31

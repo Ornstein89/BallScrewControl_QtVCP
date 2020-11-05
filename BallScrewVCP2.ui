@@ -88,6 +88,18 @@ font: 15pt bold;</string>
             </item>
             <item row="2" column="1">
              <widget class="QLabel" name="lblTorque_Actual32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>---</string>
               </property>
@@ -95,6 +107,18 @@ font: 15pt bold;</string>
             </item>
             <item row="0" column="1">
              <widget class="QLabel" name="label_82">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>---</string>
               </property>
@@ -102,6 +126,18 @@ font: 15pt bold;</string>
             </item>
             <item row="3" column="1">
              <widget class="QLabel" name="lblOmega_Actual32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>---</string>
               </property>
@@ -123,6 +159,18 @@ font: 15pt bold;</string>
             </item>
             <item row="1" column="1">
              <widget class="QLabel" name="lblTorque_Set32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>---</string>
               </property>
@@ -338,6 +386,18 @@ font: 15pt bold;</string>
             </item>
             <item row="1" column="2">
              <widget class="QLabel" name="lblGeartorque_Error_Value32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>---</string>
               </property>
@@ -345,6 +405,18 @@ font: 15pt bold;</string>
             </item>
             <item row="1" column="3">
              <widget class="QLabel" name="lblGeartorque_Error_Value_Max32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>---</string>
               </property>
@@ -380,6 +452,18 @@ qproperty-diameter: 100;</string>
             </item>
             <item row="2" column="2">
              <widget class="QLabel" name="lblBraketorque_Error_Value32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>---</string>
               </property>
@@ -387,6 +471,18 @@ qproperty-diameter: 100;</string>
             </item>
             <item row="2" column="3">
              <widget class="QLabel" name="lblBraketorque_Error_Value_Max32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>---</string>
               </property>
@@ -394,6 +490,18 @@ qproperty-diameter: 100;</string>
             </item>
             <item row="6" column="2">
              <widget class="QLabel" name="lblLoad_Error_Value32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>---</string>
               </property>
@@ -401,6 +509,18 @@ qproperty-diameter: 100;</string>
             </item>
             <item row="7" column="2">
              <widget class="QLabel" name="lblLoad_Temperature32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>---</string>
               </property>
@@ -408,6 +528,18 @@ qproperty-diameter: 100;</string>
             </item>
             <item row="6" column="3">
              <widget class="QLabel" name="lblLoad_Error_Value_Max32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>---</string>
               </property>
@@ -415,6 +547,18 @@ qproperty-diameter: 100;</string>
             </item>
             <item row="7" column="3">
              <widget class="QLabel" name="lblLoad_Temperature_Max32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>---</string>
               </property>
@@ -422,6 +566,18 @@ qproperty-diameter: 100;</string>
             </item>
             <item row="10" column="3">
              <widget class="QLabel" name="lblPos_Temperature_Max32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>---</string>
               </property>
@@ -429,6 +585,18 @@ qproperty-diameter: 100;</string>
             </item>
             <item row="10" column="2">
              <widget class="QLabel" name="lblPos_Temperature32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>---</string>
               </property>
@@ -586,6 +754,9 @@ qproperty-diameter: 100;</string>
             <property name="text">
              <string>Off</string>
             </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
           <item row="0" column="1" colspan="2">
@@ -655,7 +826,7 @@ Machine on</string>
        </widget>
       </item>
       <item>
-       <spacer name="verticalSpacer">
+       <spacer name="verticalSpacer_2">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
@@ -668,140 +839,40 @@ Machine on</string>
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="btnTestShow31">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(114, 159, 207);</string>
-        </property>
-        <property name="text">
-         <string>Тестовая
-кнопка
-отображения
-Ф_3.1</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnTestShow32">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(114, 159, 207);</string>
-        </property>
-        <property name="text">
-         <string>Тестовая
-кнопка
-отображения
-Ф_3.2</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnTestShow33">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(114, 159, 207);</string>
-        </property>
-        <property name="text">
-         <string>Тестовая
-кнопка
-отображения
-Ф_3.3</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnTestShow34">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(114, 159, 207);</string>
-        </property>
-        <property name="text">
-         <string>Тестовая
-кнопка
-отображения
-Ф_3.4</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="PushButton" name="btnTestActive0">
+       <widget class="PushButton" name="btnAppend_Buffer32">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(252, 233, 79);</string>
         </property>
         <property name="text">
-         <string>active_0</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked_state_text_option" stdset="0">
-         <bool>false</bool>
+         <string>test
+append_buffer</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="PushButton" name="btnTestActive1">
+       <widget class="PushButton" name="btnAppend_File32">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(252, 233, 79);</string>
         </property>
         <property name="text">
-         <string>active_1</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
+         <string>test
+append_file</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="PushButton" name="btnTestActive2">
+       <widget class="PushButton" name="btnAppend_Title32">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(252, 233, 79);</string>
         </property>
         <property name="text">
-         <string>active_2</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
+         <string>test
+append_title</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="PushButton" name="btnTestActive3">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(252, 233, 79);</string>
-        </property>
-        <property name="text">
-         <string>active_3</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="PushButton" name="btnTestActive4">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(252, 233, 79);</string>
-        </property>
-        <property name="text">
-         <string>active_4</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="PushButton" name="btnTestActive5">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(252, 233, 79);</string>
-        </property>
-        <property name="text">
-         <string>active_5</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="verticalSpacer_3">
+       <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
@@ -849,72 +920,7 @@ Machine on</string>
  <resources>
   <include location="BallScrewVCP.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>btnTestShow34</sender>
-   <signal>clicked()</signal>
-   <receiver>BallScrewControlMainWindow</receiver>
-   <slot>onBtnTempShow34()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>127</x>
-     <y>495</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1147</x>
-     <y>734</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnTestShow33</sender>
-   <signal>clicked()</signal>
-   <receiver>BallScrewControlMainWindow</receiver>
-   <slot>onBtnTempShow33()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>127</x>
-     <y>405</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1129</x>
-     <y>743</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnTestShow32</sender>
-   <signal>clicked()</signal>
-   <receiver>BallScrewControlMainWindow</receiver>
-   <slot>onBtnTempShow32()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>127</x>
-     <y>315</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1090</x>
-     <y>753</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnTestShow31</sender>
-   <signal>clicked()</signal>
-   <receiver>BallScrewControlMainWindow</receiver>
-   <slot>onBtnTempShow31()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>127</x>
-     <y>225</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1066</x>
-     <y>722</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>onBtnTempShow34()</slot>
   <slot>onBtnTempShow33()</slot>

@@ -18,9 +18,10 @@ import sys, os, configparser
 import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
 
 # пакеты GUI
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QColor
 #from qtvcp.widgets import FocusOverlay
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
 from qtvcp.widgets.gcode_editor import GcodeEditor as GCODE
@@ -60,10 +61,11 @@ class HandlerClass:
     # widgets allows access to  widgets from the qtvcp files
     # at this point the widgets and hal pins are not instantiated
     def __init__(self, halcomp,widgets,paths):
+        self.initialized = False
         self.hal = halcomp
         self.PATHS = paths
         self.gcodes = GCodes()
-        self.data = [[None for _ in range(10000)],[None for _ in range(10000)]]
+        self.plotdata = [[],[]]
         self.current_plot_n = 0
         self.w = widgets
         self.init_pins()
@@ -78,10 +80,9 @@ class HandlerClass:
     # This is where you make HAL pins or initialize state of widgets etc
     def initialized__(self):
         self.init_gui()
-        self.w.ledPos_Alarm31.setOffColor(Qt.yellow)
         self.start_log(self.DATALOGFILENAME)
+        self.initialized = True
         # self.gcodes.setup_list() инструкция нужна только для отображения справочного списка команд
-
         #fov = FocusOverlay(self)
         #fov.show()
 
@@ -95,44 +96,41 @@ class HandlerClass:
     def init_pins(self):
         # создание HAL-пинов приложения
         self.VCP_halpins_float = {
-        'position-pin31': None,
-        'position_actual-pin31': None,
-        'time_current-pin32': None,
-        'duration-pin32':None,
-        'torque_set-pin32': None,
-        'torque_actual-pin32': None,
-        'omega_actual-pin32': None,
-        'geartorque_error_value-pin32': None,
-        'geartorque_error_value_max32': None, # ограничение по длине имени пина 47 символов
-        'brakeorque_error_value-pin32': None,
-        'braketorque_error_value_max32': None, # ограничение по длине имени пина 47 символов
-        'load_error_value-pin32': None,
-        'load_error_value_max-pin32': None,
-        'load_temperature-pin32': None,
-        'load_temperature_max-pin32': None,
-        'pos_temperature-pin32': None,
-        'pos_temperature_max-pin32': None,
-        'torque_actual-pin32': None,
-        'torque_set-pin32': None,
-        'torque_actual-pin32': None
+        'time_current-pin32': [None, self.onUpdateFloatSignals],
+        'time-pin32': [None, self.onUpdateFloatSignals],
+        'duration-pin32':[None, self.onUpdateFloatSignals],
+        'torque_set-pin32': [None, self.onTorque_SetChanged], # пин связан с графиком, поэтому в отдельный слот для повышения производительности
+        'torque_actual-pin32': [None, self.onTorque_ActualChanged], # пин связан с графиком, поэтому в отдельный слот для повышения производительности
+        'omega_actual-pin32': [None, self.onUpdateFloatSignals],
+        'geartorque_error_value-pin32': [None, self.onUpdateFloatSignals],
+        'geartorque_error_value_max32': [None, self.onUpdateFloatSignals], # ограничение по длине имени пина 47 символов
+        'brakeorque_error_value-pin32': [None, self.onUpdateFloatSignals],
+        'braketorque_error_value_max32': [None, self.onUpdateFloatSignals], # ограничение по длине имени пина 47 символов
+        'load_error_value-pin32': [None, self.onUpdateFloatSignals],
+        'load_error_value_max-pin32': [None, self.onUpdateFloatSignals],
+        'load_temperature-pin32': [None, self.onUpdateFloatSignals],
+        'load_temperature_max-pin32': [None, self.onUpdateFloatSignals],
+        'pos_temperature-pin32': [None, self.onUpdateFloatSignals],
+        'pos_temperature_max-pin32': [None, self.onUpdateFloatSignals]
         }
         self.VCP_halpins_bit = {
-        'active_0-pin':None,
-        'active_1-pin':None,
-        'active_2-pin':None,
-        'active_3-pin':None,
-        'active_4-pin':None,
-        'active_5-pin':None
+        'dir-pin32':[None, self.onDirChanged],
+        'append_buffer-pin32':[None, self.onAppend_BufferChanged],
+        'append_file-pin32':[None,self.onAppend_FileChanged],
+        'append_title-pin32':[None, self.onAppend_TitleChanged],
         }
 
         # создание пинов и связывание событий изменения HAL с обработчиком
         for key in self.VCP_halpins_float:
-            self.VCP_halpins_float[key] = self.hal.newpin(key, hal.HAL_FLOAT, hal.HAL_IN)
-            self.VCP_halpins_float[key].value_changed.connect(lambda s: self.pinCnagedCallback(s))
+            tmp_pin = self.hal.newpin(key, hal.HAL_FLOAT, hal.HAL_IN)
+            self.VCP_halpins_float[key][0] = tmp_pin
+            tmp_pin.value_changed.connect(self.VCP_halpins_float[key][1])
+
             # создание пинов и связывание событий изменения HAL с обработчиком
         for key in self.VCP_halpins_bit:
-            self.VCP_halpins_bit[key] = self.hal.newpin(key, hal.HAL_BIT, hal.HAL_IN)
-            self.VCP_halpins_bit[key].value_changed.connect(lambda s: self.pinCnagedCallback(s))
+            tmp_pin = self.hal.newpin(key, hal.HAL_BIT, hal.HAL_IN)
+            self.VCP_halpins_bit[key][0] = tmp_pin
+            tmp_pin.value_changed.connect(self.VCP_halpins_bit[key][1])
         return
         
     def onBtnTempShow31(self):
@@ -151,27 +149,6 @@ class HandlerClass:
         self.w.stackedWidget.setCurrentIndex(8)
         pass
 
-    def onBtnLoadGCode(self):
-        # код на основе btn_load и load_code из qtdragon
-        #fname = self.w.filemanager.getCurrentSelected()
-        fname = QFileDialog.getOpenFileName(self.w, 'Open GCode file',
-        ".","NGC (*.ngc);;Text files (*.txt);;All Files (*.*)")
-        if fname[1] is None or fname[0] is None:
-            #TODO уведомление
-            return
-        if fname[0].endswith(".ngc"):
-            # self.w.cmb_gcode_history.addItem(fname) отобразить текущий файл в combobox
-            # self.w.cmb_gcode_history.setCurrentIndex(self.w.cmb_gcode_history.count() - 1) отобразить текущий файл в combobox
-            ACTION.OPEN_PROGRAM(fname[0])
-            #self.add_status("Loaded program file : {}".format(fname))
-            #self.w.main_tab_widget.setCurrentIndex(TAB_MAIN)
-            STATUS.emit('update-machine-log', "Loaded program file : {}".format(fname), 'TIME')
-            print "*** LOADED"
-        else:
-            self.add_status("Unknown or invalid filename")
-            STATUS.emit('update-machine-log', "Unknown or invalid filename", 'TIME')
-            print "*** ERROR LOAD FILE"
-
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Left:
             print '*** Qt.Key_Left'
@@ -181,15 +158,111 @@ class HandlerClass:
             return
         return
 
+    def onTorque_SetChanged(self, data):
+        if not self.initialized:
+            return
+
+        torque_set_value = self.hal['torque_set-pin32'] * 0.1 + 1.0
+        #self.hLine.setPos(pg.Point(torque_set_value, 0.0))
+        self.hLine.setValue(torque_set_value)
+        return
+
+    def onTorque_ActualChanged(self, data):
+        if not self.initialized:
+            return
+
+        torque_actual_value = self.hal['torque_actual-pin32'] * 0.1 + 1.0
+        time_value = self.hal['time-pin32']
+        time_range = 15.0 #TODO заменить на сторонний сигнал
+
+        # добавить точку
+        self.plotdata[0].append(time_value)
+        self.plotdata[1].append(torque_actual_value)
+
+        # оставить только точки в пределах [time_value-timerange, time_value]
+        plotindex = 0
+        while self.plotdata[0][plotindex] < time_value - time_range:
+            plotindex += 1
+        self.plotdata[0] = self.plotdata[0][plotindex:]
+        self.plotdata[1] = self.plotdata[1][plotindex:]
+        YMax = 1.2#max(self.plotdata[1]) * 1.1
+        # обновить график
+        #self.vLine.setPos(pg.Point(0.0, time_value))
+        self.w.plt32.setXRange(time_value - time_range, time_value + time_range*0.1)
+        self.w.plt32.setYRange(0.0, YMax)
+        #self.w.plt32.plot.clear()
+        self.w.plt32.plot(self.plotdata[0][:],
+                          self.plotdata[1][:],
+        #                  clear = True,
+                          pen = pg.mkPen(color=QColor(Qt.darkCyan), width=2))
+        self.vLine.setValue(time_value)
+        return
+
+    def onUpdateFloatSignals(self, data):
+        return
+
+    def onTimeChanged(self, data):
+        #TODO
+        if not self.initialized:
+            return
+
+        self.current_time = self.hal['time-pin32']
+        pass
+
+    def onAppend_BufferChanged(self, data):
+        # запись показаний производится в буфер для повышения производительности
+        #TODO улучшить менеджмент памяти - выделять блоками (либо за этим следит интерпретатор питона)
+        #TODO ограничение на длину???
+        # Вектор параметров состояния: (time_current; torque_actual; omega_actual)
+        # self.position_buffer.append([self.current_time, self.current_position]) # значения без лишнего обращения к пинам, для улучшения производительности
+        if not self.initialized:
+            return
+
+        if not self.hal['append_buffer-pin32']:
+            return
+
+        self.position_buffer.append([self.hal['time_current-pin32'],
+        self.hal['torque_actual-pin31'],
+        self.hal['omega_actual']]) # получение значений с hal-пинов, может снижать производительность
+
+        # форма 3.3, Вектор параметров состояния: (time; pos_measure; load; torque_at_load; torque_extremal)
+        # self.position_buffer.append([time, pos_measure, load, torque_at_load, torque_extremal])
+        # форма 3.4
+        pass
+
+    def onAppend_TitleChanged(self, data):
+        if not self.hal['append_title-pin32']:
+            return
+        if not self.initialized:
+            return
+        self.logfile.write('Время запуска:\t' + str(time))
+        self.logfile.write('Направление:\t' + str(dir))
+        self.logfile.write('\n')
+        self.logfile.write('Время работы\tКрутящий момент\tСкорость вращения')
+        return
+
+    def onAppend_FileChanged(self, data):
+        #записать показания в файл
+        if not self.hal['append_file-pin32']:
+            return
+        if not self.initialized:
+            return
+        for rec in self.position_buffer:
+            str_to_print = ''
+            for item in rec:
+                str_to_print += str(item) + '\t'
+            self.logfile.write(str_to_print)
+        return
+
+    def onDirChanged(self, data):
+        pass
+
     #####################
     # GENERAL FUNCTIONS #
     #####################
     def init_gui(self):
         # настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
         diodes_redgreen = (
-
-        self.w.ledPos_Alarm31,
-
         self.w.ledIs_Running_Ccw32,
         self.w.ledIs_Running_Cw32,
         self.w.ledGeartorque_Error32,#.setOffColor(Qt.red)
@@ -202,45 +275,7 @@ class HandlerClass:
         self.w.ledLoad_Overheat32,
         self.w.ledPos_Is_On_2_32,
         self.w.ledPos_Alarm32,
-        self.w.ledPos_Overheat32,
-
-        self.w.ledEstop_Ext33,
-        self.w.ledOn_Position33,
-        self.w.ledAt_Load33,
-        self.w.ledEnable33,
-        self.w.ledEstop_Ext33,
-        self.w.ledLoad_Is_On2_33,
-        self.w.ledLoad_Alarm33,
-        self.w.ledLoad_Error33,
-        self.w.ledLoad_Overload33,
-        self.w.ledLoad_Overheat33,
-        self.w.lepPos_Is_On33,
-        self.w.ledPos_Alarm33,
-        self.w.ledPos_Error33,
-        self.w.ledPos_Overload33,
-        self.w.ledPos_Overheat33,
-        self.w.ledPos_Sip33,
-        self.w.ledLimits_Excess33,
-
-        self.w.ledIs_Homed34,
-        self.w.ledOn_Position34,
-        self.w.ledAt_Load34,
-        self.w.ledTorque_Error34,
-        self.w.ledTorque1_Error34,
-        self.w.ledEstop_Ext34,
-        self.w.ledLoad_Is_On_2_34,
-        self.w.ledLoad_Alarm34,
-        self.w.ledLoad_Error34,
-        self.w.ledLoad_Overload34,
-        self.w.ledLoad_Overheat34,
-        self.w.ledPos_Is_On_2_34,
-        self.w.ledPoa_Alarm34,
-        self.w.ledPos_Error34,
-        self.w.ledPos_Overload34,
-        self.w.ledPos_Overheat34,
-        self.w.ledSlip34,
-        self.w.ledLimits_Excess34)
-
+        self.w.ledPos_Overheat32)
 
         for led in diodes_redgreen:
             led.setColor(Qt.green)
@@ -253,16 +288,26 @@ class HandlerClass:
         self.load_ini(int(self.TYPE))
         self.w.plt32.showGrid(x = True, y = True)
         self.w.plt32.setBackground('w')
-        pen = pg.mkPen(color=(255, 0, 0), width=2)
-        self.w.plt32.setPen(pen)
         styles = {'color':'r', 'font-size':'20px'}
-        self.w.plt32.setLabel('left', 'Момент [Н*м]', **styles)
+        self.w.plt32.setLabel('left', 'T [Н*м]', **styles)
         self.w.plt32.setLabel('bottom', 'Время', **styles)
+
+        self.hLine = pg.InfiniteLine(angle=0, movable=False, pen=pg.mkPen(color=QColor(Qt.blue), width = 2, style=Qt.DashDotLine))
+        #self.hLine.setPos(pg.Point(0.0, 10.0))
+        self.hLine.setValue(0.5)
+        self.hLine.setZValue(1)
+        self.w.plt32.addItem(self.hLine, ignoreBounds=True)
+
+        self.vLine = pg.InfiniteLine(angle=90, movable=False, pen=pg.mkPen(color=QColor(Qt.blue), width = 2, style=Qt.DashDotLine))
+        #self.vLine.setPos(pg.Point(1.0, 0.0))
+        self.vLine.setValue(0.5)
+        self.vLine.setZValue(1)
+        self.w.plt32.addItem(self.vLine, ignoreBounds=True)
+
         # self.graphWidget.setXRange(5, 20, padding=0)
         # self.graphWidget.setYRange(30, 40, padding=0)
         # курсор на графике https://stackoverflow.com/questions/50512391/can-i-share-the-crosshair-with-two-graph-in-pyqtgraph-pyqt5
         # https://stackoverflow.com/questions/52410731/drawing-and-displaying-objects-and-labels-over-the-axis-in-pyqtgraph-how-to-do
-d
         return
 
     def pinCnagedCallback(self, data):
@@ -273,75 +318,6 @@ d
             self.append_data(self.current_plot_n, self.hal['position-pin31']) # добавить точку к буферу графика
             self.update_plot() # обновить график
             return
-
-        # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_0-pin'):
-            self.w.sldVelocity31.setEnabled(self.hal['active_0-pin'])
-            self.w.sldAcceleration31.setEnabled(self.hal['active_0-pin'])
-            return
-
-        # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_1-pin'):
-            self.w.btnJog_Plus33.setEnabled(self.hal['active_1-pin'])
-            self.w.btnJog_Minus33.setEnabled(self.hal['active_1-pin'])
-            self.w.btnJog_Plus34.setEnabled(self.hal['active_1-pin'])
-            self.w.btnJog_Minus34.setEnabled(self.hal['active_1-pin'])
-            return
-
-        # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_2-pin'):
-            self.w.chkDsp_Mode33.setEnabled(self.hal['active_2-pin'])
-            #TODO на форме 33 два dsp_mode self.w.rbDsp_Mode33.setEnabled(self.hal['active_2-pin'])
-            self.w.chkDsp_Mode34.setEnabled(self.hal['active_2-pin'])
-            return
-
-        # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_3-pin'):
-            self.w.sldDsp_Idle33.setEnabled(self.hal['active_3-pin'])
-            self.w.sldVel_Idle33.setEnabled(self.hal['active_3-pin'])
-            self.w.sldAccel_Idle33.setEnabled(self.hal['active_3-pin'])
-            self.w.sldLoad33.setEnabled(self.hal['active_3-pin'])
-            self.w.sldPos_Measure33.setEnabled(self.hal['active_3-pin'])
-            self.w.sldDsp_Measure33.setEnabled(self.hal['active_3-pin'])
-            self.w.sldVel_Measure33.setEnabled(self.hal['active_3-pin'])
-            self.w.sldAccel_Measure33.setEnabled(self.hal['active_3-pin'])
-            self.w.btnSaveGCode33.setEnabled(self.hal['active_3-pin'])
-
-            self.w.sldDsp34.setEnabled(self.hal['active_3-pin'])
-            self.w.sldOmg34.setEnabled(self.hal['active_3-pin'])
-            self.w.sldAccel_Coeff34.setEnabled(self.hal['active_3-pin'])
-            self.w.sldF1_34.setEnabled(self.hal['active_3-pin'])
-            self.w.sldF2_34.setEnabled(self.hal['active_3-pin'])
-            self.w.btnSaveGCode34.setEnabled(self.hal['active_3-pin'])
-
-            return
-
-        # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_4-pin'):
-            self.w.mdiline33.setEnabled(self.hal['active_4-pin'])
-            self.w.btnLoadGCode34.setEnabled(self.hal['active_4-pin'])
-            self.w.btnProgram_Run34.setEnabled(self.hal['active_4-pin'])
-            self.w.btnProgram_Pause34.setEnabled(self.hal['active_4-pin'])
-            self.w.btnProgram_Stop34.setEnabled(self.hal['active_4-pin'])
-            return
-
-        # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_5-pin'):
-            self.w.btnLoadGCode33.setEnabled(self.hal['active_5-pin'])
-            self.w.btnProgram_Run33.setEnabled(self.hal['active_5-pin'])
-            self.w.btnProgram_Stop33.setEnabled(self.hal['active_5-pin'])
-
-            return
-
-        # соответствие пинов float и табличек, на которых нужно отображать значение
-        halpins_labels_match_precision2 = { # отображать с точностью 2 знака после запятой
-            'position-pin31':self.w.lblPosition31,
-            'position_actual-pin31':self.w.lblPosition_Actual31,
-            }
-
-        if(halpin_name in halpins_labels_match_precision2):
-            halpin_value = self.hal[halpin_name]
-            halpins_labels_match_precision2[halpin_name].setText("{:10.2f}".format(halpin_value))
 
         halpins_labels_match_precision1 = { # отображать с точностью 1 знак после запятой
             # На форме 3.2
@@ -359,55 +335,7 @@ d
             'load_temperature-pin32':self.w.lblLoad_Temperature32,
             'load_temperature_max-pin32':self.w.lblLoad_Temperature_Max32,
             'pos_temperature-pin32':self.w.lblPos_Temperature32,
-            'pos_temperature_max-pin32':self.w.lblPos_Temperature_Max32,
-
-            # На форме 3.3
-            'position':self.w.lblPosition33,
-            'position_actual':self.w.lblPosition_Actual33,
-            'load':self.w.lblLoad33,
-            'load_actual':self.w.lblLoadActual33,
-
-            # "таблица" с диодами и надписями на Форме 3.3
-            'load_error_value':self.w.lblLoad_Error_Value33,
-            'load_error_value_max':self.w.lblLoad_Error_Value_Max33,
-            'load_overload_value':self.w.lblLoad_Overload_Value33,
-            'load_overload_value_max':self.w.lblLoad_Overload_Value_Max33,
-            'load_temperature':self.w.lblLoad_Temperature33,
-            'load_temperature_max':self.w.lblLoad_Temperature_Max33,
-
-            'pos_error_value':self.w.lblPos_Error_Value33,
-            'pos_error_value_max':self.w.lblPos_Error_Value_max33,
-            'pos_overload_value':self.w.lblPos_Overload_Value33,
-            'pos_overload_value_max':self.w.lblPos_Overload_Value_max33,
-            'pos_temperature':self.w.lblPos_Temperature33,
-            'pos_temperature_max':self.w.lblPos_Temperature_Max33,
-            'torque_extremal_last':self.w.lblTorque_Extremal_Last33,
-            'torque_extremal_max':self.w.lblTorque_Extremal_Max33,
-
-            #TODO для формы 3.4
-            'position':self.w.lblPosition34,
-            'position_actual':self.w.lblPosition_Actual34,
-            'load':self.w.lblLoad34,
-            'load_actual':self.w.lblLoad_Actual34,
-
-            # "таблица" с диодами и надписями на Форме 3.4
-            'torque_error_value':self.w.lblTorque_Error_Value34,
-            'torque_error_value_max':self.w.lblTorque_Error_Value_Max34,
-            'torque1_error_value':self.w.lblTorque1_Error_Value34,
-            'torque1_error_value_max':self.w.lblTorque1_Error_Value_Max34,
-            'load_error_value':self.w.lblLoad_Error_Value34,
-            'load_error_value_max':self.w.lblLoad_Error_Value_Max34,
-            'load_overload_value':self.w.lblLoad_Overload_Value34,
-            'load_overload_value_max':self.w.lblLoad_Overload_Value_Max34,
-            'load_temperature':self.w.lblLoad_Temperature34,
-            'load_temperature_max':self.w.lblLoad_Temperature_Max34,
-            'pos_error_value':self.w.lblPos_Error_Value34,
-            'pos_error_value_max':self.w.lblPos_Error_Value_Max34,
-            'pos_overload_value':self.w.lblPos_Overload_Value34,
-            'pos_overload_value_max':self.w.lblPos_Overload_Value_Max34,
-            'pos_temperature':self.w.lblPos_Temperature34,
-            'pos_temperature_max':self.w.lblPos_Temperature_Max34,
-            'torque_max':self.w.lblTorque_Max34,
+            'pos_temperature_max-pin32':self.w.lblPos_Temperature_Max32
         }
 
         if(halpin_name in halpins_labels_match_precision1):
@@ -419,9 +347,9 @@ d
         #print 'halpin object =', self.w.sender()
         #print 'Halpin type: ',self.w.sender().get_type()
 
-    def append_data(self, x, y):
-        self.data[0][self.current_plot_n] = x
-        self.data[1][self.current_plot_n] = y
+    def append_plot(self, x, y):
+        self.plotdata[0][self.current_plot_n] = x
+        self.plotdata[1][self.current_plot_n] = y
         self.current_plot_n += 1
         if(self.current_plot_n >= 10000):
             self.current_plot_n = 0 # логика кольцевого буфера
@@ -430,26 +358,14 @@ d
     def update_plot(self):
         if(self.current_plot_n < 20):
             #print "*** plot < 20"
-            self.w.plt32.plot(self.data[0][0:self.current_plot_n],
-                              self.data[1][0:self.current_plot_n],
+            self.w.plt32.plot(self.plotdata[0][0:self.current_plot_n],
+                              self.plotdata[1][0:self.current_plot_n],
                               clear = True)
         else:
             #print "*** plot >= 20"
-            self.w.plt32.plot(self.data[0][self.current_plot_n-20:self.current_plot_n],
-                              self.data[1][self.current_plot_n-20:self.current_plot_n],
+            self.w.plt32.plot(self.plotdata[0][self.current_plot_n-20:self.current_plot_n],
+                              self.plotdata[1][self.current_plot_n-20:self.current_plot_n],
                               clear=True)
-        return
-
-    def flush_to_log(self):
-        logfile = open('temp_log.log', 'w')
-        #Заголовок лога
-        logfile.write('Модель: ', self.MODEL, '\n')
-        logfile.write('Номер изделия: ', self.PART, '\n')
-        logfile.write('Дата: ', self.DATE, '\n')
-        logfile.write('\n')
-        for i in range(self.current_plot_n):
-            logfile.write(self.data[0][i], self.data[1][i])
-        logfile.close()
         return
 
     def on_siggen_test_read_pin_value_changed(self, data):
@@ -467,35 +383,6 @@ d
 
     #TODO в принципе функция не нужна, т.к. linuxcnc сам поддерживает передачу параметров из ini
     def load_ini(self, n_form):
-        ini_control_match_dict = (
-        # для формы 3.1
-        {
-            'NOM_VEL' : self.w.sldVelocity31,
-            'NOM_ACCEL' : self.w.sldAcceleration31
-        },
-        # для формы 3.2
-        {},
-        # для формы 3.3
-        {
-            'NOM_DSP_IDLE' : self.w.sldDsp_Idle33,
-            'NOM_VEL_IDLE' : self.w.sldVel_Idle33,
-            'NOM_ACCEL_IDLE' : self.w.sldAccel_Idle33,
-            'NOM_DSP_MEASURE' : self.w.sldDsp_Measure33,
-            'NOM_VEL_MEASURE' : self.w.sldVel_Measure33,
-            'NOM_ACCEL_MEASURE' : self.w.sldAccel_Measure33,
-            'NOM_LOAD' : self.w.sldLoad33,
-            'NOM_POS_MEASURE' : self.w.sldPos_Measure33
-        },
-        # для формы 3.4
-        {
-            'NOM_TRAVEL' : self.w.sldDsp34,
-            'NOM_OMEGA' : self.w.sldOmg34,
-            'NOM_ACCEL_COEFF' : self.w.sldAccel_Coeff34,
-            'NOM_F1' : self.w.sldF1_34,
-            'NOM_F2' : self.w.sldF2_34
-        }
-        )
-
         #self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
         #print "*** self.TYPE = ", self.TYPE
         self.MODEL = INFO.INI.findall("BALLSCREWPARAMS", "MODEL")[0]
@@ -503,13 +390,8 @@ d
         self.PART = INFO.INI.findall("BALLSCREWPARAMS", "PART")[0]
         #self.datalog.write("Номер изделия: " + self.PART + "\n")
         #self.datalog.write("Дата: " + self.DATE + "\n")
-        for key, sldr in ini_control_match_dict[int(self.TYPE)-1].items():
-            sldr.setMinimum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MIN')[0]))
-            sldr.setMaximum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MAX')[0]))
-            sldr.setValue(float(INFO.INI.findall("BALLSCREWPARAMS", key)[0]))
         #TODO обработка ошибок и исключений: 1) нет файла - сообщение и заполнение по умолчанию, создание конфига
         #TODO обработка ошибок и исключений: 2) нет ключей в конфиге - сообщение и заполнение по умолчанию
-
     
 ################################
 # required handler boiler code #
