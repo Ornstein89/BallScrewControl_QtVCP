@@ -41,11 +41,21 @@ net bit3 => BallScrewVCP2.ledPos_Is_On32                  # BIT	IN	Цветов�
 # стандартная ActionButton net device_off <=  BallScrewVCP2.btnDevice_Off32        # BIT	OUT	Кнопка
 net load_active <=  BallScrewVCP2.Load_Active_On32        # BIT	OUT	Переключатель
 
-net enable => BallScrewVCP2.ledEnable32                  # BIT	IN	Цветовой индикатор (красный / зелёный)
-net geartorque_error => BallScrewVCP2.ledGeartorque_Error32  # BIT	IN	Цветовой индикатор (красный / зелёный)
-net braketorque_error => BallScrewVCP2.ledBraketorque_Error32# BIT	IN	Цветовой индикатор (красный / зелёный)
-net estop_ext => BallScrewVCP2.ledEstop_Ext32            # BIT	IN	Цветовой индикатор (красный / зелёный)
-net load_is_on => BallScrewVCP2.ledLoad_Is_On2_32        # BIT	IN	Цветовой индикатор (красный / зелёный)
+#net enable => BallScrewVCP2.ledEnable32                  # BIT	IN	Цветовой индикатор (красный / зелёный)
+net  bit0 => BallScrewVCP2.ledEnable32
+
+#net geartorque_error => BallScrewVCP2.ledGeartorque_Error32  # BIT	IN	Цветовой индикатор (красный / зелёный)
+net bit1 => BallScrewVCP2.ledGeartorque_Error32
+
+#net braketorque_error => BallScrewVCP2.ledBraketorque_Error32# BIT	IN	Цветовой индикатор (красный / зелёный)
+net bit2 => BallScrewVCP2.ledBraketorque_Error32
+
+#net estop_ext => BallScrewVCP2.ledEstop_Ext32            # BIT	IN	Цветовой индикатор (красный / зелёный)
+net bit3 => BallScrewVCP2.ledEstop_Ext32
+
+#net load_is_on => BallScrewVCP2.ledLoad_Is_On2_32        # BIT	IN	Цветовой индикатор (красный / зелёный)
+net bit4 => BallScrewVCP2.ledLoad_Is_On2_32
+
 net load_alarm => BallScrewVCP2.ledLoad_Alarm32          # BIT	IN	Цветовой индикатор (красный / зелёный)
 net load_error => BallScrewVCP2.ledLoad_Error32          # BIT	IN	Цветовой индикатор (красный / зелёный)
 net load_overheat => BallScrewVCP2.ledLoad_Overheat32    # BIT	IN	Цветовой индикатор (красный / зелёный)
@@ -53,13 +63,27 @@ net pos_is_on => BallScrewVCP2.ledPos_Is_On_2_32         # BIT	IN	Цветово
 net pos_alarm => BallScrewVCP2.ledPos_Alarm32            # BIT	IN	Цветовой индикатор (красный / зелёный)
 net pos_overheat => BallScrewVCP2.ledPos_Overheat32      # BIT	IN	Цветовой индикатор (красный / зелёный)
 
-net geartorque_error_value  => BallScrewVCP2.geartorque_error_value-pin32    #
-net geartorque_error_value_max => BallScrewVCP2.geartorque_error_value_max32 # ограничение по длине имени пина 47 символов #	FLOAT	IN	Числовой индикатор
-net brakeorque_error_value  => BallScrewVCP2.brakeorque_error_value-pin32    #
-net braketorque_error_value_max => BallScrewVCP2.braketorque_error_value_max32 # ограничение по длине имени пина 47 символов #	FLOAT	IN	Числовой индикатор
-net load_error_value => BallScrewVCP2.load_error_value-pin32                 #
-net load_error_value_max => BallScrewVCP2.load_error_value_max-pin32         # FLOAT	IN	Числовой индикатор
-net load_temperature => BallScrewVCP2.load_temperature-pin32                 #
+#net geartorque_error_value  => BallScrewVCP2.geartorque_error_value-pin32    #
+net sine0 => BallScrewVCP2.geartorque_error_value-pin32
+
+#net geartorque_error_value_max => BallScrewVCP2.geartorque_error_value_max32 # ограничение по длине имени пина 47 символов #	FLOAT	IN	Числовой индикатор
+net cosine0 => BallScrewVCP2.geartorque_error_value_max32
+
+#net brakeorque_error_value  => BallScrewVCP2.brakeorque_error_value-pin32    #
+net sine0 => BallScrewVCP2.brakeorque_error_value-pin32
+
+#net braketorque_error_value_max => BallScrewVCP2.braketorque_error_value_max32 # ограничение по длине имени пина 47 символов #	FLOAT	IN	Числовой индикатор
+net cosine0 => BallScrewVCP2.braketorque_error_value_max32
+
+#net load_error_value => BallScrewVCP2.load_error_value-pin32                 #
+net sine0 => BallScrewVCP2.load_error_value-pin32
+
+#net load_error_value_max => BallScrewVCP2.load_error_value_max-pin32         # FLOAT	IN	Числовой индикатор
+net cosine0 => BallScrewVCP2.load_error_value_max-pin32
+
+#net load_temperature => BallScrewVCP2.load_temperature-pin32                 #
+net sine0 => BallScrewVCP2.load_temperature-pin32
+
 net load_temperature_max => BallScrewVCP2.load_temperature_max-pin32         # FLOAT	IN	Числовой индикатор
 net pos_temperature => BallScrewVCP2.pos_temperature-pin32                   #
 net pos_temperature_max =>  BallScrewVCP2.pos_temperature_max-pin32          # FLOAT	IN	Числовой индикатор

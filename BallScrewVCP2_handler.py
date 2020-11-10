@@ -19,10 +19,10 @@ import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
 
 # пакеты GUI
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog#, QHalLabel
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
-#from qtvcp.widgets import FocusOverlay
+#from qtvcp.widgets import FocusOverlay, HALLabel
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
 from qtvcp.widgets.gcode_editor import GcodeEditor as GCODE
 from qtvcp.lib.keybindings import Keylookup
@@ -131,6 +131,9 @@ class HandlerClass:
             tmp_pin = self.hal.newpin(key, hal.HAL_BIT, hal.HAL_IN)
             self.VCP_halpins_bit[key][0] = tmp_pin
             tmp_pin.value_changed.connect(self.VCP_halpins_bit[key][1])
+
+        STATUS.connect('state-on', self.on_state_on)
+        STATUS.connect('state-off', self.on_state_off)
         return
         
     def onBtnTempShow31(self):
@@ -157,6 +160,13 @@ class HandlerClass:
             print '*** Qt.Key_Right'
             return
         return
+
+    def on_state_on(self, data):
+        print "*** on_state_on, data=",data
+        pass
+    def on_state_off(self, data):
+        print "*** on_state_off, data=", data
+        pass
 
     def onTorque_SetChanged(self, data):
         if not self.initialized:
@@ -190,15 +200,45 @@ class HandlerClass:
         #self.vLine.setPos(pg.Point(0.0, time_value))
         self.w.plt32.setXRange(time_value - time_range, time_value + time_range*0.1)
         self.w.plt32.setYRange(0.0, YMax)
-        #self.w.plt32.plot.clear()
+        self.w.plt32.clear() # обязательно очищать, иначе утечка памяти, объекты копятся на графике
+        self.w.plt32.addItem(self.hLine, ignoreBounds=True, label='*Y')
+        self.w.plt32.addItem(self.vLine, ignoreBounds=True, label='*X')
         self.w.plt32.plot(self.plotdata[0][:],
                           self.plotdata[1][:],
-        #                  clear = True,
+                          #clear = True,
                           pen = pg.mkPen(color=QColor(Qt.darkCyan), width=2))
+        self.w.plt32.plot(self.plotdata[0][-1:],
+                            self.plotdata[1][-1:],
+                            #                  clear = True,
+                            symbolPen = pg.mkPen(color=QColor(255,0,0,255), width=3),
+                            symbol='o', symbolSize=10, symbolBrush=QColor(0,0,0,0),
+                            label='{value:0.1f}',
+                            labelOpts={'position':0.95, 'color': (255,0,0),
+                                       'movable': False, 'fill': (0, 0, 200, 100)})
         self.vLine.setValue(time_value)
         return
 
     def onUpdateFloatSignals(self, data):
+        halpin_name = self.w.sender().text()
+
+        halpins_labels_match_precision1 = { # отображать с точностью 2 знака после запятой
+        'geartorque_error_value-pin32':[self.w.lblGeartorque_Error_Value32, '%'],
+        'geartorque_error_value_max32':[self.w.lblGeartorque_Error_Value_Max32, '%'],
+        'brakeorque_error_value-pin32':[self.w.lblBraketorque_Error_Value32, '%'],
+        'braketorque_error_value_max32':[self.w.lblBraketorque_Error_Value_Max32, '%'],
+        'load_error_value-pin32':[self.w.lblLoad_Error_Value32, ''],
+        'load_error_value_max-pin32':[self.w.lblLoad_Error_Value_Max32, ''],
+        'load_temperature-pin32':[self.w.lblLoad_Temperature32, ''],
+        'load_temperature_max-pin32':[self.w.lblLoad_Temperature_Max32, ''],
+        'pos_temperature-pin32':[self.w.lblPos_Temperature32, ''],
+        'pos_temperature_max-pin32':[self.w.lblPos_Temperature_Max32, '']
+        }
+
+        if(halpin_name in halpins_labels_match_precision1):
+            halpin_value = self.hal[halpin_name]
+            halpins_labels_match_precision1[halpin_name][0].setText("{:10.1f}".format(halpin_value)
+                +halpins_labels_match_precision1[halpin_name][1])
+
         return
 
     def onTimeChanged(self, data):
@@ -281,6 +321,10 @@ class HandlerClass:
             led.setColor(Qt.green)
             led.setOffColor(Qt.green)
 
+        #self.w.lblTest = QHalLabel()
+        #self.w.lblTest.setText("!!!HAL Label!!!")
+        # self.w.gridLayout_29.addWidget(self.w.lblTest, 3, 2)
+
         #TODO настройка осей графика
         self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
         self.DATALOGFILENAME = INFO.INI.findall("BALLSCREWPARAMS", "LOGFILE")[0]
@@ -292,18 +336,31 @@ class HandlerClass:
         self.w.plt32.setLabel('left', 'T [Н*м]', **styles)
         self.w.plt32.setLabel('bottom', 'Время', **styles)
 
-        self.hLine = pg.InfiniteLine(angle=0, movable=False, pen=pg.mkPen(color=QColor(Qt.blue), width = 2, style=Qt.DashDotLine))
+        font=QtGui.QFont()
+        font.setPixelSize(20)
+        self.hLine = pg.InfiniteLine(angle=0, movable=False,
+            pen=pg.mkPen(color=QColor(Qt.blue),
+            width = 2, style=Qt.DashDotLine),
+            label='{value:0.1f}',
+            labelOpts={'position':0.95, 'color': (255,0,0),
+                       'movable': False, 'fill': (0, 0, 200, 100)})
         #self.hLine.setPos(pg.Point(0.0, 10.0))
         self.hLine.setValue(0.5)
         self.hLine.setZValue(1)
         self.w.plt32.addItem(self.hLine, ignoreBounds=True)
 
-        self.vLine = pg.InfiniteLine(angle=90, movable=False, pen=pg.mkPen(color=QColor(Qt.blue), width = 2, style=Qt.DashDotLine))
+        self.vLine = pg.InfiniteLine(angle=90, movable=False,
+            pen=pg.mkPen(color=QColor(Qt.blue), width = 2, style=Qt.DashDotLine))
         #self.vLine.setPos(pg.Point(1.0, 0.0))
         self.vLine.setValue(0.5)
         self.vLine.setZValue(1)
         self.w.plt32.addItem(self.vLine, ignoreBounds=True)
 
+        font=QtGui.QFont()
+        font.setPixelSize(20)
+        #plot.getAxis("bottom").tickFont = font
+        self.w.plt32.getAxis("bottom").setStyle(tickFont = font)
+        self.w.plt32.getAxis("left").setStyle(tickFont = font)
         # self.graphWidget.setXRange(5, 20, padding=0)
         # self.graphWidget.setYRange(30, 40, padding=0)
         # курсор на графике https://stackoverflow.com/questions/50512391/can-i-share-the-crosshair-with-two-graph-in-pyqtgraph-pyqt5

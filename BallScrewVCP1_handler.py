@@ -87,6 +87,17 @@ class HandlerClass:
 
         #fov = FocusOverlay(self)
         #fov.show()
+    def processed_key_event__(self,receiver,event,is_pressed,key,code,shift,cntrl):
+        if event.key() == Qt.Key_Left:
+            print '*** Qt.Key_Left'
+            return
+        if event.key() == Qt.Key_Right:
+            print '*** Qt.Key_Right'
+            return
+    def closeEvent(self, event):
+            #ACTION.
+            print '*** closeEvent'
+            event.accept()
 
     ########################
     # CALLBACKS FROM STATUS#
@@ -163,16 +174,24 @@ class HandlerClass:
             led.setOffColor(Qt.green)
         ini_control_match_dict = {
             'NOM_VEL' : (self.w.sldVelocity31, self.w.spnVelocity31),
-            'NOM_ACCEL' : (self.w.sldAcceleration31, self.w.sldAcceleration31)
+            'NOM_ACCEL' : (self.w.sldAcceleration31, self.w.spnAcceleration31)
         }
-        for key, controls in ini_control_match_dict.items():
-            for control in controls:
-                control.setMinimum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MIN')[0]))
-                control.setMaximum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MAX')[0]))
-                control.setValue(float(INFO.INI.findall("BALLSCREWPARAMS", key)[0]))
-            controls[0].valueChanged.connect(controls[1].setValue)
-            controls[1].valueChanged.connect(controls[0].setValue)
 
+
+        for key, controls in ini_control_match_dict.items():
+            print '***controls[0] = ', controls[0]
+            print '***controls[1] = ', controls[1]
+            controls[0].setMinimum(int(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MIN')[0])*100))
+            controls[0].setMaximum(int(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MAX')[0])*100))
+            controls[0].setValue(int(float(INFO.INI.findall("BALLSCREWPARAMS", key)[0])*100))
+            controls[1].setMinimum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MIN')[0]))
+            controls[1].setMaximum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MAX')[0]))
+            controls[1].setValue(float(INFO.INI.findall("BALLSCREWPARAMS", key)[0]))
+
+        self.w.sldVelocity31.valueChanged.connect(lambda val: self.w.spnVelocity31.setValue(float(val)/100.0))
+        self.w.spnVelocity31.valueChanged.connect(lambda val: self.w.sldVelocity31.setValue(int(val*100)))
+        self.w.sldAcceleration31.valueChanged.connect(lambda val: self.w.spnAcceleration31.setValue(float(val)/100.0))
+        self.w.spnAcceleration31.valueChanged.connect(lambda val: self.w.sldAcceleration31.setValue(int(val*100)))
         return
 
     def onPositionChanged(self, data):
@@ -182,7 +201,7 @@ class HandlerClass:
 
     def onPosition_ActualChanged(self, data):
         halpin_value = self.hal['position_actual-pin31']
-        print '*** onPosition_ActualChanged, data=', data
+        #print '*** onPosition_ActualChanged, data=', data
         self.w.lblPosition_Actual31.setText("{:10.2f}".format(halpin_value))
         self.current_position = self.hal['position_actual-pin31']
         pass
@@ -203,7 +222,7 @@ class HandlerClass:
         # запись показаний производится в буфер для повышения производительности
         #TODO улучшить менеджмент памяти - выделять блоками (либо за этим следит интерпретатор питона)
         #TODO ограничение на длину???
-        if not self.hal['append_buffer']: # исключить обратный фронт сигнала
+        if not self.hal['append_buffer-pin31']: # исключить обратный фронт сигнала
             return
         self.position_buffer.append([self.current_time, self.current_position]) # значения без лишнего обращения к пинам, для улучшения производительности
         # self.position_buffer.append([self.hal['position_actual-pin31'], self.hal['time-pin31']]) # получение значений с hal-пинов, может снижать производительность
@@ -214,7 +233,7 @@ class HandlerClass:
         pass
 
     def onAppend_FileChanged(self, data):
-        if not self.hal['append_file']: # исключить обратный фронт сигнала
+        if not self.hal['append_file-pin31']: # исключить обратный фронт сигнала
             return
         #записать показания в файл
         for rec in self.position_buffer:

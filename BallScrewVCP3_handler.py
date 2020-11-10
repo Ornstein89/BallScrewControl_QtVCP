@@ -78,7 +78,6 @@ class HandlerClass:
     # This is where you make HAL pins or initialize state of widgets etc
     def initialized__(self):
         self.init_gui()
-        self.w.ledPos_Alarm31.setOffColor(Qt.yellow)
         self.start_log(self.DATALOGFILENAME)
         # self.gcodes.setup_list() инструкция нужна только для отображения справочного списка команд
 
@@ -95,26 +94,7 @@ class HandlerClass:
     def init_pins(self):
         # создание HAL-пинов приложения
         self.VCP_halpins_float = {
-        'position-pin31': None,
-        'position_actual-pin31': None,
-        'time_current-pin32': None,
-        'duration-pin32':None,
-        'torque_set-pin32': None,
-        'torque_actual-pin32': None,
-        'omega_actual-pin32': None,
-        'geartorque_error_value-pin32': None,
-        'geartorque_error_value_max32': None, # ограничение по длине имени пина 47 символов
-        'brakeorque_error_value-pin32': None,
-        'braketorque_error_value_max32': None, # ограничение по длине имени пина 47 символов
-        'load_error_value-pin32': None,
-        'load_error_value_max-pin32': None,
-        'load_temperature-pin32': None,
-        'load_temperature_max-pin32': None,
-        'pos_temperature-pin32': None,
-        'pos_temperature_max-pin32': None,
-        'torque_actual-pin32': None,
-        'torque_set-pin32': None,
-        'torque_actual-pin32': None
+
         }
         self.VCP_halpins_bit = {
         'active_0-pin':None,
@@ -188,22 +168,6 @@ class HandlerClass:
         # настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
         diodes_redgreen = (
 
-        self.w.ledPos_Alarm31,
-
-        self.w.ledIs_Running_Ccw32,
-        self.w.ledIs_Running_Cw32,
-        self.w.ledGeartorque_Error32,#.setOffColor(Qt.red)
-        self.w.ledGeartorque_Error32,#.setColor(Qt.green)
-        self.w.ledBraketorque_Error32,
-        self.w.ledEstop_Ext32,
-        self.w.ledLoad_Is_On2_32,
-        self.w.ledLoad_Alarm32,
-        self.w.ledLoad_Error32,
-        self.w.ledLoad_Overheat32,
-        self.w.ledPos_Is_On_2_32,
-        self.w.ledPos_Alarm32,
-        self.w.ledPos_Overheat32,
-
         self.w.ledEstop_Ext33,
         self.w.ledOn_Position33,
         self.w.ledAt_Load33,
@@ -220,49 +184,54 @@ class HandlerClass:
         self.w.ledPos_Overload33,
         self.w.ledPos_Overheat33,
         self.w.ledPos_Sip33,
-        self.w.ledLimits_Excess33,
-
-        self.w.ledIs_Homed34,
-        self.w.ledOn_Position34,
-        self.w.ledAt_Load34,
-        self.w.ledTorque_Error34,
-        self.w.ledTorque1_Error34,
-        self.w.ledEstop_Ext34,
-        self.w.ledLoad_Is_On_2_34,
-        self.w.ledLoad_Alarm34,
-        self.w.ledLoad_Error34,
-        self.w.ledLoad_Overload34,
-        self.w.ledLoad_Overheat34,
-        self.w.ledPos_Is_On_2_34,
-        self.w.ledPoa_Alarm34,
-        self.w.ledPos_Error34,
-        self.w.ledPos_Overload34,
-        self.w.ledPos_Overheat34,
-        self.w.ledSlip34,
-        self.w.ledLimits_Excess34)
+        self.w.ledLimits_Excess33)
 
 
         for led in diodes_redgreen:
             led.setColor(Qt.green)
             led.setOffColor(Qt.green)
 
+        ini_control_match_dict = {
+            'NOM_DSP_IDLE' : (self.w.sldDsp_Idle33, self.w.spnDsp_Idle33),
+            'NOM_VEL' : (self.w.sldVel_Idle33, self.w.spnVel_Idle33),
+            'NOM_ACCEL' : (self.w.sldAccel_Idle33, self.w.spnAccel_Idle33),
+            'NOM_LOAD' : (self.w.sldLoad33, self.w.spnLoad33),
+            'NOM_POS_MEASURE' : (self.w.sldPos_Measure33, self.w.spnPos_Measure33),
+            'NOM_DSP_MEASURE' : (self.w.sldDsp_Measure33, self.w.spnDsp_Measure33),
+            'NOM_VEL_MEASURE' : (self.w.sldVel_Measure33, self.w.spnVel_Measure33),
+            'NOM_ACCEL_MEASURE' : (self.w.sldAccel_Measure33, self.w.spnAccel_Measure33),
+        }
+
+        for key, controls in ini_control_match_dict.items():
+            print '***controls[0] = ', controls[0]
+            print '***controls[1] = ', controls[1]
+            controls[0].setMinimum(int(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MIN')[0])*100))
+            controls[0].setMaximum(int(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MAX')[0])*100))
+            controls[0].setValue(int(float(INFO.INI.findall("BALLSCREWPARAMS", key)[0])*100))
+            controls[1].setMinimum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MIN')[0]))
+            controls[1].setMaximum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MAX')[0]))
+            controls[1].setValue(float(INFO.INI.findall("BALLSCREWPARAMS", key)[0]))
+            controls[0].valueChanged.connect(lambda val: controls[1].setValue(float(val)/100.0))
+            controls[1].valueChanged.connect(lambda val: controls[0].setValue(int(val*100)))
+
+
         #TODO настройка осей графика
         self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
         self.DATALOGFILENAME = INFO.INI.findall("BALLSCREWPARAMS", "LOGFILE")[0]
         self.w.stackedWidget.setCurrentIndex(int(self.TYPE)-1)
         self.load_ini(int(self.TYPE))
-        self.w.plt32.showGrid(x = True, y = True)
-        self.w.plt32.setBackground('w')
+        self.w.plt33.showGrid(x = True, y = True)
+        self.w.plt33.setBackground('w')
         pen = pg.mkPen(color=(255, 0, 0), width=2)
-        self.w.plt32.setPen(pen)
+        self.w.plt33.setPen(pen)
         styles = {'color':'r', 'font-size':'20px'}
-        self.w.plt32.setLabel('left', 'Момент [Н*м]', **styles)
-        self.w.plt32.setLabel('bottom', 'Время', **styles)
+        self.w.plt33.setLabel('left', 'Момент [Н*м]', **styles)
+        self.w.plt33.setLabel('bottom', 'Время', **styles)
         # self.graphWidget.setXRange(5, 20, padding=0)
         # self.graphWidget.setYRange(30, 40, padding=0)
         # курсор на графике https://stackoverflow.com/questions/50512391/can-i-share-the-crosshair-with-two-graph-in-pyqtgraph-pyqt5
         # https://stackoverflow.com/questions/52410731/drawing-and-displaying-objects-and-labels-over-the-axis-in-pyqtgraph-how-to-do
-d
+
         return
 
     def pinCnagedCallback(self, data):
@@ -275,24 +244,15 @@ d
             return
 
         # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_0-pin'):
-            self.w.sldVelocity31.setEnabled(self.hal['active_0-pin'])
-            self.w.sldAcceleration31.setEnabled(self.hal['active_0-pin'])
-            return
-
-        # отдельные пины, отвечающий за активность графических компонентов
         if(halpin_name == 'active_1-pin'):
             self.w.btnJog_Plus33.setEnabled(self.hal['active_1-pin'])
             self.w.btnJog_Minus33.setEnabled(self.hal['active_1-pin'])
-            self.w.btnJog_Plus34.setEnabled(self.hal['active_1-pin'])
-            self.w.btnJog_Minus34.setEnabled(self.hal['active_1-pin'])
             return
 
         # отдельные пины, отвечающий за активность графических компонентов
         if(halpin_name == 'active_2-pin'):
             self.w.chkDsp_Mode33.setEnabled(self.hal['active_2-pin'])
             #TODO на форме 33 два dsp_mode self.w.rbDsp_Mode33.setEnabled(self.hal['active_2-pin'])
-            self.w.chkDsp_Mode34.setEnabled(self.hal['active_2-pin'])
             return
 
         # отдельные пины, отвечающий за активность графических компонентов
@@ -307,22 +267,6 @@ d
             self.w.sldAccel_Measure33.setEnabled(self.hal['active_3-pin'])
             self.w.btnSaveGCode33.setEnabled(self.hal['active_3-pin'])
 
-            self.w.sldDsp34.setEnabled(self.hal['active_3-pin'])
-            self.w.sldOmg34.setEnabled(self.hal['active_3-pin'])
-            self.w.sldAccel_Coeff34.setEnabled(self.hal['active_3-pin'])
-            self.w.sldF1_34.setEnabled(self.hal['active_3-pin'])
-            self.w.sldF2_34.setEnabled(self.hal['active_3-pin'])
-            self.w.btnSaveGCode34.setEnabled(self.hal['active_3-pin'])
-
-            return
-
-        # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_4-pin'):
-            self.w.mdiline33.setEnabled(self.hal['active_4-pin'])
-            self.w.btnLoadGCode34.setEnabled(self.hal['active_4-pin'])
-            self.w.btnProgram_Run34.setEnabled(self.hal['active_4-pin'])
-            self.w.btnProgram_Pause34.setEnabled(self.hal['active_4-pin'])
-            self.w.btnProgram_Stop34.setEnabled(self.hal['active_4-pin'])
             return
 
         # отдельные пины, отвечающий за активность графических компонентов
@@ -335,8 +279,7 @@ d
 
         # соответствие пинов float и табличек, на которых нужно отображать значение
         halpins_labels_match_precision2 = { # отображать с точностью 2 знака после запятой
-            'position-pin31':self.w.lblPosition31,
-            'position_actual-pin31':self.w.lblPosition_Actual31,
+
             }
 
         if(halpin_name in halpins_labels_match_precision2):
@@ -344,22 +287,6 @@ d
             halpins_labels_match_precision2[halpin_name].setText("{:10.2f}".format(halpin_value))
 
         halpins_labels_match_precision1 = { # отображать с точностью 1 знак после запятой
-            # На форме 3.2
-            'torque_set-pin32':self.w.lblTorque_Set32,
-            'torque_actual-pin32':self.w.lblTorque_Actual32,
-            'omega_actual-pin32':self.w.lblOmega_Actual32,
-
-            # "таблица" с диодами и надписями на Форме 3.2
-            'geartorque_error_value-pin32':self.w.lblGeartorque_Error_Value32,
-            'geartorque_error_value_max32':self.w.lblGeartorque_Error_Value_Max32,
-            'brakeorque_error_value-pin32':self.w.lblBraketorque_Error_Value32,
-            'braketorque_error_value_max32':self.w.lblBraketorque_Error_Value_Max32,
-            'load_error_value-pin32':self.w.lblLoad_Error_Value32,
-            'load_error_value_max-pin32':self.w.lblLoad_Error_Value_Max32,
-            'load_temperature-pin32':self.w.lblLoad_Temperature32,
-            'load_temperature_max-pin32':self.w.lblLoad_Temperature_Max32,
-            'pos_temperature-pin32':self.w.lblPos_Temperature32,
-            'pos_temperature_max-pin32':self.w.lblPos_Temperature_Max32,
 
             # На форме 3.3
             'position':self.w.lblPosition33,
@@ -382,32 +309,7 @@ d
             'pos_temperature':self.w.lblPos_Temperature33,
             'pos_temperature_max':self.w.lblPos_Temperature_Max33,
             'torque_extremal_last':self.w.lblTorque_Extremal_Last33,
-            'torque_extremal_max':self.w.lblTorque_Extremal_Max33,
-
-            #TODO для формы 3.4
-            'position':self.w.lblPosition34,
-            'position_actual':self.w.lblPosition_Actual34,
-            'load':self.w.lblLoad34,
-            'load_actual':self.w.lblLoad_Actual34,
-
-            # "таблица" с диодами и надписями на Форме 3.4
-            'torque_error_value':self.w.lblTorque_Error_Value34,
-            'torque_error_value_max':self.w.lblTorque_Error_Value_Max34,
-            'torque1_error_value':self.w.lblTorque1_Error_Value34,
-            'torque1_error_value_max':self.w.lblTorque1_Error_Value_Max34,
-            'load_error_value':self.w.lblLoad_Error_Value34,
-            'load_error_value_max':self.w.lblLoad_Error_Value_Max34,
-            'load_overload_value':self.w.lblLoad_Overload_Value34,
-            'load_overload_value_max':self.w.lblLoad_Overload_Value_Max34,
-            'load_temperature':self.w.lblLoad_Temperature34,
-            'load_temperature_max':self.w.lblLoad_Temperature_Max34,
-            'pos_error_value':self.w.lblPos_Error_Value34,
-            'pos_error_value_max':self.w.lblPos_Error_Value_Max34,
-            'pos_overload_value':self.w.lblPos_Overload_Value34,
-            'pos_overload_value_max':self.w.lblPos_Overload_Value_Max34,
-            'pos_temperature':self.w.lblPos_Temperature34,
-            'pos_temperature_max':self.w.lblPos_Temperature_Max34,
-            'torque_max':self.w.lblTorque_Max34,
+            'torque_extremal_max':self.w.lblTorque_Extremal_Max33
         }
 
         if(halpin_name in halpins_labels_match_precision1):
@@ -430,12 +332,12 @@ d
     def update_plot(self):
         if(self.current_plot_n < 20):
             #print "*** plot < 20"
-            self.w.plt32.plot(self.data[0][0:self.current_plot_n],
+            self.w.plt33.plot(self.data[0][0:self.current_plot_n],
                               self.data[1][0:self.current_plot_n],
                               clear = True)
         else:
             #print "*** plot >= 20"
-            self.w.plt32.plot(self.data[0][self.current_plot_n-20:self.current_plot_n],
+            self.w.plt33.plot(self.data[0][self.current_plot_n-20:self.current_plot_n],
                               self.data[1][self.current_plot_n-20:self.current_plot_n],
                               clear=True)
         return
@@ -468,13 +370,6 @@ d
     #TODO в принципе функция не нужна, т.к. linuxcnc сам поддерживает передачу параметров из ini
     def load_ini(self, n_form):
         ini_control_match_dict = (
-        # для формы 3.1
-        {
-            'NOM_VEL' : self.w.sldVelocity31,
-            'NOM_ACCEL' : self.w.sldAcceleration31
-        },
-        # для формы 3.2
-        {},
         # для формы 3.3
         {
             'NOM_DSP_IDLE' : self.w.sldDsp_Idle33,
@@ -486,14 +381,6 @@ d
             'NOM_LOAD' : self.w.sldLoad33,
             'NOM_POS_MEASURE' : self.w.sldPos_Measure33
         },
-        # для формы 3.4
-        {
-            'NOM_TRAVEL' : self.w.sldDsp34,
-            'NOM_OMEGA' : self.w.sldOmg34,
-            'NOM_ACCEL_COEFF' : self.w.sldAccel_Coeff34,
-            'NOM_F1' : self.w.sldF1_34,
-            'NOM_F2' : self.w.sldF2_34
-        }
         )
 
         #self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
