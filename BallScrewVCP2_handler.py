@@ -102,6 +102,21 @@ class HandlerClass:
         #fov = FocusOverlay(self)
         #fov.show()
 
+    def processed_key_event__(self,receiver,event,is_pressed,key,code,shift,cntrl):
+        if event.key() == Qt.Key_Left and self.w.btnStart_Ccw32.isEnabled():
+            if is_pressed:
+                self.w.btnStart_Ccw32.setChecked(True)
+            else:
+                self.w.btnStart_Ccw32.setChecked(False)
+            #print '*** Qt.Key_Left'
+
+        if event.key() == Qt.Key_Right and self.w.btnStart_Cw32.isEnabled():
+            if is_pressed:
+                self.w.btnStart_Cw32.setChecked(True)
+            else:
+                self.w.btnStart_Cw32.setChecked(False)
+            #print '*** Qt.Key_Right'
+
     ########################
     # CALLBACKS FROM STATUS#
     ########################
@@ -148,6 +163,8 @@ class HandlerClass:
             self.VCP_halpins_bit[key][0] = tmp_pin
             tmp_pin.value_changed.connect(self.VCP_halpins_bit[key][1])
 
+        STATUS.connect('state-on', self.on_state_on)
+        STATUS.connect('state-off', self.on_state_off)
         return
 
     def keyPressEvent(self, event):
@@ -158,6 +175,14 @@ class HandlerClass:
             print '*** Qt.Key_Right'
             return
         return
+
+    def on_state_on(self, data):
+        print "*** on_state_on, data=",data
+        pass
+
+    def on_state_off(self, data):
+        print "*** on_state_off, data=", data
+        pass
 
     def onTorque_SetChanged(self, data):
         if not self.initialized:
@@ -324,6 +349,7 @@ class HandlerClass:
     #####################
     # GENERAL FUNCTIONS #
     #####################
+
     def init_gui(self):
         self.load_ini()
         self.init_led_colors()
@@ -333,17 +359,18 @@ class HandlerClass:
         # STATUS.connect('state-off', lambda w: self.w.btnDevice_On32.setEnabled(True))
         # STATUS.connect('state-off', lambda w: self.w.btnDevice_Off32.setEnabled(False))
         # STATUS.connect('state-estop-reset', lambda w: self.w.btnDevice_Off32.setEnabled(False))
-        STATUS.connect('state-on', lambda _: (self.w.btnStart_Cw32.setEnabled(True),
-                                              self.w.btnStart_Ccw32.setEnabled(True),
-                                              self.w.btnStop32.setEnabled(True)))
-        STATUS.connect('state-off', lambda _:(self.w.btnStart_Cw32.setEnabled(False),
-                                              self.w.btnStart_Ccw32.setEnabled(False),
-                                              self.w.btnStop32.setEnabled(False)))
+
         self.w.btnDevice_Off32.clicked.connect(self.onBtnDevice_Off)
-        self.w.btnStart_Cw32.clicked.connect(lambda: self.w.btnStart_Ccw32.setChecked(not self.w.btnStart_Cw32.isChecked()))
-        self.w.btnStart_Ccw32.clicked.connect(lambda: self.w.btnStart_Cw32.setChecked(not self.w.btnStart_Ccw32.isChecked()))
-        self.w.btnStop32.clicked.connect(lambda : (self.w.btnStart_Cw32.setChecked(False),
-                                                  self.w.btnStart_Ccw32.setChecked(False)))
+        STATUS.connect('state-on', lambda _: (self.w.btnStart_Ccw32.setEnabled(True),
+                                              self.w.btnStop32.setEnabled(True),
+                                              self.w.btnStart_Cw32.setEnabled(True)))
+        STATUS.connect('state-off', lambda _:(self.w.btnStart_Ccw32.setEnabled(False),
+                                              self.w.btnStop32.setEnabled(False),
+                                              self.w.btnStart_Cw32.setEnabled(False)))
+        self.w.btnStart_Ccw32.clicked.connect(lambda x: self.w.btnStart_Cw32.setChecked(False) if self.w.btnStart_Ccw32.isChecked() else None)
+        self.w.btnStart_Cw32.clicked.connect(lambda x: self.w.btnStart_Ccw32.setChecked(False) if self.w.btnStart_Cw32.isChecked() else None)
+        self.w.btnStop32.clicked.connect(lambda x: (self.w.btnStart_Cw32.setChecked(False),
+            self.w.btnStart_Ccw32.setChecked(False)))
 
         #STATUS.connect('state-estop-reset', lambda w: self._flip_state(False))
         #self.w.lblTest = QHalLabel()

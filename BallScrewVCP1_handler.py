@@ -139,22 +139,6 @@ class HandlerClass:
             tmpPin.value_changed.connect(self.VCP_halpins_bit[key][1])
 
         return
-        
-    def onBtnTempShow31(self):
-        self.w.stackedWidget.setCurrentIndex(5)
-        pass
-        
-    def onBtnTempShow32(self):
-        self.w.stackedWidget.setCurrentIndex(6)
-        pass
-        
-    def onBtnTempShow33(self):
-        self.w.stackedWidget.setCurrentIndex(7)
-        pass
-        
-    def onBtnTempShow34(self):
-        self.w.stackedWidget.setCurrentIndex(8)
-        pass
 
     def onBtnSaveState31(self):
         #TODO
