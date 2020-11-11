@@ -12,7 +12,7 @@
 # **** IMPORT SECTION **** #
 ############################
 # стандартные пакеты
-import sys, os, configparser
+import sys, os, configparser, datetime, time
 
 # пакеты linuxcnc
 import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
@@ -53,6 +53,21 @@ ACTION = Action()
 # **** HANDLER CLASS SECTION **** #
 ###################################
 
+def timestamp():
+    # https://gist.github.com/iverasp/9349dffa42aeffb32e48a0868edfa32d
+    return int(time.mktime(datetime.datetime.now().timetuple()))
+
+
+class TimeAxisItem(pg.AxisItem):
+    # https://gist.github.com/iverasp/9349dffa42aeffb32e48a0868edfa32d
+    def __init__(self, *args, **kwargs):
+        super(TimeAxisItem, self).__init__(*args, **kwargs)
+        #self.setLabel(text='Время', units='м:с')
+        self.enableAutoSIPrefix(False)
+
+    def tickStrings(self, values, scale, spacing):
+        return [datetime.datetime.fromtimestamp(value).strftime("%M:%S") for value in values]
+
 class HandlerClass:
 
     ########################
@@ -65,7 +80,8 @@ class HandlerClass:
         self.hal = halcomp
         self.PATHS = paths
         self.gcodes = GCodes()
-        self.plotdata = [[],[]]
+        self.plot_data_buffer = [[],[]]
+        self.log_data_buffer = []
         self.current_plot_n = 0
         self.w = widgets
         self.init_pins()
@@ -80,7 +96,7 @@ class HandlerClass:
     # This is where you make HAL pins or initialize state of widgets etc
     def initialized__(self):
         self.init_gui()
-        self.start_log(self.DATALOGFILENAME)
+        self.start_log(self.datalogfileFILENAME)
         self.initialized = True
         # self.gcodes.setup_list() инструкция нужна только для отображения справочного списка команд
         #fov = FocusOverlay(self)
@@ -132,25 +148,7 @@ class HandlerClass:
             self.VCP_halpins_bit[key][0] = tmp_pin
             tmp_pin.value_changed.connect(self.VCP_halpins_bit[key][1])
 
-        STATUS.connect('state-on', self.on_state_on)
-        STATUS.connect('state-off', self.on_state_off)
         return
-        
-    def onBtnTempShow31(self):
-        self.w.stackedWidget.setCurrentIndex(5)
-        pass
-        
-    def onBtnTempShow32(self):
-        self.w.stackedWidget.setCurrentIndex(6)
-        pass
-        
-    def onBtnTempShow33(self):
-        self.w.stackedWidget.setCurrentIndex(7)
-        pass
-        
-    def onBtnTempShow34(self):
-        self.w.stackedWidget.setCurrentIndex(8)
-        pass
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Left:
@@ -161,18 +159,12 @@ class HandlerClass:
             return
         return
 
-    def on_state_on(self, data):
-        print "*** on_state_on, data=",data
-        pass
-    def on_state_off(self, data):
-        print "*** on_state_off, data=", data
-        pass
-
     def onTorque_SetChanged(self, data):
         if not self.initialized:
             return
 
         torque_set_value = self.hal['torque_set-pin32'] * 0.1 + 1.0
+        self.w.lblTorque_Set32.setText("{:10.1f}".format(torque_set_value))
         #self.hLine.setPos(pg.Point(torque_set_value, 0.0))
         self.hLine.setValue(torque_set_value)
         return
@@ -182,33 +174,34 @@ class HandlerClass:
             return
 
         torque_actual_value = self.hal['torque_actual-pin32'] * 0.1 + 1.0
+        self.w.lblTorque_Actual32.setText("{:10.1f}".format(torque_actual_value))
         time_value = self.hal['time-pin32']
         time_range = 15.0 #TODO заменить на сторонний сигнал
 
         # добавить точку
-        self.plotdata[0].append(time_value)
-        self.plotdata[1].append(torque_actual_value)
+        self.append_plot(time_value, torque_actual_value)
 
         # оставить только точки в пределах [time_value-timerange, time_value]
         plotindex = 0
-        while self.plotdata[0][plotindex] < time_value - time_range:
+        while self.plot_data_buffer[0][plotindex] < time_value - time_range:
             plotindex += 1
-        self.plotdata[0] = self.plotdata[0][plotindex:]
-        self.plotdata[1] = self.plotdata[1][plotindex:]
-        YMax = 1.2#max(self.plotdata[1]) * 1.1
+        self.plot_data_buffer[0] = self.plot_data_buffer[0][plotindex:]
+        self.plot_data_buffer[1] = self.plot_data_buffer[1][plotindex:]
+        YMax = 1.2#max(self.plot_data_buffer[1]) * 1.1
         # обновить график
+        self.update_plot()
         #self.vLine.setPos(pg.Point(0.0, time_value))
         self.w.plt32.setXRange(time_value - time_range, time_value + time_range*0.1)
         self.w.plt32.setYRange(0.0, YMax)
         self.w.plt32.clear() # обязательно очищать, иначе утечка памяти, объекты копятся на графике
         self.w.plt32.addItem(self.hLine, ignoreBounds=True, label='*Y')
         self.w.plt32.addItem(self.vLine, ignoreBounds=True, label='*X')
-        self.w.plt32.plot(self.plotdata[0][:],
-                          self.plotdata[1][:],
+        self.w.plt32.plot(self.plot_data_buffer[0][:],
+                          self.plot_data_buffer[1][:],
                           #clear = True,
                           pen = pg.mkPen(color=QColor(Qt.darkCyan), width=2))
-        self.w.plt32.plot(self.plotdata[0][-1:],
-                            self.plotdata[1][-1:],
+        self.w.plt32.plot(self.plot_data_buffer[0][-1:],
+                            self.plot_data_buffer[1][-1:],
                             #                  clear = True,
                             symbolPen = pg.mkPen(color=QColor(255,0,0,255), width=3),
                             symbol='o', symbolSize=10, symbolBrush=QColor(0,0,0,0),
@@ -239,6 +232,14 @@ class HandlerClass:
             halpins_labels_match_precision1[halpin_name][0].setText("{:10.1f}".format(halpin_value)
                 +halpins_labels_match_precision1[halpin_name][1])
 
+        if(halpin_name == 'time-pin32'): #TODO заменить на 'time_current-pin32'
+            timedelta1 = datetime.timedelta(seconds=self.hal['time-pin32']) #TODO заменить на 'time_current-pin32'
+            self.w.lblTime_Current32.setText('%02d' % (timedelta1.seconds // 60) + ':' + '%02d' % (timedelta1.seconds % 60))
+            #TODO перевести на сигнал duration
+            # timedelta2 = datetime.timedelta(seconds=self.hal['duration-pin32'])
+            # self.w.lblDuration32.setText('%02d'%(timedelta2.seconds // 60) + ':' + '%02d'%(timedelta2.seconds % 60))
+            self.w.lblDuration32.setText('10:15')
+
         return
 
     def onTimeChanged(self, data):
@@ -251,51 +252,74 @@ class HandlerClass:
 
     def onAppend_BufferChanged(self, data):
         # запись показаний производится в буфер для повышения производительности
-        #TODO улучшить менеджмент памяти - выделять блоками (либо за этим следит интерпретатор питона)
-        #TODO ограничение на длину???
+        # TODO улучшить менеджмент памяти - выделять блоками (либо за этим следит интерпретатор питона)
+        # TODO ограничение на длину???
         # Вектор параметров состояния: (time_current; torque_actual; omega_actual)
-        # self.position_buffer.append([self.current_time, self.current_position]) # значения без лишнего обращения к пинам, для улучшения производительности
+        # self.log_data_buffer.append([self.current_time, self.current_position]) # значения без лишнего обращения к пинам, для улучшения производительности
         if not self.initialized:
             return
 
+        # только восходящий фронт
         if not self.hal['append_buffer-pin32']:
             return
 
-        self.position_buffer.append([self.hal['time_current-pin32'],
-        self.hal['torque_actual-pin31'],
-        self.hal['omega_actual']]) # получение значений с hal-пинов, может снижать производительность
+        self.log_data_buffer.append([self.hal['time-pin32'], #TODO 'time_current-pin32'
+            self.hal['torque_actual-pin32'],
+            self.hal['omega_actual-pin32']]) # получение значений с hal-пинов, может снижать производительность
 
         # форма 3.3, Вектор параметров состояния: (time; pos_measure; load; torque_at_load; torque_extremal)
-        # self.position_buffer.append([time, pos_measure, load, torque_at_load, torque_extremal])
+        # self.log_data_buffer.append([time, pos_measure, load, torque_at_load, torque_extremal])
         # форма 3.4
         pass
 
     def onAppend_TitleChanged(self, data):
         if not self.hal['append_title-pin32']:
             return
+        # только восходящий фронт
         if not self.initialized:
             return
-        self.logfile.write('Время запуска:\t' + str(time))
-        self.logfile.write('Направление:\t' + str(dir))
-        self.logfile.write('\n')
-        self.logfile.write('Время работы\tКрутящий момент\tСкорость вращения')
+
+        self.datalogfile.write('\n')
+        self.datalogfile.write('Время запуска:\t' + str(datetime.timedelta(seconds=self.hal['time-pin32'])) + '\n')
+        self.datalogfile.write('Направление:\t' + str(self.hal['dir-pin32']) + '\n')
+        self.datalogfile.write('\n')
+        self.datalogfile.write('Время работы\tКрутящий момент\tСкорость вращения\n')
+        self.datalogfile.flush()
         return
 
     def onAppend_FileChanged(self, data):
-        #записать показания в файл
+        # Вектор параметров состояния: (time_current; torque_actual; omega_actual)
         if not self.hal['append_file-pin32']:
             return
         if not self.initialized:
             return
-        for rec in self.position_buffer:
-            str_to_print = ''
-            for item in rec:
-                str_to_print += str(item) + '\t'
-            self.logfile.write(str_to_print)
+        for rec in self.log_data_buffer:
+            # время
+            str_to_print = str(datetime.timedelta(seconds=rec[0])) + '\t'
+            # torque_actual
+            str_to_print += "{:.1f}".format(rec[1]) + '\t'
+            # omega_actual
+            str_to_print += "{:.1f}".format(rec[2]) + '\n'
+            self.datalogfile.write(str_to_print)
+        self.datalogfile.flush()
+        self.log_data_buffer = []
         return
+
+    def closeEvent(self, event):
+        # TODO по закрытию приложения
+        # закрывать файл
+        # вопрос про выключение
+        self.datalogfile.flush()
+        self.datalogfile.close()
+        print "*** closeEvent"
+        event.accept()
+
 
     def onDirChanged(self, data):
         pass
+
+    def onBtnDevice_Off(self):
+        ACTION.SET_MACHINE_STATE(linuxcnc.STATE_OFF)
 
     #####################
     # GENERAL FUNCTIONS #
@@ -303,13 +327,32 @@ class HandlerClass:
     def init_gui(self):
         self.load_ini()
         self.init_led_colors()
+
+        # STATUS.connect('state-on', lambda w: self.w.btnDevice_On32.setEnabled(False))
+        # STATUS.connect('state-on', lambda w: self.w.btnDevice_Off32.setEnabled(True))
+        # STATUS.connect('state-off', lambda w: self.w.btnDevice_On32.setEnabled(True))
+        # STATUS.connect('state-off', lambda w: self.w.btnDevice_Off32.setEnabled(False))
+        # STATUS.connect('state-estop-reset', lambda w: self.w.btnDevice_Off32.setEnabled(False))
+        STATUS.connect('state-on', lambda _: (self.w.btnStart_Cw32.setEnabled(True),
+                                              self.w.btnStart_Ccw32.setEnabled(True),
+                                              self.w.btnStop32.setEnabled(True)))
+        STATUS.connect('state-off', lambda _:(self.w.btnStart_Cw32.setEnabled(False),
+                                              self.w.btnStart_Ccw32.setEnabled(False),
+                                              self.w.btnStop32.setEnabled(False)))
+        self.w.btnDevice_Off32.clicked.connect(self.onBtnDevice_Off)
+        self.w.btnStart_Cw32.clicked.connect(lambda: self.w.btnStart_Ccw32.setChecked(not self.w.btnStart_Cw32.isChecked()))
+        self.w.btnStart_Ccw32.clicked.connect(lambda: self.w.btnStart_Cw32.setChecked(not self.w.btnStart_Ccw32.isChecked()))
+        self.w.btnStop32.clicked.connect(lambda : (self.w.btnStart_Cw32.setChecked(False),
+                                                  self.w.btnStart_Ccw32.setChecked(False)))
+
+        #STATUS.connect('state-estop-reset', lambda w: self._flip_state(False))
         #self.w.lblTest = QHalLabel()
         #self.w.lblTest.setText("!!!HAL Label!!!")
         # self.w.gridLayout_29.addWidget(self.w.lblTest, 3, 2)
         self.init_plot()
         return
 
-    self.init_led_colors(self):
+    def init_led_colors(self):
         # настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
         diodes_redgreen = (
         self.w.ledIs_Running_Ccw32,
@@ -360,6 +403,8 @@ class HandlerClass:
         font=QtGui.QFont()
         font.setPixelSize(20)
         #plot.getAxis("bottom").tickFont = font
+        # https://gist.github.com/iverasp/9349dffa42aeffb32e48a0868edfa32d
+        self.w.plt32.setAxisItems({'bottom': TimeAxisItem(orientation='bottom')})
         self.w.plt32.getAxis("bottom").setStyle(tickFont = font)
         self.w.plt32.getAxis("left").setStyle(tickFont = font)
         # self.graphWidget.setXRange(5, 20, padding=0)
@@ -406,23 +451,26 @@ class HandlerClass:
         #print 'Halpin type: ',self.w.sender().get_type()
 
     def append_plot(self, x, y):
-        self.plotdata[0][self.current_plot_n] = x
-        self.plotdata[1][self.current_plot_n] = y
-        self.current_plot_n += 1
-        if(self.current_plot_n >= 10000):
-            self.current_plot_n = 0 # логика кольцевого буфера
-        return
+        self.plot_data_buffer[0].append(x)
+        self.plot_data_buffer[1].append(y)
+        #
+        # self.plot_data_buffer[0][self.current_plot_n] = x
+        # self.plot_data_buffer[1][self.current_plot_n] = y
+        # self.current_plot_n += 1
+        # if(self.current_plot_n >= 10000):
+        #     self.current_plot_n = 0 # логика кольцевого буфера
+        # return
 
     def update_plot(self):
         if(self.current_plot_n < 20):
             #print "*** plot < 20"
-            self.w.plt32.plot(self.plotdata[0][0:self.current_plot_n],
-                              self.plotdata[1][0:self.current_plot_n],
+            self.w.plt32.plot(self.plot_data_buffer[0][0:self.current_plot_n],
+                              self.plot_data_buffer[1][0:self.current_plot_n],
                               clear = True)
         else:
             #print "*** plot >= 20"
-            self.w.plt32.plot(self.plotdata[0][self.current_plot_n-20:self.current_plot_n],
-                              self.plotdata[1][self.current_plot_n-20:self.current_plot_n],
+            self.w.plt32.plot(self.plot_data_buffer[0][self.current_plot_n-20:self.current_plot_n],
+                              self.plot_data_buffer[1][self.current_plot_n-20:self.current_plot_n],
                               clear=True)
         return
 
@@ -433,23 +481,25 @@ class HandlerClass:
         #print("*** siggen.0.sine directly", hal.get_value("siggen.0.sine"))
 
     def start_log(self, logfilename):
-        self.datalog = None
-        self.datalog = open(logfilename,"w")
-        self.datalog.write("Модель: " + self.MODEL + "\n")
-        self.datalog.write("Номер изделия: " + self.PART + "\n")
-        self.datalog.write("Дата: " + self.DATE + "\n")
+        self.datalogfile = None
+        self.datalogfile = open(logfilename,"w")
+        self.datalogfile.write("Модель: " + self.MODEL + '\n')
+        self.datalogfile.write("Номер изделия: " + self.PART + '\n')
+        self.datalogfile.write("Дата: " + self.DATE + '\n')
+        self.datalogfile.write('\n')
+        self.datalogfile.flush()
 
     #TODO в принципе функция не нужна, т.к. linuxcnc сам поддерживает передачу параметров из ini
-    def load_ini(self, n_form):
+    def load_ini(self):
         #self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
         #print "*** self.TYPE = ", self.TYPE
         self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
-        self.DATALOGFILENAME = INFO.INI.findall("BALLSCREWPARAMS", "LOGFILE")[0]
+        self.datalogfileFILENAME = INFO.INI.findall("BALLSCREWPARAMS", "LOGFILE")[0]
         self.MODEL = INFO.INI.findall("BALLSCREWPARAMS", "MODEL")[0]
         self.DATE = INFO.INI.findall("BALLSCREWPARAMS", "DATE")[0]
         self.PART = INFO.INI.findall("BALLSCREWPARAMS", "PART")[0]
-        #self.datalog.write("Номер изделия: " + self.PART + "\n")
-        #self.datalog.write("Дата: " + self.DATE + "\n")
+        #self.datalogfile.write("Номер изделия: " + self.PART + "\n")
+        #self.datalogfile.write("Дата: " + self.DATE + "\n")
         #TODO обработка ошибок и исключений: 1) нет файла - сообщение и заполнение по умолчанию, создание конфига
         #TODO обработка ошибок и исключений: 2) нет ключей в конфиге - сообщение и заполнение по умолчанию
     

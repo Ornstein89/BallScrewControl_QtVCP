@@ -326,15 +326,33 @@ class HandlerClass:
         #print 'halpin object =', self.w.sender()
         #print 'Halpin type: ',self.w.sender().get_type()
 
-    def append_data(self, x, y):
-        self.data[0][self.current_plot_n] = x
-        self.data[1][self.current_plot_n] = y
+    def append_data(self, p_time, p_pos_measure, p_load, p_torque_at_load, p_torque_extremal):
+        '''
+        Функция для фиксирования новых показаний в массиве, по которому будет строиться график и записываться файл
+        :param p_time:
+        :param p_pos_measure:
+        :param p_load:
+        :param p_torque_at_load:
+        :param p_torque_extremal:
+        :return:
+        '''
+        # Вектор параметров состояния: (time; pos_measure; load; torque_at_load; torque_extremal)
+        self.data['time'][self.current_plot_n] = p_time
+        self.data['pos_measure'][self.current_plot_n] = p_pos_measure
+        self.data['load'][self.current_plot_n] = p_load
+        self.data['torque_at_load'][self.current_plot_n] = p_torque_at_load
+        self.data['torque_extremal'][self.current_plot_n] = p_torque_extremal
         self.current_plot_n += 1
-        if(self.current_plot_n >= 10000):
-            self.current_plot_n = 0 # логика кольцевого буфера
+        # if(self.current_plot_n >= 10000):
+        #     self.current_plot_n = 0 # логика кольцевого буфера
         return
 
     def update_plot(self):
+        '''
+        Функция для построения графика в координатах position(X)-torque(Y)
+        :return:
+        '''
+
         if(self.current_plot_n < 20):
             #print "*** plot < 20"
             self.w.plt33.plot(self.data[0][0:self.current_plot_n],

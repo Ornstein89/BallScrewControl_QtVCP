@@ -192,6 +192,13 @@ class HandlerClass:
         self.w.spnVelocity31.valueChanged.connect(lambda val: self.w.sldVelocity31.setValue(int(val*100)))
         self.w.sldAcceleration31.valueChanged.connect(lambda val: self.w.spnAcceleration31.setValue(float(val)/100.0))
         self.w.spnAcceleration31.valueChanged.connect(lambda val: self.w.sldAcceleration31.setValue(int(val*100)))
+
+        STATUS.connect('state-on', lambda _: (self.w.btnJog_Minus31.setEnabled(True),
+                                              self.w.btnJog_Plus31.setEnabled(True),
+                                              self.w.btnLog_Trigger31.setEnabled(True)))
+        STATUS.connect('state-off', lambda _:(self.w.btnJog_Minus31.setEnabled(False),
+                                              self.w.btnJog_Plus31.setEnabled(False),
+                                              self.w.btnLog_Trigger31.setEnabled(False)))
         return
 
     def onPositionChanged(self, data):
