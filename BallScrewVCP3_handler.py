@@ -18,9 +18,10 @@ import sys, os, configparser
 import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
 
 # пакеты GUI
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QColor
 #from qtvcp.widgets import FocusOverlay
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
 from qtvcp.widgets.gcode_editor import GcodeEditor as GCODE
@@ -165,6 +166,14 @@ class HandlerClass:
     # GENERAL FUNCTIONS #
     #####################
     def init_gui(self):
+        self.load_ini()
+        self.init_led_colors()
+        #self.w.lblTest = QHalLabel()
+        #self.w.lblTest.setText("!!!HAL Label!!!")
+        # self.w.gridLayout_29.addWidget(self.w.lblTest, 3, 2)
+        self.init_plot()
+
+    def init_led_colors(self):
         # настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
         diodes_redgreen = (
 
@@ -186,52 +195,48 @@ class HandlerClass:
         self.w.ledPos_Sip33,
         self.w.ledLimits_Excess33)
 
-
         for led in diodes_redgreen:
             led.setColor(Qt.green)
             led.setOffColor(Qt.green)
 
-        ini_control_match_dict = {
-            'NOM_DSP_IDLE' : (self.w.sldDsp_Idle33, self.w.spnDsp_Idle33),
-            'NOM_VEL' : (self.w.sldVel_Idle33, self.w.spnVel_Idle33),
-            'NOM_ACCEL' : (self.w.sldAccel_Idle33, self.w.spnAccel_Idle33),
-            'NOM_LOAD' : (self.w.sldLoad33, self.w.spnLoad33),
-            'NOM_POS_MEASURE' : (self.w.sldPos_Measure33, self.w.spnPos_Measure33),
-            'NOM_DSP_MEASURE' : (self.w.sldDsp_Measure33, self.w.spnDsp_Measure33),
-            'NOM_VEL_MEASURE' : (self.w.sldVel_Measure33, self.w.spnVel_Measure33),
-            'NOM_ACCEL_MEASURE' : (self.w.sldAccel_Measure33, self.w.spnAccel_Measure33),
-        }
+        return
 
-        for key, controls in ini_control_match_dict.items():
-            print '***controls[0] = ', controls[0]
-            print '***controls[1] = ', controls[1]
-            controls[0].setMinimum(int(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MIN')[0])*100))
-            controls[0].setMaximum(int(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MAX')[0])*100))
-            controls[0].setValue(int(float(INFO.INI.findall("BALLSCREWPARAMS", key)[0])*100))
-            controls[1].setMinimum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MIN')[0]))
-            controls[1].setMaximum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MAX')[0]))
-            controls[1].setValue(float(INFO.INI.findall("BALLSCREWPARAMS", key)[0]))
-            controls[0].valueChanged.connect(lambda val: controls[1].setValue(float(val)/100.0))
-            controls[1].valueChanged.connect(lambda val: controls[0].setValue(int(val*100)))
-
-
-        #TODO настройка осей графика
-        self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
-        self.DATALOGFILENAME = INFO.INI.findall("BALLSCREWPARAMS", "LOGFILE")[0]
-        self.w.stackedWidget.setCurrentIndex(int(self.TYPE)-1)
-        self.load_ini(int(self.TYPE))
+    def init_plot(self):
         self.w.plt33.showGrid(x = True, y = True)
         self.w.plt33.setBackground('w')
-        pen = pg.mkPen(color=(255, 0, 0), width=2)
-        self.w.plt33.setPen(pen)
         styles = {'color':'r', 'font-size':'20px'}
-        self.w.plt33.setLabel('left', 'Момент [Н*м]', **styles)
+        self.w.plt33.setLabel('left', 'T [Н*м]', **styles)
         self.w.plt33.setLabel('bottom', 'Время', **styles)
+
+        font=QtGui.QFont()
+        font.setPixelSize(20)
+        self.hLine = pg.InfiniteLine(angle=0, movable=False,
+            pen=pg.mkPen(color=QColor(Qt.blue),
+            width = 2, style=Qt.DashDotLine),
+            label='{value:0.1f}',
+            labelOpts={'position':0.95, 'color': (255,0,0),
+                       'movable': False, 'fill': (0, 0, 200, 100)})
+        #self.hLine.setPos(pg.Point(0.0, 10.0))
+        self.hLine.setValue(0.5)
+        self.hLine.setZValue(1)
+        self.w.plt33.addItem(self.hLine, ignoreBounds=True)
+
+        self.vLine = pg.InfiniteLine(angle=90, movable=False,
+            pen=pg.mkPen(color=QColor(Qt.blue), width = 2, style=Qt.DashDotLine))
+        #self.vLine.setPos(pg.Point(1.0, 0.0))
+        self.vLine.setValue(0.5)
+        self.vLine.setZValue(1)
+        self.w.plt33.addItem(self.vLine, ignoreBounds=True)
+
+        font=QtGui.QFont()
+        font.setPixelSize(20)
+        #plot.getAxis("bottom").tickFont = font
+        self.w.plt33.getAxis("bottom").setStyle(tickFont = font)
+        self.w.plt33.getAxis("left").setStyle(tickFont = font)
         # self.graphWidget.setXRange(5, 20, padding=0)
         # self.graphWidget.setYRange(30, 40, padding=0)
         # курсор на графике https://stackoverflow.com/questions/50512391/can-i-share-the-crosshair-with-two-graph-in-pyqtgraph-pyqt5
         # https://stackoverflow.com/questions/52410731/drawing-and-displaying-objects-and-labels-over-the-axis-in-pyqtgraph-how-to-do
-
         return
 
     def pinCnagedCallback(self, data):
@@ -368,32 +373,63 @@ class HandlerClass:
         self.datalog.write("Дата: " + self.DATE + "\n")
 
     #TODO в принципе функция не нужна, т.к. linuxcnc сам поддерживает передачу параметров из ini
-    def load_ini(self, n_form):
-        ini_control_match_dict = (
-        # для формы 3.3
-        {
-            'NOM_DSP_IDLE' : self.w.sldDsp_Idle33,
-            'NOM_VEL_IDLE' : self.w.sldVel_Idle33,
-            'NOM_ACCEL_IDLE' : self.w.sldAccel_Idle33,
-            'NOM_DSP_MEASURE' : self.w.sldDsp_Measure33,
-            'NOM_VEL_MEASURE' : self.w.sldVel_Measure33,
-            'NOM_ACCEL_MEASURE' : self.w.sldAccel_Measure33,
-            'NOM_LOAD' : self.w.sldLoad33,
-            'NOM_POS_MEASURE' : self.w.sldPos_Measure33
-        },
-        )
+    def load_ini(self):
+        ini_control_match_dict = {
+            'NOM_DSP_IDLE' : (self.w.sldDsp_Idle33, self.w.spnDsp_Idle33),
+            'NOM_VEL_IDLE' : (self.w.sldVel_Idle33, self.w.spnVel_Idle33),
+            'NOM_ACCEL_IDLE' : (self.w.sldAccel_Idle33, self.w.spnAccel_Idle33),
+            'NOM_LOAD' : (self.w.sldLoad33, self.w.spnLoad33),
+            'NOM_POS_MEASURE' : (self.w.sldPos_Measure33, self.w.spnPos_Measure33),
+            'NOM_DSP_MEASURE' : (self.w.sldDsp_Measure33, self.w.spnDsp_Measure33),
+            'NOM_VEL_MEASURE' : (self.w.sldVel_Measure33, self.w.spnVel_Measure33),
+            'NOM_ACCEL_MEASURE' : (self.w.sldAccel_Measure33, self.w.spnAccel_Measure33),
+        }
 
-        #self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
-        #print "*** self.TYPE = ", self.TYPE
+        for key, controls in ini_control_match_dict.items():
+            print '***controls[0] = ', controls[0].objectName()
+            print '***controls[1] = ', controls[1].objectName()
+            controls[0].setMinimum(int(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MIN')[0])*100))
+            controls[0].setMaximum(int(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MAX')[0])*100))
+            controls[0].setValue(int(float(INFO.INI.findall("BALLSCREWPARAMS", key)[0])*100))
+            controls[1].setMinimum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MIN')[0]))
+            controls[1].setMaximum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MAX')[0]))
+            controls[1].setValue(float(INFO.INI.findall("BALLSCREWPARAMS", key)[0]))
+            #controls[0].valueChanged.connect(lambda val1: controls[1].setValue(float(val1)/100.0))
+            #controls[1].valueChanged.connect(lambda val2: controls[0].setValue(int(val2*100)))
+
+        self.w.sldDsp_Idle33.valueChanged.connect(lambda val: self.w.spnDsp_Idle33.setValue(float(val)/100.0))
+        self.w.spnDsp_Idle33.valueChanged.connect(lambda val: self.w.sldDsp_Idle33.setValue(int(val*100)))
+
+        self.w.sldVel_Idle33.valueChanged.connect(lambda val: self.w.spnVel_Idle33.setValue(float(val)/100.0))
+        self.w.spnVel_Idle33.valueChanged.connect(lambda val: self.w.sldVel_Idle33.setValue(int(val*100)))
+
+        self.w.sldAccel_Idle33.valueChanged.connect(lambda val: self.w.spnAccel_Idle33.setValue(float(val)/100.0))
+        self.w.spnAccel_Idle33.valueChanged.connect(lambda val: self.w.sldAccel_Idle33.setValue(int(val*100)))
+
+        self.w.sldLoad33.valueChanged.connect(lambda val: self.w.spnLoad33.setValue(float(val)/100.0))
+        self.w.spnLoad33.valueChanged.connect(lambda val: self.w.sldLoad33.setValue(int(val*100)))
+
+        self.w.sldPos_Measure33.valueChanged.connect(lambda val: self.w.spnPos_Measure33.setValue(float(val)/100.0))
+        self.w.spnPos_Measure33.valueChanged.connect(lambda val: self.w.sldPos_Measure33.setValue(int(val*100)))
+
+        self.w.sldDsp_Measure33.valueChanged.connect(lambda val: self.w.spnDsp_Measure33.setValue(float(val)/100.0))
+        self.w.spnDsp_Measure33.valueChanged.connect(lambda val: self.w.sldDsp_Measure33.setValue(int(val*100)))
+
+        self.w.sldVel_Measure33.valueChanged.connect(lambda val: self.w.spnVel_Measure33.setValue(float(val)/100.0))
+        self.w.spnVel_Measure33.valueChanged.connect(lambda val: self.w.sldVel_Measure33.setValue(int(val*100)))
+
+        self.w.sldAccel_Measure33.valueChanged.connect(lambda val: self.w.spnAccel_Measure33.setValue(float(val)/100.0))
+        self.w.spnAccel_Measure33.valueChanged.connect(lambda val: self.w.sldAccel_Measure33.setValue(int(val*100)))
+
+
+        self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
+        self.DATALOGFILENAME = INFO.INI.findall("BALLSCREWPARAMS", "LOGFILE")[0]
         self.MODEL = INFO.INI.findall("BALLSCREWPARAMS", "MODEL")[0]
         self.DATE = INFO.INI.findall("BALLSCREWPARAMS", "DATE")[0]
         self.PART = INFO.INI.findall("BALLSCREWPARAMS", "PART")[0]
         #self.datalog.write("Номер изделия: " + self.PART + "\n")
         #self.datalog.write("Дата: " + self.DATE + "\n")
-        for key, sldr in ini_control_match_dict[int(self.TYPE)-1].items():
-            sldr.setMinimum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MIN')[0]))
-            sldr.setMaximum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MAX')[0]))
-            sldr.setValue(float(INFO.INI.findall("BALLSCREWPARAMS", key)[0]))
+
         #TODO обработка ошибок и исключений: 1) нет файла - сообщение и заполнение по умолчанию, создание конфига
         #TODO обработка ошибок и исключений: 2) нет ключей в конфиге - сообщение и заполнение по умолчанию
 

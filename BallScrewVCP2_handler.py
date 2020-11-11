@@ -301,6 +301,15 @@ class HandlerClass:
     # GENERAL FUNCTIONS #
     #####################
     def init_gui(self):
+        self.load_ini()
+        self.init_led_colors()
+        #self.w.lblTest = QHalLabel()
+        #self.w.lblTest.setText("!!!HAL Label!!!")
+        # self.w.gridLayout_29.addWidget(self.w.lblTest, 3, 2)
+        self.init_plot()
+        return
+
+    self.init_led_colors(self):
         # настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
         diodes_redgreen = (
         self.w.ledIs_Running_Ccw32,
@@ -321,15 +330,7 @@ class HandlerClass:
             led.setColor(Qt.green)
             led.setOffColor(Qt.green)
 
-        #self.w.lblTest = QHalLabel()
-        #self.w.lblTest.setText("!!!HAL Label!!!")
-        # self.w.gridLayout_29.addWidget(self.w.lblTest, 3, 2)
-
-        #TODO настройка осей графика
-        self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
-        self.DATALOGFILENAME = INFO.INI.findall("BALLSCREWPARAMS", "LOGFILE")[0]
-        self.w.stackedWidget.setCurrentIndex(int(self.TYPE)-1)
-        self.load_ini(int(self.TYPE))
+    def init_plot(self):
         self.w.plt32.showGrid(x = True, y = True)
         self.w.plt32.setBackground('w')
         styles = {'color':'r', 'font-size':'20px'}
@@ -442,6 +443,8 @@ class HandlerClass:
     def load_ini(self, n_form):
         #self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
         #print "*** self.TYPE = ", self.TYPE
+        self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
+        self.DATALOGFILENAME = INFO.INI.findall("BALLSCREWPARAMS", "LOGFILE")[0]
         self.MODEL = INFO.INI.findall("BALLSCREWPARAMS", "MODEL")[0]
         self.DATE = INFO.INI.findall("BALLSCREWPARAMS", "DATE")[0]
         self.PART = INFO.INI.findall("BALLSCREWPARAMS", "PART")[0]

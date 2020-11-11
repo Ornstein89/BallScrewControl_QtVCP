@@ -776,14 +776,41 @@ qproperty-flashRate: 200;</string>
         </item>
         <item row="6" column="2">
          <layout class="QGridLayout" name="gridLayout_26">
-          <item row="1" column="0">
+          <item row="0" column="2">
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="2" column="0">
            <widget class="QPushButton" name="pushButton_16">
             <property name="text">
              <string>Очистить</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="pushButton">
+            <property name="text">
+             <string>PushButton</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="pushButton_2">
+            <property name="text">
+             <string>PushButton</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" colspan="2">
            <spacer name="horizontalSpacer_12">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -796,31 +823,14 @@ qproperty-flashRate: 200;</string>
             </property>
            </spacer>
           </item>
-          <item row="0" column="0" colspan="2">
-           <widget class="QTabWidget" name="tabWidget">
-            <property name="currentIndex">
-             <number>1</number>
+          <item row="1" column="0" colspan="3">
+           <widget class="PlotWidget" name="plt34" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-            <widget class="QWidget" name="tab_4">
-             <attribute name="title">
-              <string>Крутящий момент</string>
-             </attribute>
-             <layout class="QGridLayout" name="gridLayout_27">
-              <item row="0" column="0">
-               <widget class="PlotWidget" name="widget" native="true"/>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="tab_3">
-             <attribute name="title">
-              <string>Линейное усилие</string>
-             </attribute>
-             <layout class="QGridLayout" name="gridLayout_28">
-              <item row="0" column="0">
-               <widget class="PlotWidget" name="widget_2" native="true"/>
-              </item>
-             </layout>
-            </widget>
            </widget>
           </item>
          </layout>
