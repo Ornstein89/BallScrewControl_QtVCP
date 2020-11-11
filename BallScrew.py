@@ -1,5 +1,6 @@
 # This Python file uses the following encoding: utf-8
 import sys, os, configparser, codecs
+from shutil import copyfile
 
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QPushButton
@@ -8,6 +9,17 @@ from PyQt5.QtCore import QFile, QDateTime
 
 # пакет для xlsx
 import openpyxl
+
+class M(dict):
+    def __setitem__(self, key, value):
+        if key in self:
+            items = self[key]
+            print 'value=', value
+            new = value[0]
+            if new not in items:
+                items.append(new)
+        else:
+            super(M, self).__setitem__(key, value)
 
 class BallScrew(QMainWindow):
     def __init__(self):
@@ -212,7 +224,7 @@ class BallScrew(QMainWindow):
         # создать config из шаблона
         config = configparser.ConfigParser(strict=False) # strict=False - разрешение повторов имени ключа
         config.optionxform = str # имена ключей не будут приведены к нижнему регистру
-        config.read('BallScrewVCP_template.ini', encoding='utf-8')
+        #config.read('BallScrewVCP_template.ini', encoding='utf-8')
         # добавить значения из интерфейса в объект config
         config['BALLSCREWPARAMS'] = {}
         for key, control in self.params_and_controls_dict[n_form-1].items():
@@ -226,20 +238,34 @@ class BallScrew(QMainWindow):
         print '***self.LOGFILE=', self.LOGFILE
         config['BALLSCREWPARAMS']['LOGFILE']= self.LOGFILE # "TempLogFile.log" # TODO вызывает ошибку строка в utf-8 с кириллицей
 
+        replacements = [['{{MACHINE}}','BallScrewVCP' + str(n_form)],
+            ['{{VCP}}', 'BallScrewVCP' + str(n_form)],
+            ['{{DISPLAY}}', 'BallScrewVCP' + str(n_form)],
+            ['{{POSTGUI_HALFILE}}', 'BallScrewVCP' + str(n_form)+'_postgui.hal']]
+        f = open('BallScrewVCP_template.ini','rb')
+        filedata = f.read()
+        f.close()
+        for replacement in replacements:
+            filedata = filedata.replace(replacement[0], replacement[1])
         # после разбивки на 4 отдельных файла
-        config['EMC']['MACHINE'] = 'BallScrewVCP' + str(n_form)
-        config['HAL']['POSTGUI_HALFILE'] = 'BallScrewVCP' + str(n_form)+'_postgui.hal'
-        config['DISPLAY']['VCP'] = 'BallScrewVCP' + str(n_form)
-        config['DISPLAY']['DISPLAY'] = 'qtvcp BallScrewVCP' + str(n_form)
+        # config['EMC'] = {}
+        # config['EMC']['MACHINE'] = 'BallScrewVCP' + str(n_form)
+        # config['HAL'] = {}
+        # config['HAL']['POSTGUI_HALFILE'] = 'BallScrewVCP' + str(n_form)+'_postgui.hal'
+        # config['DISPLAY'] = {}
+        # config['DISPLAY']['VCP'] = 'BallScrewVCP' + str(n_form)
+        # config['DISPLAY']['DISPLAY'] = 'qtvcp BallScrewVCP' + str(n_form)
 
         # запись заполненного config в ini-файл
         #.encode('utf-8')
         print '***self.NAME=', self.NAME
-        # configfile = open(self.NAME, 'w')
-        # config.write(configfile)
-        # configfile.close()
 
-        configfile = codecs.open(self.NAME,'wb+','utf-8')
+        configfile = open(self.NAME, 'w')
+        configfile.write(filedata)
+        configfile.close()
+
+        # copyfile('BallScrewVCP_template.ini', self.NAME)
+        configfile = codecs.open(self.NAME,'ab+','utf-8')
         config.write(configfile)
         configfile.close()
 

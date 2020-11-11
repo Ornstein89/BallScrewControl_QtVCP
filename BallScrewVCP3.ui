@@ -519,16 +519,6 @@ font: 15pt bold;</string>
            </layout>
           </item>
           <item>
-           <widget class="MDILine" name="mdiline33">
-            <property name="frame">
-             <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string>MDI:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <layout class="QHBoxLayout" name="horizontalLayout_13">
             <item>
              <widget class="QLabel" name="label_93">
@@ -538,30 +528,12 @@ font: 15pt bold;</string>
              </widget>
             </item>
             <item>
-             <widget class="ActionButton" name="actionbutton_mdi">
-              <property name="autoExclusive">
+             <widget class="MDILine" name="mdiline33">
+              <property name="frame">
                <bool>true</bool>
               </property>
-              <property name="indicator_option" stdset="0">
-               <bool>true</bool>
-              </property>
-              <property name="indicator_HAL_pin_option" stdset="0">
-               <bool>true</bool>
-              </property>
-              <property name="indicator_status_option" stdset="0">
-               <bool>false</bool>
-              </property>
-              <property name="is_mdi_status" stdset="0">
-               <bool>true</bool>
-              </property>
-              <property name="mdi_action" stdset="0">
-               <bool>true</bool>
-              </property>
-              <property name="mdi_command_action" stdset="0">
-               <bool>false</bool>
-              </property>
-              <property name="ini_mdi_command_action" stdset="0">
-               <bool>false</bool>
+              <property name="placeholderText">
+               <string>MDI:</string>
               </property>
              </widget>
             </item>

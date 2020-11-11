@@ -88,12 +88,20 @@ class HandlerClass:
         #fov = FocusOverlay(self)
         #fov.show()
     def processed_key_event__(self,receiver,event,is_pressed,key,code,shift,cntrl):
-        if event.key() == Qt.Key_Left:
-            print '*** Qt.Key_Left'
-            return
-        if event.key() == Qt.Key_Right:
-            print '*** Qt.Key_Right'
-            return
+        if event.key() == Qt.Key_Left and self.w.btnJog_Minus31.isEnabled():
+            if is_pressed:
+                self.w.btnJog_Minus31.setDown(True)
+            else:
+                self.w.btnJog_Minus31.setDown(False)
+            #print '*** Qt.Key_Left'
+
+        if event.key() == Qt.Key_Right and self.w.btnJog_Plus31.isEnabled():
+            if is_pressed:
+                self.w.btnJog_Plus31.setDown(True)
+            else:
+                self.w.btnJog_Plus31.setDown(False)
+            #print '*** Qt.Key_Right'
+
     def closeEvent(self, event):
             #ACTION.
             print '*** closeEvent'
