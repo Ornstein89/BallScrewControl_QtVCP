@@ -87,20 +87,42 @@ class HandlerClass:
 
         #fov = FocusOverlay(self)
         #fov.show()
+
     def processed_key_event__(self,receiver,event,is_pressed,key,code,shift,cntrl):
         if event.key() == Qt.Key_Left and self.w.btnJog_Minus31.isEnabled():
-            if is_pressed:
+            if is_pressed and not self.w.btnJog_Minus31.isDown():
                 self.w.btnJog_Minus31.setDown(True)
-            else:
+                #self.w.btnJog_Minus31.click(True)
+                self.w.btnJog_Minus31.pressed.emit()
+                #self.w.btnJog_Minus31.setCheckable(True)
+                #self.w.btnJog_Minus31.setChecked(True)
+            elif self.w.btnJog_Minus31.isDown():
                 self.w.btnJog_Minus31.setDown(False)
+                #self.w.btnJog_Minus31.click(False)
+                self.w.btnJog_Minus31.released.emit()
+                #self.w.btnJog_Minus31.setChecked(False)
+                #self.w.btnJog_Minus31.setCheckable(False)
             #print '*** Qt.Key_Left'
+            # event.accept()
 
         if event.key() == Qt.Key_Right and self.w.btnJog_Plus31.isEnabled():
-            if is_pressed:
+            if is_pressed and not self.w.btnJog_Plus31.isDown():
                 self.w.btnJog_Plus31.setDown(True)
-            else:
+                self.w.btnJog_Plus31.pressed.emit()
+                # self.w.btnJog_Plus31.click(True)
+                # self.w.btnJog_Plus31.press()
+                # self.w.btnJog_Plus31.setCheckable(True)
+                # self.w.btnJog_Plus31.setChecked(True)
+            elif self.w.btnJog_Plus31.isDown():
                 self.w.btnJog_Plus31.setDown(False)
+                self.w.btnJog_Plus31.released.emit()
+                # self.w.btnJog_Plus31.click(True)
+                # self.w.btnJog_Plus31.release()
+                # self.w.btnJog_Plus31.setChecked(False)
+                # self.w.btnJog_Plus31.setCheckable(False)
+
             #print '*** Qt.Key_Right'
+            # event.accept()
 
     def closeEvent(self, event):
             #ACTION.

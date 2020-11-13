@@ -85,6 +85,42 @@ class HandlerClass:
         #fov = FocusOverlay(self)
         #fov.show()
 
+    def processed_key_event__(self,receiver,event,is_pressed,key,code,shift,cntrl):
+        if event.key() == Qt.Key_Left and self.w.btnJog_Minus34.isEnabled():
+            if is_pressed and not self.w.btnJog_Minus34.isDown():
+                self.w.btnJog_Minus34.setDown(True)
+                #self.w.btnJog_Minus34.click(True)
+                self.w.btnJog_Minus34.pressed.emit()
+                #self.w.btnJog_Minus34.setCheckable(True)
+                #self.w.btnJog_Minus34.setChecked(True)
+            elif self.w.btnJog_Minus34.isDown():
+                self.w.btnJog_Minus34.setDown(False)
+                #self.w.btnJog_Minus34.click(False)
+                self.w.btnJog_Minus34.released.emit()
+                #self.w.btnJog_Minus34.setChecked(False)
+                #self.w.btnJog_Minus34.setCheckable(False)
+            #print '*** Qt.Key_Left'
+            # event.accept()
+
+        if event.key() == Qt.Key_Right and self.w.btnJog_Plus34.isEnabled():
+            if is_pressed and not self.w.btnJog_Plus34.isDown():
+                self.w.btnJog_Plus34.setDown(True)
+                self.w.btnJog_Plus34.pressed.emit()
+                # self.w.btnJog_Plus34.click(True)
+                # self.w.btnJog_Plus34.press()
+                # self.w.btnJog_Plus34.setCheckable(True)
+                # self.w.btnJog_Plus34.setChecked(True)
+            elif self.w.btnJog_Plus34.isDown():
+                self.w.btnJog_Plus34.setDown(False)
+                self.w.btnJog_Plus34.released.emit()
+                # self.w.btnJog_Plus34.click(True)
+                # self.w.btnJog_Plus34.release()
+                # self.w.btnJog_Plus34.setChecked(False)
+                # self.w.btnJog_Plus34.setCheckable(False)
+
+            #print '*** Qt.Key_Right'
+            # event.accept()
+
     ########################
     # CALLBACKS FROM STATUS#
     ########################
@@ -116,7 +152,7 @@ class HandlerClass:
             self.VCP_halpins_bit[key].value_changed.connect(lambda s: self.pinCnagedCallback(s))
         return
 
-    def onBtnLoadGCode(self):
+    def onBtnLoadGCode34(self):
         # код на основе btn_load и load_code из qtdragon
         #fname = self.w.filemanager.getCurrentSelected()
         fname = QFileDialog.getOpenFileName(self.w, 'Open GCode file',
@@ -136,6 +172,26 @@ class HandlerClass:
             self.add_status("Unknown or invalid filename")
             STATUS.emit('update-machine-log', "Unknown or invalid filename", 'TIME')
             print "*** ERROR LOAD FILE"
+
+    def onBtnSaveGCode34(self):
+        # загрузить шаблон
+        # заполнить отмеченные места
+        # диалог сохранения файла
+        # сохранить файл
+        pass
+
+    def pnBtnShowResult34(self):
+        #TODO открыть блокнот
+        pass
+
+    def onBtnClearPlot34(self):
+        pass
+
+    def onBtnShowForse34(self):
+        pass
+
+    def onBtnShowTorque34(self):
+        pass
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Left:

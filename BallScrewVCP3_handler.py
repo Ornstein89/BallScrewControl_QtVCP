@@ -85,6 +85,42 @@ class HandlerClass:
         #fov = FocusOverlay(self)
         #fov.show()
 
+    def processed_key_event__(self,receiver,event,is_pressed,key,code,shift,cntrl):
+        if event.key() == Qt.Key_Left and self.w.btnJog_Minus33.isEnabled():
+            if is_pressed and not self.w.btnJog_Minus33.isDown():
+                self.w.btnJog_Minus33.setDown(True)
+                #self.w.btnJog_Minus33.click(True)
+                self.w.btnJog_Minus33.pressed.emit()
+                #self.w.btnJog_Minus33.setCheckable(True)
+                #self.w.btnJog_Minus33.setChecked(True)
+            elif self.w.btnJog_Minus33.isDown():
+                self.w.btnJog_Minus33.setDown(False)
+                #self.w.btnJog_Minus33.click(False)
+                self.w.btnJog_Minus33.released.emit()
+                #self.w.btnJog_Minus33.setChecked(False)
+                #self.w.btnJog_Minus33.setCheckable(False)
+            #print '*** Qt.Key_Left'
+            # event.accept()
+
+        if event.key() == Qt.Key_Right and self.w.btnJog_Plus33.isEnabled():
+            if is_pressed and not self.w.btnJog_Plus33.isDown():
+                self.w.btnJog_Plus33.setDown(True)
+                self.w.btnJog_Plus33.pressed.emit()
+                # self.w.btnJog_Plus33.click(True)
+                # self.w.btnJog_Plus33.press()
+                # self.w.btnJog_Plus33.setCheckable(True)
+                # self.w.btnJog_Plus33.setChecked(True)
+            elif self.w.btnJog_Plus33.isDown():
+                self.w.btnJog_Plus33.setDown(False)
+                self.w.btnJog_Plus33.released.emit()
+                # self.w.btnJog_Plus33.click(True)
+                # self.w.btnJog_Plus33.release()
+                # self.w.btnJog_Plus33.setChecked(False)
+                # self.w.btnJog_Plus33.setCheckable(False)
+
+            #print '*** Qt.Key_Right'
+            # event.accept()
+
     ########################
     # CALLBACKS FROM STATUS#
     ########################
