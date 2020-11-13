@@ -168,7 +168,7 @@ class HandlerClass:
         self.w.stackedWidget.setCurrentIndex(8)
         pass
 
-    def onBtnLoadGCode(self):
+    def onBtnLoadGCode33(self):
         # код на основе btn_load и load_code из qtdragon
         #fname = self.w.filemanager.getCurrentSelected()
         fname = QFileDialog.getOpenFileName(self.w, 'Open GCode file',
@@ -189,14 +189,32 @@ class HandlerClass:
             STATUS.emit('update-machine-log', "Unknown or invalid filename", 'TIME')
             print "*** ERROR LOAD FILE"
 
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Left:
-            print '*** Qt.Key_Left'
-            return
-        if event.key() == Qt.Key_Right:
-            print '*** Qt.Key_Right'
-            return
-        return
+    def onBtnSaveGCode33():
+        replacements = [['{{DSP_IDLE}}', '%10.1f'.format(self.w.spnDsp_Idle33.value())],
+            ['{{VEL_IDLE}}', '%10.1f'.format(self.w.spnVel_Idle33.value())],
+            ['{{ACCEL_IDLE}}', '%10.1f'.format(self.w.spnAccel_Idle33.value())],
+            ['{{LOAD}}', '%10.1f'.format(self.w.spnLoad33.value())],
+            ['{{POS_MEASURE}}', '%10.1f'.format(self.w.spnPos_Measure33.value())],
+            ['{{DSP_MEASURE}}', '%10.1f'.format(self.w.spnDsp_Measure33.value())],
+            ['{{VEL_MEASURE}}', '%10.1f'.format(self.w.spnVel_Measure33.value())],
+            ['{{ACCEL_MEASURE}}', '%10.1f'.format(self.w.spnAccel_Measure33.value())]]
+
+        # открыть шаблон
+        f_template = open('BallScrewVCP33_template.ngc','rb')
+        filedata = f_template.read()
+        f_template.close()
+
+        # заменить отмеченные места
+        for replacement in replacements:
+            filedata = filedata.replace(replacement[0], replacement[1])
+
+        # записать файл
+        f_final = open('BallScrewVCP33.ngc', 'wb')
+        f_final.write(filedata)
+        f_final.close()
+
+    def onBtnClearPlot33():
+        pass
 
     #####################
     # GENERAL FUNCTIONS #

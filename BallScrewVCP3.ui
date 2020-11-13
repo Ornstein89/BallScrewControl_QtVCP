@@ -424,8 +424,11 @@ qproperty-diameter: 20;
           </item>
           <item>
            <layout class="QGridLayout" name="gridLayout_15">
-            <item row="0" column="0" alignment="Qt::AlignLeft">
+            <item row="0" column="0" alignment="Qt::AlignHCenter">
              <widget class="QPushButton" name="btnLoadGCode33">
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
               <property name="text">
                <string>Загрузить УП</string>
               </property>
@@ -1132,15 +1135,47 @@ font: bold</string>
    <sender>btnLoadGCode33</sender>
    <signal>clicked()</signal>
    <receiver>BallScrewControlMainWindow</receiver>
-   <slot>onBtnLoadGCode()</slot>
+   <slot>onBtnLoadGCode33()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>261</x>
-     <y>764</y>
+     <x>222</x>
+     <y>742</y>
     </hint>
     <hint type="destinationlabel">
-     <x>252</x>
-     <y>771</y>
+     <x>7</x>
+     <y>746</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnClear33</sender>
+   <signal>clicked()</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onBtnClearPlot33()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>734</x>
+     <y>853</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>784</x>
+     <y>885</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnSaveGCode33</sender>
+   <signal>clicked()</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onBtnSaveGCode33()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>373</x>
+     <y>602</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>8</x>
+     <y>601</y>
     </hint>
    </hints>
   </connection>
@@ -1150,7 +1185,9 @@ font: bold</string>
   <slot>onBtnTempShow33()</slot>
   <slot>onBtnTempShow32()</slot>
   <slot>onBtnTempShow31()</slot>
-  <slot>onBtnLoadGCode()</slot>
+  <slot>onBtnLoadGCode33()</slot>
   <slot>onBtnTestActive0(bool)</slot>
+  <slot>onBtnSaveGCode33()</slot>
+  <slot>onBtnClearPlot33()</slot>
  </slots>
 </ui>
