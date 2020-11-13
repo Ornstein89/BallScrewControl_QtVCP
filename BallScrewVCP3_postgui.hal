@@ -3,36 +3,74 @@
 ## Перед подключением сигнала к GUI убедиться, что сигнал существует (генерируется тестовым генератором или оборудованием)
 
 # Тестовые кнопки для активации пинов
-net active_0 => BallScrewVCP3.btnTestActive0
-net active_1 => BallScrewVCP3.btnTestActive1
-net active_2 => BallScrewVCP3.btnTestActive2
-net active_3 => BallScrewVCP3.btnTestActive3
-net active_4 => BallScrewVCP3.btnTestActive4
-net active_5 => BallScrewVCP3.btnTestActive5
+net active_0 <= BallScrewVCP3.btnTestActive0
+net active_1 <= BallScrewVCP3.btnTestActive1
+net active_2 <= BallScrewVCP3.btnTestActive2
+net active_3 <= BallScrewVCP3.btnTestActive3
+net active_4 <= BallScrewVCP3.btnTestActive4
+net active_5 <= BallScrewVCP3.btnTestActive5
 
 
 ### Форма 33
 
+# есть специальный Action
 # net home_sequence_start	BIT	OUT	Кнопка
+
 # net is_homed	BIT	IN	Цветовой индикатор (красный / зелёный)
+net bit0 => BallScrewVCP3.ledIs_Homed33
+
 # net dsp_mode	BIT	OUT	Переключатель
+net dsp_mode <= BallScrewVCP3.chkDsp_Mode33
+
 # net jog_minus	BIT	OUT	Кнопка
+
 # net on_position	BIT	IN	Цветовой индикатор (красный / зелёный)
+net bit1 => BallScrewVCP3.ledOn_Position33
+
 # net jog_plus	BIT	OUT	Кнопка
+
 # net position	FLOAT	IN	Числовой индикатор
+net sine0 => BallScrewVCP3.position-pin33
+
 # net position_actual	FLOAT	IN	Числовой индикатор
-# net dsp_mode	BIT	OUT	Переключатель
+net cosine0 => BallScrewVCP3.position_actual-pin33
+
+# net load_active	BIT	OUT	Переключатель
+net load_active <= BallScrewVCP3.chkLoad_Active33
+
 # net at_load	BIT	IN	Цветовой индикатор (красный / зелёный)
+net bit2 => BallScrewVCP3.ledAt_Load33
+
 # net load	FLOAT	IN	Числовой индикатор
+net sine0 => BallScrewVCP3.load-pin33
+
 # net load_actual	FLOAT	IN	Числовой индикатор
+net cosine0 => BallScrewVCP3.load_actual-pin33
+
 # net dsp_idle	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+net dsp_idle <= BallScrewVCP3.sldDsp_Idle33-f
+
 # net vel_idle	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+net vel_idle <= BallScrewVCP3.sldVel_Idle33-f
+
 # net accel_idle	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+net accel_idle => BallScrewVCP3.sldAccel_Idle33-f
+
 # net load	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+net load => BallScrewVCP3.sldLoad33-f
+
 # net pos_measure	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+net pos_measure => BallScrewVCP3.sldPos_Measure33-f
+
 # net dsp_measure	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+net dsp_measure => BallScrewVCP3.sldDsp_Measure33-f
+
 # net vel_measure	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+net vel_measure => BallScrewVCP3.sldVel_Measure33-f
+
 # net accel_measure	FLOAT	OUT	Ползунок с возможностью тонкой настройки и индикацией значения
+net accel_measure => BallScrewVCP3.sldAccel_Measure33-f
+
 # -	-	-	Кнопка
 # -	STRING	OUT	Поле ввода
 # net command_run	BIT	OUT	Кнопка
@@ -87,8 +125,13 @@ net active_5 => BallScrewVCP3.btnTestActive5
 # net active_4	BIT	IN	-
 # net active_5	BIT	IN	-
 
-
+net active_0 => BallScrewVCP3.active_0-pin #
+net active_1 => BallScrewVCP3.active_1-pin #
+net active_2 => BallScrewVCP3.active_2-pin #
+net active_3 => BallScrewVCP3.active_3-pin #
+net active_4 => BallScrewVCP3.active_4-pin #
+net active_5 => BallScrewVCP3.active_5-pin #
 
 loadusr halscope
 
-net machine_on BallScrewVCP3.actionbutton_mdi-led <= halui.machine.is-on
+# net machine_on BallScrewVCP3.actionbutton_mdi-led <= halui.machine.is-on

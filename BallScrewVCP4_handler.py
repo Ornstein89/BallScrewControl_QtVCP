@@ -193,14 +193,6 @@ class HandlerClass:
     def onBtnShowTorque34(self):
         pass
 
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Left:
-            print '*** Qt.Key_Left'
-            return
-        if event.key() == Qt.Key_Right:
-            print '*** Qt.Key_Right'
-            return
-        return
 
     #####################
     # GENERAL FUNCTIONS #

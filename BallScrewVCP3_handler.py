@@ -131,25 +131,38 @@ class HandlerClass:
     def init_pins(self):
         # создание HAL-пинов приложения
         self.VCP_halpins_float = {
-
+            'position-pin33':None,
+            'position_actual-pin33':None,
+            'load-pin33':None,
+            'load_actual-pin33':None
         }
         self.VCP_halpins_bit = {
-        'active_0-pin':None,
-        'active_1-pin':None,
-        'active_2-pin':None,
-        'active_3-pin':None,
-        'active_4-pin':None,
-        'active_5-pin':None
+            'active_0-pin':[None,self.onActive0Changed],
+            'active_1-pin':[None,self.onActive1Changed],
+            'active_2-pin':[None,self.onActive2Changed],
+            'active_3-pin':[None,self.onActive3Changed],
+            'active_4-pin':[None,self.onActive4Changed],
+            'active_5-pin':[None,self.onActive5Changed]
         }
 
         # создание пинов и связывание событий изменения HAL с обработчиком
         for key in self.VCP_halpins_float:
-            self.VCP_halpins_float[key] = self.hal.newpin(key, hal.HAL_FLOAT, hal.HAL_IN)
-            self.VCP_halpins_float[key].value_changed.connect(lambda s: self.pinCnagedCallback(s))
+            tmp_pin = self.hal.newpin(key, hal.HAL_FLOAT, hal.HAL_IN)
+            self.VCP_halpins_float[key] = tmp_pin
+            tmp_pin.value_changed.connect(lambda s: self.pinCnagedCallback(s))
             # создание пинов и связывание событий изменения HAL с обработчиком
+
         for key in self.VCP_halpins_bit:
-            self.VCP_halpins_bit[key] = self.hal.newpin(key, hal.HAL_BIT, hal.HAL_IN)
-            self.VCP_halpins_bit[key].value_changed.connect(lambda s: self.pinCnagedCallback(s))
+            tmp_pin = self.hal.newpin(key, hal.HAL_BIT, hal.HAL_IN)
+            self.VCP_halpins_bit[key][0] = tmp_pin
+            tmp_pin.value_changed.connect(self.VCP_halpins_bit[key][1])
+        #self.hal['active_0-pin'].value_changed.connect(self.onActive0Changed)
+        #self.hal['active_1-pin'].value_changed.connect(self.onActive1Changed)
+        #self.hal['active_2-pin'].value_changed.connect(self.onActive2Changed)
+        #self.hal['active_3-pin'].value_changed.connect(self.onActive3Changed)
+        #self.hal['active_4-pin'].value_changed.connect(self.onActive4Changed)
+        #self.hal['active_5-pin'].value_changed.connect(self.onActive5Changed)
+
         return
         
     def onBtnTempShow31(self):
@@ -215,6 +228,66 @@ class HandlerClass:
 
     def onBtnClearPlot33():
         pass
+
+    def onActive0Changed(self, data):
+        if not STATUS.machine_is_on():
+            return
+        self.w.btnHome33.setEnabled(self.hal['active_0-pin'])
+
+    def onActive1Changed(self, data):
+        if not STATUS.machine_is_on():
+            return
+        self.w.btnJog_Plus33.setEnabled(self.hal['active_1-pin'])
+        self.w.btnJog_Minus33.setEnabled(self.hal['active_1-pin'])
+
+    def onActive2Changed(self, data):
+        if not STATUS.machine_is_on():
+            return
+        self.w.chkDsp_Mode33.setEnabled(self.hal['active_2-pin'])
+        self.w.chkLoad_Active33.setEnabled(self.hal['active_2-pin'])
+
+    def onActive3Changed(self, data):
+        if not STATUS.machine_is_on():
+            return
+        self.w.sldDsp_Idle33.setEnabled(self.hal['active_3-pin'])
+        self.w.spnDsp_Idle33.setEnabled(self.hal['active_3-pin'])
+
+        self.w.sldVel_Idle33.setEnabled(self.hal['active_3-pin'])
+        self.w.spnVel_Idle33.setEnabled(self.hal['active_3-pin'])
+
+        self.w.sldAccel_Idle33.setEnabled(self.hal['active_3-pin'])
+        self.w.spnAccel_Idle33.setEnabled(self.hal['active_3-pin'])
+
+        self.w.sldLoad33.setEnabled(self.hal['active_3-pin'])
+        self.w.spnLoad33.setEnabled(self.hal['active_3-pin'])
+
+        self.w.sldPos_Measure33.setEnabled(self.hal['active_3-pin'])
+        self.w.spnPos_Measure33.setEnabled(self.hal['active_3-pin'])
+
+        self.w.sldDsp_Measure33.setEnabled(self.hal['active_3-pin'])
+        self.w.spnDsp_Measure33.setEnabled(self.hal['active_3-pin'])
+
+        self.w.sldVel_Measure33.setEnabled(self.hal['active_3-pin'])
+        self.w.spnVel_Measure33.setEnabled(self.hal['active_3-pin'])
+
+        self.w.sldAccel_Measure33.setEnabled(self.hal['active_3-pin'])
+        self.w.spnAccel_Measure33.setEnabled(self.hal['active_3-pin'])
+        
+        self.w.btnSaveGCode33.setEnabled(self.hal['active_3-pin'])
+
+
+    def onActive4Changed(self, data):
+        if not STATUS.machine_is_on():
+            return
+        self.w.btnCommand_Run33.setEnabled(self.hal['active_4-pin'])
+
+    def onActive5Changed(self, data):
+        if not STATUS.machine_is_on():
+            return
+        self.w.btnLoadGCode33.setEnabled(self.hal['active_5-pin'])
+        self.w.btnProgram_Run33.setEnabled(self.hal['active_5-pin'])
+        self.w.btnProgram_Stop33.setEnabled(self.hal['active_5-pin'])
+        self.w.gcode_editor33.setEnabled(self.hal['active_5-pin'])
 
     #####################
     # GENERAL FUNCTIONS #
@@ -302,40 +375,6 @@ class HandlerClass:
             self.update_plot() # обновить график
             return
 
-        # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_1-pin'):
-            self.w.btnJog_Plus33.setEnabled(self.hal['active_1-pin'])
-            self.w.btnJog_Minus33.setEnabled(self.hal['active_1-pin'])
-            return
-
-        # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_2-pin'):
-            self.w.chkDsp_Mode33.setEnabled(self.hal['active_2-pin'])
-            #TODO на форме 33 два dsp_mode self.w.rbDsp_Mode33.setEnabled(self.hal['active_2-pin'])
-            return
-
-        # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_3-pin'):
-            self.w.sldDsp_Idle33.setEnabled(self.hal['active_3-pin'])
-            self.w.sldVel_Idle33.setEnabled(self.hal['active_3-pin'])
-            self.w.sldAccel_Idle33.setEnabled(self.hal['active_3-pin'])
-            self.w.sldLoad33.setEnabled(self.hal['active_3-pin'])
-            self.w.sldPos_Measure33.setEnabled(self.hal['active_3-pin'])
-            self.w.sldDsp_Measure33.setEnabled(self.hal['active_3-pin'])
-            self.w.sldVel_Measure33.setEnabled(self.hal['active_3-pin'])
-            self.w.sldAccel_Measure33.setEnabled(self.hal['active_3-pin'])
-            self.w.btnSaveGCode33.setEnabled(self.hal['active_3-pin'])
-
-            return
-
-        # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_5-pin'):
-            self.w.btnLoadGCode33.setEnabled(self.hal['active_5-pin'])
-            self.w.btnProgram_Run33.setEnabled(self.hal['active_5-pin'])
-            self.w.btnProgram_Stop33.setEnabled(self.hal['active_5-pin'])
-
-            return
-
         # соответствие пинов float и табличек, на которых нужно отображать значение
         halpins_labels_match_precision2 = { # отображать с точностью 2 знака после запятой
 
@@ -348,27 +387,27 @@ class HandlerClass:
         halpins_labels_match_precision1 = { # отображать с точностью 1 знак после запятой
 
             # На форме 3.3
-            'position':self.w.lblPosition33,
-            'position_actual':self.w.lblPosition_Actual33,
-            'load':self.w.lblLoad33,
-            'load_actual':self.w.lblLoadActual33,
+            'position-pin33':self.w.lblPosition33,
+            'position_actual-pin33':self.w.lblPosition_Actual33,
+            'load-pin33':self.w.lblLoad33,
+            'load_actual-pin33':self.w.lblLoadActual33,
 
             # "таблица" с диодами и надписями на Форме 3.3
-            'load_error_value':self.w.lblLoad_Error_Value33,
-            'load_error_value_max':self.w.lblLoad_Error_Value_Max33,
-            'load_overload_value':self.w.lblLoad_Overload_Value33,
-            'load_overload_value_max':self.w.lblLoad_Overload_Value_Max33,
-            'load_temperature':self.w.lblLoad_Temperature33,
-            'load_temperature_max':self.w.lblLoad_Temperature_Max33,
+            'load_error_value-pin33':self.w.lblLoad_Error_Value33,
+            'load_error_value_max-pin33':self.w.lblLoad_Error_Value_Max33,
+            'load_overload_value-pin33':self.w.lblLoad_Overload_Value33,
+            'load_overload_value_max-pin33':self.w.lblLoad_Overload_Value_Max33,
+            'load_temperature-pin33':self.w.lblLoad_Temperature33,
+            'load_temperature_max-pin33':self.w.lblLoad_Temperature_Max33,
 
-            'pos_error_value':self.w.lblPos_Error_Value33,
-            'pos_error_value_max':self.w.lblPos_Error_Value_max33,
-            'pos_overload_value':self.w.lblPos_Overload_Value33,
-            'pos_overload_value_max':self.w.lblPos_Overload_Value_max33,
-            'pos_temperature':self.w.lblPos_Temperature33,
-            'pos_temperature_max':self.w.lblPos_Temperature_Max33,
-            'torque_extremal_last':self.w.lblTorque_Extremal_Last33,
-            'torque_extremal_max':self.w.lblTorque_Extremal_Max33
+            'pos_error_value-pin33':self.w.lblPos_Error_Value33,
+            'pos_error_value_max-pin33':self.w.lblPos_Error_Value_max33,
+            'pos_overload_value-pin33':self.w.lblPos_Overload_Value33,
+            'pos_overload_value_max-pin33':self.w.lblPos_Overload_Value_max33,
+            'pos_temperature-pin33':self.w.lblPos_Temperature33,
+            'pos_temperature_max-pin33':self.w.lblPos_Temperature_Max33,
+            'torque_extremal_last-pin33':self.w.lblTorque_Extremal_Last33,
+            'torque_extremal_max-pin33':self.w.lblTorque_Extremal_Max33
         }
 
         if(halpin_name in halpins_labels_match_precision1):

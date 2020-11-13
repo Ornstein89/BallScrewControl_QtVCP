@@ -139,14 +139,15 @@ class HandlerClass:
     def init_pins(self):
         # создание HAL-пинов приложения
         self.VCP_halpins_float = {
-        'position-pin31': [None, self.onPositionChanged],
-        'position_actual-pin31': [None, self.onPosition_ActualChanged],
-        'time-pin31':[None, self.onTimeChanged]
+            'position-pin31': [None, self.onPositionChanged],
+            'position_actual-pin31': [None, self.onPosition_ActualChanged],
+            'time-pin31':[None, self.onTimeChanged]
         }
+
         self.VCP_halpins_bit = {
-        'active_0-pin':[None, self.onActive0Changed],
-        'append_buffer-pin31': [None, self.onAppend_BufferChanged],
-        'append_file-pin31': [None, self.onAppend_FileChanged]
+            'active_0-pin':[None, self.onActive0Changed],
+            'append_buffer-pin31': [None, self.onAppend_BufferChanged],
+            'append_file-pin31': [None, self.onAppend_FileChanged]
         }
 
         # создание пинов и связывание событий изменения HAL с обработчиком
@@ -232,7 +233,8 @@ class HandlerClass:
             return
         self.w.sldVelocity31.setEnabled(self.hal['active_0-pin'])
         self.w.sldAcceleration31.setEnabled(self.hal['active_0-pin'])
-        pass
+        self.w.spnVelocity31.setEnabled(self.hal['active_0-pin'])
+        self.w.spnAcceleration31.setEnabled(self.hal['active_0-pin'])
 
     def onTimeChanged(self, data):
         #TODO
