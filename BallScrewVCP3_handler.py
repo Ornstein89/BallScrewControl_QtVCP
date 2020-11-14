@@ -136,6 +136,30 @@ class HandlerClass:
             'load-pin33':None,
             'load_actual-pin33':None
         }
+
+        self.VCP_halpins_float2 = {
+            'load_error_value-pin33':None,
+            'load_error_value_max-pin33':None,
+            'load_overload_value-pin33':None,
+            'load_overload_value_max-pin33':None,
+            'load_temperature-pin33':None,
+            'load_temperature_max-pin33':None,
+            'pos_error_value-pin33':None,
+            'pos_error_value_max-pin33':None,
+            'pos_overload_value-pin33':None,
+            'pos_overload_value_max-pin33':None,
+            'pos_temperature-pin33':None,
+            'pos_temperature_max-pin33':None,
+            'torque_extremal_last-pin33':None,
+            'torque_extremal_max-pin33':None,
+            'torque_actual-pin33':None,
+            'torque_estimated-pin33':None,
+            'torque_estimated-pin33':None,
+            'torque_actual-pin33':None,
+            'position_i-pin33':None,
+            'torque_extremal_i-pin33':None
+        }
+
         self.VCP_halpins_bit = {
             'active_0-pin':[None,self.onActive0Changed],
             'active_1-pin':[None,self.onActive1Changed],
@@ -150,7 +174,12 @@ class HandlerClass:
             tmp_pin = self.hal.newpin(key, hal.HAL_FLOAT, hal.HAL_IN)
             self.VCP_halpins_float[key] = tmp_pin
             tmp_pin.value_changed.connect(lambda s: self.pinCnagedCallback(s))
-            # создание пинов и связывание событий изменения HAL с обработчиком
+
+        # создание пинов и связывание событий изменения HAL с обработчиком
+        for key in self.VCP_halpins_float2:
+            tmp_pin = self.hal.newpin(key, hal.HAL_FLOAT, hal.HAL_IN)
+            self.VCP_halpins_float2[key] = tmp_pin
+            tmp_pin.value_changed.connect(lambda s: self.pinCnagedCallback(s))
 
         for key in self.VCP_halpins_bit:
             tmp_pin = self.hal.newpin(key, hal.HAL_BIT, hal.HAL_IN)
@@ -162,7 +191,6 @@ class HandlerClass:
         #self.hal['active_3-pin'].value_changed.connect(self.onActive3Changed)
         #self.hal['active_4-pin'].value_changed.connect(self.onActive4Changed)
         #self.hal['active_5-pin'].value_changed.connect(self.onActive5Changed)
-
         return
         
     def onBtnTempShow31(self):
@@ -323,7 +351,7 @@ class HandlerClass:
         self.w.ledLimits_Excess33)
 
         for led in diodes_redgreen:
-            led.setColor(Qt.green)
+            led.setColor(Qt.red)
             led.setOffColor(Qt.green)
 
         return
@@ -374,15 +402,6 @@ class HandlerClass:
             self.append_data(self.current_plot_n, self.hal['position-pin31']) # добавить точку к буферу графика
             self.update_plot() # обновить график
             return
-
-        # соответствие пинов float и табличек, на которых нужно отображать значение
-        halpins_labels_match_precision2 = { # отображать с точностью 2 знака после запятой
-
-            }
-
-        if(halpin_name in halpins_labels_match_precision2):
-            halpin_value = self.hal[halpin_name]
-            halpins_labels_match_precision2[halpin_name].setText("{:10.2f}".format(halpin_value))
 
         halpins_labels_match_precision1 = { # отображать с точностью 1 знак после запятой
 
