@@ -14,6 +14,7 @@
 # стандартные пакеты
 import sys, os, configparser
 import codecs
+import re
 
 # пакеты linuxcnc
 import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
@@ -592,11 +593,50 @@ class HandlerClass:
         #TODO обработка ошибок и исключений: 2) нет ключей в конфиге - сообщение и заполнение по умолчанию
 
     def update_ini(self):
-         inifilename = INFO.INIPATH# имя ini-файла
-         # открыть и считать
-         inifile = open(inifilename, "rb")
-         # список поле - GUI-элемент
-         for item in IniGUIMatches:
+        # список на замену
+        replacelist = [[rb"^(NOM_DSP_IDLE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnDsp_Idle33.value()).encode()],
+                       [rb"^(NOM_VEL_IDLE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnVel_Idle33.value()).encode()],
+                       [rb"^(NOM_ACCEL_IDLE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnAccel_Idle33.value()).encode()],
+                       [rb"^(NOM_LOAD\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnLoad33.value()).encode()],
+                       [rb"^(NOM_POS_MEASURE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnPos_Measure33.value()).encode()],
+                       [rb"^(NOM_DSP_MEASURE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnDsp_Measure33.value()).encode()],
+                       [rb"^(NOM_VEL_MEASURE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnVel_Measure33.value()).encode()],
+                       [rb"^(NOM_ACCEL_MEASURE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnAccel_Measure33.value()).encode()],]
+
+        # путь к текущему INI-файлу
+        inifilename = INFO.INIPATH# имя ini-файла
+        print "*** inifilename = ", inifilename
+
+        # открыть и считать
+        inifile = open(inifilename, "rb")
+        inilines = inifile.readlines()
+        inifile.close()
+
+        # список поле - GUI-элемент
+        for ini_line in inilines: # перечислить все строки INI-файла
+            for replace_item in replacelist: # в каждой строке поиск
+                ini_line = re.sub(replace_item[0], replace_item[1], ini_line)
+
+        inifile = open(inifilename, "wb")
+        inilines = inifile.writelines(inilines)
+        inifile.close()
+
+    def closeEvent(self, event):
+        #self.w.overlay.text='     SHUTDOWN?'
+        #self.w.overlay.bg_color = QtGui.QColor(0, 0, 0,150)
+        #self.w.overlay.show()
+
+        #if self.shutdown_check:
+        #    answer = MSG.showdialog('Do you want to shutdown now?',
+        #        details='You can set a preference to not see this message',
+        #         display_type='YESNO')
+        #    if not answer:
+        #        self.w.overlay.hide()
+        #        event.ignore()
+        #        return
+        #self.w.overlay.hide()
+        self.update_ini()
+        event.accept()
 
 ################################
 # required handler boiler code #
