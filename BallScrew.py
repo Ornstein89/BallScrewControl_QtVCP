@@ -1,5 +1,9 @@
 # This Python file uses the following encoding: utf-8
-import sys, os, configparser, codecs
+import sys, os, codecs
+if sys.version_info[0] == 2:
+    import ConfigParser as configparser
+else:
+    import configparser
 from shutil import copyfile
 
 from PyQt5 import uic
