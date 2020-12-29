@@ -160,24 +160,67 @@ class HandlerClass:
         if fname[1] is None or fname[0] is None:
             #TODO уведомление
             return
-        if fname[0].endswith(".ngc"):
+        elif fname[0].endswith(".ngc"):
             # self.w.cmb_gcode_history.addItem(fname) отобразить текущий файл в combobox
             # self.w.cmb_gcode_history.setCurrentIndex(self.w.cmb_gcode_history.count() - 1) отобразить текущий файл в combobox
             ACTION.OPEN_PROGRAM(fname[0])
             #self.add_status("Loaded program file : {}".format(fname))
             #self.w.main_tab_widget.setCurrentIndex(TAB_MAIN)
-            STATUS.emit('update-machine-log', "Loaded program file : {}".format(fname), 'TIME')
-            print "*** LOADED"
+            #STATUS.emit('update-machine-log', "Loaded program file : {}".format(fname), 'TIME')
+            #print "*** LOADED"
         else:
-            self.add_status("Unknown or invalid filename")
-            STATUS.emit('update-machine-log', "Unknown or invalid filename", 'TIME')
-            print "*** ERROR LOAD FILE"
+            #self.add_status("Unknown or invalid filename")
+            #STATUS.emit('update-machine-log', "Unknown or invalid filename", 'TIME')
+            #print "*** ERROR LOAD FILE"
 
     def onBtnSaveGCode34(self):
-        # загрузить шаблон
-        # заполнить отмеченные места
-        # диалог сохранения файла
-        # сохранить файл
+        replacements = [['{{dsp}}', '{:.1f}'.format(self.w.spnDsp34.value())],
+            ['{{omg}}', '{:.1f}'.format(self.w.spnOmg34.value())],
+            ['{{accel_coeff}}', '{:.1f}'.format(self.w.spnAccel_Coeff34.value())],
+            ['{{f1}}', '{:.1f}'.format(self.w.spnF1_34.value())],
+            ['{{f2}}', '{:.1f}'.format(self.w.spnF2_34.value())]]
+
+        # открыть шаблон
+        try:
+            #f_template = open('BallScrewVCP3_template.ngc','rb')
+            f_template = codecs.open('BallScrewVCP3_template.ngc','rb', 'utf-8')
+            filedata = f_template.read()
+            f_template.close()
+        except:
+            QMessageBox.critical(self.w, 'Ошибка',
+            "Невозможно найти шаблон BallScrewVCP3_template.ngc", QMessageBox.Yes)
+            return
+
+        # заменить отмеченные места
+        for replacement in replacements:
+            filedata = filedata.replace(replacement[0], replacement[1])
+
+        # записать файл
+        fname = QFileDialog.getSaveFileName(self.w, 'Сохранить программу GCode',
+        ".","NGC (*.ngc);;Text files (*.txt);;All Files (*.*)")
+
+        if (not fname[0].endswith(".ngc")) or (fname[1] is None):
+            # self.w.cmb_gcode_history.addItem(fname) отобразить текущий файл в combobox
+            # self.w.cmb_gcode_history.setCurrentIndex(self.w.cmb_gcode_history.count() - 1) отобразить текущий файл в combobox
+            #ACTION.OPEN_PROGRAM(fname[0])
+            #self.add_status("Loaded program file : {}".format(fname))
+            #self.w.main_tab_widget.setCurrentIndex(TAB_MAIN)
+            #STATUS.emit('update-machine-log', "Loaded program file : {}".format(fname), 'TIME')
+            QMessageBox.Warning(self.w, 'Внимание',
+            "Не выбрано название файла *.ngc для сохранения программы GCode", QMessageBox.Yes)
+            return
+            #self.add_status("Unknown or invalid filename")
+            #STATUS.emit('update-machine-log', "Unknown or invalid filename", 'TIME')
+
+        try:
+            #f_final = open(fname[0], 'wb')
+            f_final = codecs.open(fname[0], 'wb', 'utf-8')
+            f_final.write(filedata)
+            f_final.close()
+        except:
+            QMessageBox.critical(self.w, 'Ошибка',
+            "Невозможно записать файл " + fname[0], QMessageBox.Yes)
+            return
         pass
 
     def pnBtnShowResult34(self):
@@ -425,7 +468,8 @@ class HandlerClass:
 
         #TODO обработка ошибок и исключений: 1) нет файла - сообщение и заполнение по умолчанию, создание конфига
         #TODO обработка ошибок и исключений: 2) нет ключей в конфиге - сообщение и заполнение по умолчанию
-
+    def update_ini(self):
+        pass
     
 ################################
 # required handler boiler code #

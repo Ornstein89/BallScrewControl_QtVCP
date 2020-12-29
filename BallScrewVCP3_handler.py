@@ -13,13 +13,14 @@
 ############################
 # стандартные пакеты
 import sys, os, configparser
+import codecs
 
 # пакеты linuxcnc
 import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
 
 # пакеты GUI
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog, QMessageBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
 #from qtvcp.widgets import FocusOverlay
@@ -214,45 +215,73 @@ class HandlerClass:
         #fname = self.w.filemanager.getCurrentSelected()
         fname = QFileDialog.getOpenFileName(self.w, 'Open GCode file',
         ".","NGC (*.ngc);;Text files (*.txt);;All Files (*.*)")
-        if fname[1] is None or fname[0] is None:
+        if (fname[1] is None) or (fname[0] is None):
             #TODO уведомление
             return
-        if fname[0].endswith(".ngc"):
+        elif fname[0].endswith(".ngc"):
             # self.w.cmb_gcode_history.addItem(fname) отобразить текущий файл в combobox
             # self.w.cmb_gcode_history.setCurrentIndex(self.w.cmb_gcode_history.count() - 1) отобразить текущий файл в combobox
             ACTION.OPEN_PROGRAM(fname[0])
             #self.add_status("Loaded program file : {}".format(fname))
             #self.w.main_tab_widget.setCurrentIndex(TAB_MAIN)
-            STATUS.emit('update-machine-log', "Loaded program file : {}".format(fname), 'TIME')
+            #STATUS.emit('update-machine-log', "Loaded program file : {}".format(fname), 'TIME')
             print "*** LOADED"
-        else:
-            self.add_status("Unknown or invalid filename")
-            STATUS.emit('update-machine-log', "Unknown or invalid filename", 'TIME')
-            print "*** ERROR LOAD FILE"
+        #else:
+            #self.add_status("Unknown or invalid filename")
+            #STATUS.emit('update-machine-log', "Unknown or invalid filename", 'TIME')
+            #print "*** ERROR LOAD FILE"
 
-    def onBtnSaveGCode33():
-        replacements = [['{{DSP_IDLE}}', '%10.1f'.format(self.w.spnDsp_Idle33.value())],
-            ['{{VEL_IDLE}}', '%10.1f'.format(self.w.spnVel_Idle33.value())],
-            ['{{ACCEL_IDLE}}', '%10.1f'.format(self.w.spnAccel_Idle33.value())],
-            ['{{LOAD}}', '%10.1f'.format(self.w.spnLoad33.value())],
-            ['{{POS_MEASURE}}', '%10.1f'.format(self.w.spnPos_Measure33.value())],
-            ['{{DSP_MEASURE}}', '%10.1f'.format(self.w.spnDsp_Measure33.value())],
-            ['{{VEL_MEASURE}}', '%10.1f'.format(self.w.spnVel_Measure33.value())],
-            ['{{ACCEL_MEASURE}}', '%10.1f'.format(self.w.spnAccel_Measure33.value())]]
+    def onBtnSaveGCode33(self):
+        replacements = [['{{dsp_idle}}', '{:.1f}'.format(self.w.spnDsp_Idle33.value())],
+            ['{{vel_idle}}', '{:.1f}'.format(self.w.spnVel_Idle33.value())],
+            ['{{accel_idle}}', '{:.1f}'.format(self.w.spnAccel_Idle33.value())],
+            ['{{load}}', '{:.1f}'.format(self.w.spnLoad33.value())],
+            ['{{pos_measure}}', '{:.1f}'.format(self.w.spnPos_Measure33.value())],
+            ['{{dsp_measure}}', '{:.1f}'.format(self.w.spnDsp_Measure33.value())],
+            ['{{vel_measure}}', '{:.1f}'.format(self.w.spnVel_Measure33.value())],
+            ['{{accel_measure}}', '{:.1f}'.format(self.w.spnAccel_Measure33.value())]]
 
         # открыть шаблон
-        f_template = open('BallScrewVCP33_template.ngc','rb')
-        filedata = f_template.read()
-        f_template.close()
+        try:
+            #f_template = open('BallScrewVCP3_template.ngc','rb')
+            f_template = codecs.open('BallScrewVCP3_template.ngc','rb', 'utf-8')
+            filedata = f_template.read()
+            f_template.close()
+        except:
+            QMessageBox.critical(self.w, 'Ошибка',
+            "Невозможно найти шаблон BallScrewVCP3_template.ngc", QMessageBox.Yes)
+            return
 
         # заменить отмеченные места
         for replacement in replacements:
             filedata = filedata.replace(replacement[0], replacement[1])
 
         # записать файл
-        f_final = open('BallScrewVCP33.ngc', 'wb')
-        f_final.write(filedata)
-        f_final.close()
+        fname = QFileDialog.getSaveFileName(self.w, 'Сохранить программу GCode',
+        ".","NGC (*.ngc);;Text files (*.txt);;All Files (*.*)")
+
+        if (not fname[0].endswith(".ngc")) or (fname[1] is None):
+            # self.w.cmb_gcode_history.addItem(fname) отобразить текущий файл в combobox
+            # self.w.cmb_gcode_history.setCurrentIndex(self.w.cmb_gcode_history.count() - 1) отобразить текущий файл в combobox
+            #ACTION.OPEN_PROGRAM(fname[0])
+            #self.add_status("Loaded program file : {}".format(fname))
+            #self.w.main_tab_widget.setCurrentIndex(TAB_MAIN)
+            #STATUS.emit('update-machine-log', "Loaded program file : {}".format(fname), 'TIME')
+            QMessageBox.Warning(self.w, 'Внимание',
+            "Не выбрано название файла *.ngc для сохранения программы GCode", QMessageBox.Yes)
+            return
+            #self.add_status("Unknown or invalid filename")
+            #STATUS.emit('update-machine-log', "Unknown or invalid filename", 'TIME')
+
+        try:
+            #f_final = open(fname[0], 'wb')
+            f_final = codecs.open(fname[0], 'wb', 'utf-8')
+            f_final.write(filedata)
+            f_final.close()
+        except:
+            QMessageBox.critical(self.w, 'Ошибка',
+            "Невозможно записать файл " + fname[0], QMessageBox.Yes)
+            return
 
     def onBtnClearPlot33():
         pass
@@ -401,7 +430,6 @@ class HandlerClass:
             #print "*** update and plot"
             self.append_data(self.current_plot_n, self.hal['position-pin31']) # добавить точку к буферу графика
             self.update_plot() # обновить график
-            return
 
         halpins_labels_match_precision1 = { # отображать с точностью 1 знак после запятой
 
@@ -563,7 +591,13 @@ class HandlerClass:
         #TODO обработка ошибок и исключений: 1) нет файла - сообщение и заполнение по умолчанию, создание конфига
         #TODO обработка ошибок и исключений: 2) нет ключей в конфиге - сообщение и заполнение по умолчанию
 
-    
+    def update_ini(self):
+         inifilename = INFO.INIPATH# имя ini-файла
+         # открыть и считать
+         inifile = open(inifilename, "rb")
+         # список поле - GUI-элемент
+         for item in IniGUIMatches:
+
 ################################
 # required handler boiler code #
 ################################
