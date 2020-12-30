@@ -291,7 +291,7 @@ qproperty-flashing: true;
 qproperty-flashRate: 200;</string>
             </property>
             <property name="diameter">
-             <number>100</number>
+             <number>70</number>
             </property>
             <property name="off_color" stdset="0">
              <color>

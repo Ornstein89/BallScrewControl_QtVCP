@@ -95,7 +95,7 @@ qproperty-off_color: red;
 qproperty-diameter: 100;</string>
             </property>
             <property name="diameter">
-             <number>100</number>
+             <number>70</number>
             </property>
             <property name="off_color" stdset="0">
              <color>
@@ -426,17 +426,10 @@ on</string>
           </item>
           <item>
            <layout class="QGridLayout" name="gridLayout_31">
-            <item row="8" column="0" colspan="2" alignment="Qt::AlignHCenter">
-             <widget class="QPushButton" name="btnSaveGCode33">
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_92">
               <property name="text">
-               <string>Обновить УП</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_89">
-              <property name="text">
-               <string>Скорость (ХХ), мм/мин</string>
+               <string>Положение для измерения, мм</string>
               </property>
              </widget>
             </item>
@@ -447,86 +440,8 @@ on</string>
               </property>
              </widget>
             </item>
-            <item row="7" column="0">
-             <widget class="QLabel" name="label_113">
-              <property name="text">
-               <string>Ускорение (ИЗМ), мм/с&lt;sup&gt;2&lt;sup&gt;</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="1">
-             <widget class="Slider" name="sldDsp_Measure33">
-              <property name="maximum">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="label_92">
-              <property name="text">
-               <string>Положение для измерения, мм</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_90">
-              <property name="text">
-               <string>Ускорение (ХХ), мм/с&lt;sup&gt;2&lt;sup&gt;</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="1">
-             <widget class="Slider" name="sldAccel_Measure33">
-              <property name="maximum">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="Slider" name="sldDsp_Idle33">
-              <property name="maximum">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="label_112">
-              <property name="text">
-               <string>Скорость (ИЗМ), мм/мин</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="1">
-             <widget class="Slider" name="sldVel_Measure33">
-              <property name="maximum">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="Slider" name="sldAccel_Idle33">
-              <property name="maximum">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="Slider" name="sldLoad33">
+            <item row="4" column="1">
+             <widget class="Slider" name="sldPos_Measure33">
               <property name="maximum">
                <number>100</number>
               </property>
@@ -545,10 +460,10 @@ on</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_88">
+            <item row="8" column="0">
+             <widget class="QLabel" name="label_113">
               <property name="text">
-               <string>Ход, мм</string>
+               <string>Ускорение (ИЗМ), мм/с&lt;sup&gt;2&lt;sup&gt;</string>
               </property>
              </widget>
             </item>
@@ -559,8 +474,15 @@ on</string>
               </property>
              </widget>
             </item>
-            <item row="4" column="1">
-             <widget class="Slider" name="sldPos_Measure33">
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_90">
+              <property name="text">
+               <string>Ускорение (ХХ), мм/с&lt;sup&gt;2&lt;sup&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="Slider" name="sldAccel_Idle33">
               <property name="maximum">
                <number>100</number>
               </property>
@@ -569,17 +491,98 @@ on</string>
               </property>
              </widget>
             </item>
+            <item row="9" column="0" colspan="2" alignment="Qt::AlignHCenter">
+             <widget class="QPushButton" name="btnSaveGCode33">
+              <property name="text">
+               <string>Обновить УП</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="label_112">
+              <property name="text">
+               <string>Скорость (ИЗМ), мм/мин</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_89">
+              <property name="text">
+               <string>Скорость (ХХ), мм/мин</string>
+              </property>
+             </widget>
+            </item>
             <item row="0" column="2">
              <widget class="QDoubleSpinBox" name="spnDsp_Idle33"/>
             </item>
-            <item row="1" column="2">
-             <widget class="QDoubleSpinBox" name="spnVel_Idle33"/>
+            <item row="3" column="1">
+             <widget class="Slider" name="sldLoad33">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="2">
+             <widget class="QDoubleSpinBox" name="spnAccel_Measure33"/>
+            </item>
+            <item row="5" column="1">
+             <widget class="Slider" name="sldDsp_Measure33">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_88">
+              <property name="text">
+               <string>Ход, мм</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="Slider" name="sldVel_Measure33">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
             </item>
             <item row="2" column="2">
              <widget class="QDoubleSpinBox" name="spnAccel_Idle33"/>
             </item>
             <item row="3" column="2">
              <widget class="QDoubleSpinBox" name="spnLoad33"/>
+            </item>
+            <item row="1" column="2">
+             <widget class="QDoubleSpinBox" name="spnVel_Idle33"/>
+            </item>
+            <item row="0" column="1">
+             <widget class="Slider" name="sldDsp_Idle33">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="1">
+             <widget class="Slider" name="sldAccel_Measure33">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
             </item>
             <item row="4" column="2">
              <widget class="QDoubleSpinBox" name="spnPos_Measure33"/>
@@ -589,9 +592,6 @@ on</string>
             </item>
             <item row="6" column="2">
              <widget class="QDoubleSpinBox" name="spnVel_Measure33"/>
-            </item>
-            <item row="7" column="2">
-             <widget class="QDoubleSpinBox" name="spnAccel_Measure33"/>
             </item>
            </layout>
           </item>
