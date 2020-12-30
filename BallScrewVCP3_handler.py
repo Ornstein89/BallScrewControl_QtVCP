@@ -21,9 +21,9 @@ import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
 
 # пакеты GUI
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import QFileDialog, QMessageBox
+from PyQt5.QtWidgets import QFileDialog, QMessageBox, QLabel
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QColor, QPixmap
 #from qtvcp.widgets import FocusOverlay
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
 from qtvcp.widgets.gcode_editor import GcodeEditor as GCODE
@@ -284,68 +284,65 @@ class HandlerClass:
             "Невозможно записать файл " + fname[0], QMessageBox.Yes)
             return
 
-    def onBtnClearPlot33():
+    def onBtnClearPlot33(self):
+        pass
+
+    def onBtnMDI(self):
+        linuxcnc.command().mode(linuxcnc.MODE_MDI)
+        linuxcnc.command().wait_complete() # wait until mode switch executed
+        linuxcnc.command().mdi(self.w.mdiline33.text())
         pass
 
     def onActive0Changed(self, data):
-        if not STATUS.machine_is_on():
-            return
-        self.w.btnHome33.setEnabled(self.hal['active_0-pin'])
+        self.w.btnHome33.setEnabled(self.hal['active_0-pin'] and STATUS.machine_is_on())
 
     def onActive1Changed(self, data):
-        if not STATUS.machine_is_on():
-            return
-        self.w.btnJog_Plus33.setEnabled(self.hal['active_1-pin'])
-        self.w.btnJog_Minus33.setEnabled(self.hal['active_1-pin'])
+        self.w.btnJog_Plus33.setEnabled(self.hal['active_1-pin'] and STATUS.machine_is_on())
+        self.w.btnJog_Minus33.setEnabled(self.hal['active_1-pin'] and STATUS.machine_is_on())
 
     def onActive2Changed(self, data):
-        if not STATUS.machine_is_on():
-            return
-        self.w.chkDsp_Mode33.setEnabled(self.hal['active_2-pin'])
-        self.w.chkLoad_Active33.setEnabled(self.hal['active_2-pin'])
+        self.w.chkDsp_Mode33.setEnabled(self.hal['active_2-pin'] and STATUS.machine_is_on())
+        self.w.chkLoad_Active33.setEnabled(self.hal['active_2-pin'] and STATUS.machine_is_on())
 
     def onActive3Changed(self, data):
-        if not STATUS.machine_is_on():
-            return
-        self.w.sldDsp_Idle33.setEnabled(self.hal['active_3-pin'])
-        self.w.spnDsp_Idle33.setEnabled(self.hal['active_3-pin'])
+        controls = [self.w.sldDsp_Idle33,
+        self.w.spnDsp_Idle33,
 
-        self.w.sldVel_Idle33.setEnabled(self.hal['active_3-pin'])
-        self.w.spnVel_Idle33.setEnabled(self.hal['active_3-pin'])
+        self.w.sldVel_Idle33,
+        self.w.spnVel_Idle33,
 
-        self.w.sldAccel_Idle33.setEnabled(self.hal['active_3-pin'])
-        self.w.spnAccel_Idle33.setEnabled(self.hal['active_3-pin'])
+        self.w.sldAccel_Idle33,
+        self.w.spnAccel_Idle33,
 
-        self.w.sldLoad33.setEnabled(self.hal['active_3-pin'])
-        self.w.spnLoad33.setEnabled(self.hal['active_3-pin'])
+        self.w.sldLoad33,
+        self.w.spnLoad33,
 
-        self.w.sldPos_Measure33.setEnabled(self.hal['active_3-pin'])
-        self.w.spnPos_Measure33.setEnabled(self.hal['active_3-pin'])
+        self.w.sldPos_Measure33,
+        self.w.spnPos_Measure33,
 
-        self.w.sldDsp_Measure33.setEnabled(self.hal['active_3-pin'])
-        self.w.spnDsp_Measure33.setEnabled(self.hal['active_3-pin'])
+        self.w.sldDsp_Measure33,
+        self.w.spnDsp_Measure33,
 
-        self.w.sldVel_Measure33.setEnabled(self.hal['active_3-pin'])
-        self.w.spnVel_Measure33.setEnabled(self.hal['active_3-pin'])
+        self.w.sldVel_Measure33,
+        self.w.spnVel_Measure33,
 
-        self.w.sldAccel_Measure33.setEnabled(self.hal['active_3-pin'])
-        self.w.spnAccel_Measure33.setEnabled(self.hal['active_3-pin'])
+        self.w.sldAccel_Measure33,
+        self.w.spnAccel_Measure33,
         
-        self.w.btnSaveGCode33.setEnabled(self.hal['active_3-pin'])
+        self.w.btnSaveGCode33]
+
+        for control in controls:
+            control.setEnabled(self.hal['active_3-pin'] and STATUS.machine_is_on())
 
 
     def onActive4Changed(self, data):
-        if not STATUS.machine_is_on():
-            return
-        self.w.btnCommand_Run33.setEnabled(self.hal['active_4-pin'])
+        self.w.btnCommand_Run33.setEnabled(self.hal['active_4-pin'] and STATUS.machine_is_on())
 
     def onActive5Changed(self, data):
-        if not STATUS.machine_is_on():
-            return
-        self.w.btnLoadGCode33.setEnabled(self.hal['active_5-pin'])
-        self.w.btnProgram_Run33.setEnabled(self.hal['active_5-pin'])
-        self.w.btnProgram_Stop33.setEnabled(self.hal['active_5-pin'])
-        self.w.gcode_editor33.setEnabled(self.hal['active_5-pin'])
+        self.w.btnLoadGCode33.setEnabled(self.hal['active_5-pin'] and STATUS.machine_is_on())
+        self.w.btnProgram_Run33.setEnabled(self.hal['active_5-pin'] and STATUS.machine_is_on())
+        self.w.btnProgram_Stop33.setEnabled(self.hal['active_5-pin'] and STATUS.machine_is_on())
+        self.w.gcode_editor33.setEnabled(self.hal['active_5-pin'] and STATUS.machine_is_on())
 
     #####################
     # GENERAL FUNCTIONS #
@@ -357,6 +354,19 @@ class HandlerClass:
         #self.w.lblTest.setText("!!!HAL Label!!!")
         # self.w.gridLayout_29.addWidget(self.w.lblTest, 3, 2)
         self.init_plot()
+
+        # экран-заглушка для графика пока не получены данные с устройства
+        self.w.plot_overlay = QLabel(self.w.plt33)
+        self.stub_image = QPixmap("stub_screen.png")
+        self.w.plot_overlay.setPixmap(self.stub_image)
+
+        # приведение GUI в соответствие с сигналами HAL
+        self.onActive0Changed(None)
+        self.onActive1Changed(None)
+        self.onActive2Changed(None)
+        self.onActive3Changed(None)
+        self.onActive4Changed(None)
+        self.onActive5Changed(None)
 
     def init_led_colors(self):
         # настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
@@ -594,14 +604,15 @@ class HandlerClass:
 
     def update_ini(self):
         # список на замену
-        replacelist = [[rb"^(NOM_DSP_IDLE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnDsp_Idle33.value()).encode()],
-                       [rb"^(NOM_VEL_IDLE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnVel_Idle33.value()).encode()],
-                       [rb"^(NOM_ACCEL_IDLE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnAccel_Idle33.value()).encode()],
-                       [rb"^(NOM_LOAD\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnLoad33.value()).encode()],
-                       [rb"^(NOM_POS_MEASURE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnPos_Measure33.value()).encode()],
-                       [rb"^(NOM_DSP_MEASURE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnDsp_Measure33.value()).encode()],
-                       [rb"^(NOM_VEL_MEASURE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnVel_Measure33.value()).encode()],
-                       [rb"^(NOM_ACCEL_MEASURE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnAccel_Measure33.value()).encode()],]
+        replacelist = [[r'^123'.encode(), r'123'.encode()]]
+        #replacelist = [[rb"^(NOM_DSP_IDLE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnDsp_Idle33.value()).encode()]]
+        #               [rb"^(NOM_VEL_IDLE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnVel_Idle33.value()).encode()],
+        #               [rb'^(NOM_ACCEL_IDLE\s*\=\s*)\S*$', r"\1 {:.1f}".format(self.w.spnAccel_Idle33.value()).encode()],
+        #               [rb"^(NOM_LOdAD\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnLoad33.value()).encode()],
+        #               [rb"^(NOM_POS_MEASURE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnPos_Measure33.value()).encode()],
+        #               [rb"^(NOM_DSP_MEASURE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnDsp_Measure33.value()).encode()],
+        #               [rb"^(NOM_VEL_MEASURE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnVel_Measure33.value()).encode()],
+        #               [rb"^(NOM_ACCEL_MEASURE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnAccel_Measure33.value()).encode()]]
 
         # путь к текущему INI-файлу
         inifilename = INFO.INIPATH# имя ini-файла
@@ -617,9 +628,9 @@ class HandlerClass:
             for replace_item in replacelist: # в каждой строке поиск
                 ini_line = re.sub(replace_item[0], replace_item[1], ini_line)
 
-        inifile = open(inifilename, "wb")
-        inilines = inifile.writelines(inilines)
-        inifile.close()
+        #inifile = open(inifilename, "wb")
+        #inilines = inifile.writelines(inilines)
+        #inifile.close()
 
     def closeEvent(self, event):
         #self.w.overlay.text='     SHUTDOWN?'

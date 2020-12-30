@@ -210,8 +210,8 @@ font: bold</string>
              <string notr="true">background-color: rgb(239, 41, 41);</string>
             </property>
             <property name="icon">
-             <iconset resource="BallScrewVCP.qrc">
-              <normaloff>:/resources/circle.png</normaloff>:/resources/circle.png</iconset>
+             <iconset>
+              <normaloff>resources/circle.png</normaloff>resources/circle.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -241,8 +241,8 @@ font: bold</string>
              <string notr="true">background-color: rgb(138, 226, 52);</string>
             </property>
             <property name="icon">
-             <iconset resource="BallScrewVCP.qrc">
-              <normaloff>:/resources/vertical_line.png</normaloff>:/resources/vertical_line.png</iconset>
+             <iconset>
+              <normaloff>resources/vertical_line.png</normaloff>resources/vertical_line.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -469,6 +469,9 @@ qproperty-flashRate: 200;</string>
            <layout class="QHBoxLayout" name="horizontalLayout_16">
             <item>
              <widget class="QCheckBox" name="checkBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
                <string>Записывать в файл</string>
               </property>
@@ -476,6 +479,9 @@ qproperty-flashRate: 200;</string>
             </item>
             <item>
              <widget class="QPushButton" name="btnShowResult34">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
                <string>Просмотр результатов</string>
               </property>
@@ -546,17 +552,30 @@ qproperty-flashRate: 200;</string>
           </item>
           <item row="7" column="0">
            <layout class="QGridLayout" name="gridLayout_18">
-            <item row="1" column="0" rowspan="3">
-             <widget class="GcodeEditor" name="gcode_editor34"/>
-            </item>
-            <item row="0" column="0" colspan="3">
-             <widget class="QPushButton" name="btnLoadGCode34">
+            <item row="4" column="1">
+             <widget class="ActionButton" name="btnProgram_Stop34">
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(239, 41, 41);</string>
+              </property>
               <property name="text">
-               <string>Загрузить УП</string>
+               <string>Стоп</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>resources/stop.png</normaloff>resources/stop.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>40</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="abort_action" stdset="0">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
+            <item row="2" column="1">
              <widget class="ActionButton" name="btnProgram_Run34">
               <property name="styleSheet">
                <string notr="true">background-color: rgb(138, 226, 52);</string>
@@ -579,7 +598,7 @@ qproperty-flashRate: 200;</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
+            <item row="3" column="1">
              <widget class="ActionButton" name="btnProgram_Pause34">
               <property name="styleSheet">
                <string notr="true">background-color: rgb(114, 159, 207);</string>
@@ -602,28 +621,15 @@ qproperty-flashRate: 200;</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="1">
-             <widget class="ActionButton" name="btnProgram_Stop34">
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(239, 41, 41);</string>
-              </property>
+            <item row="1" column="1">
+             <widget class="QPushButton" name="btnLoadGCode34">
               <property name="text">
-               <string>Стоп</string>
-              </property>
-              <property name="icon">
-               <iconset>
-                <normaloff>resources/stop.png</normaloff>resources/stop.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="abort_action" stdset="0">
-               <bool>true</bool>
+               <string>Загрузить УП</string>
               </property>
              </widget>
+            </item>
+            <item row="1" column="0" rowspan="4">
+             <widget class="GcodeEditor" name="gcode_editor34"/>
             </item>
            </layout>
           </item>
@@ -670,8 +676,8 @@ qproperty-flashRate: 200;</string>
             <item row="1" column="0" rowspan="2">
              <widget class="ActionButton" name="btnJog_Minus34">
               <property name="icon">
-               <iconset resource="BallScrewVCP.qrc">
-                <normaloff>:/resources/caret_left.png</normaloff>:/resources/caret_left.png</iconset>
+               <iconset>
+                <normaloff>resources/caret_left.png</normaloff>resources/caret_left.png</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -687,8 +693,8 @@ qproperty-flashRate: 200;</string>
             <item row="1" column="2" rowspan="2">
              <widget class="ActionButton" name="btnJog_Plus34">
               <property name="icon">
-               <iconset resource="BallScrewVCP.qrc">
-                <normaloff>:/resources/caret_right.png</normaloff>:/resources/caret_right.png</iconset>
+               <iconset>
+                <normaloff>resources/caret_right.png</normaloff>resources/caret_right.png</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -763,6 +769,9 @@ qproperty-flashRate: 200;</string>
         </item>
         <item row="2" column="2">
          <widget class="QToolBox" name="toolBox">
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
           <property name="currentIndex">
            <number>1</number>
           </property>
@@ -1198,19 +1207,17 @@ font: 15pt bold;</string>
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="BallScrewVCP.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>btnLoadGCode34</sender>
    <signal>clicked()</signal>
    <receiver>BallScrewControlMainWindow</receiver>
-   <slot>onBtnLoadGCode()</slot>
+   <slot>onBtnLoadGCode34()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>321</x>
-     <y>632</y>
+     <x>630</x>
+     <y>714</y>
     </hint>
     <hint type="destinationlabel">
      <x>13</x>
@@ -1225,8 +1232,8 @@ font: 15pt bold;</string>
    <slot>onBtnSaveGCode34()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>394</x>
-     <y>575</y>
+     <x>448</x>
+     <y>659</y>
     </hint>
     <hint type="destinationlabel">
      <x>5</x>
@@ -1257,8 +1264,8 @@ font: 15pt bold;</string>
    <slot>pnBtnShowResult34()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>455</x>
-     <y>353</y>
+     <x>630</x>
+     <y>419</y>
     </hint>
     <hint type="destinationlabel">
      <x>5</x>

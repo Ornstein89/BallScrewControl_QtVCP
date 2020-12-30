@@ -19,9 +19,9 @@ import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
 
 # пакеты GUI
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog, QLabel
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QColor, QPixmap
 #from qtvcp.widgets import FocusOverlay
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
 from qtvcp.widgets.gcode_editor import GcodeEditor as GCODE
@@ -131,7 +131,7 @@ class HandlerClass:
     def init_pins(self):
         # создание HAL-пинов приложения
         self.VCP_halpins_float = {
-        'position-pin31': None,
+
         }
         self.VCP_halpins_bit = {
         'active_0-pin':None,
@@ -164,14 +164,14 @@ class HandlerClass:
             # self.w.cmb_gcode_history.addItem(fname) отобразить текущий файл в combobox
             # self.w.cmb_gcode_history.setCurrentIndex(self.w.cmb_gcode_history.count() - 1) отобразить текущий файл в combobox
             ACTION.OPEN_PROGRAM(fname[0])
-            #self.add_status("Loaded program file : {}".format(fname))
-            #self.w.main_tab_widget.setCurrentIndex(TAB_MAIN)
+            #self.add_status("Loaded program file : {}".format(fname))            #self.w.main_tab_widget.setCurrentIndex(TAB_MAIN)
             #STATUS.emit('update-machine-log', "Loaded program file : {}".format(fname), 'TIME')
             #print "*** LOADED"
         else:
             #self.add_status("Unknown or invalid filename")
             #STATUS.emit('update-machine-log', "Unknown or invalid filename", 'TIME')
             #print "*** ERROR LOAD FILE"
+            pass
 
     def onBtnSaveGCode34(self):
         replacements = [['{{dsp}}', '{:.1f}'.format(self.w.spnDsp34.value())],
@@ -223,6 +223,7 @@ class HandlerClass:
             return
         pass
 
+
     def pnBtnShowResult34(self):
         #TODO открыть блокнот
         pass
@@ -245,6 +246,11 @@ class HandlerClass:
         #TODO настройка осей графика
         self.load_ini()
         self.init_plot()
+
+        # экран-заглушка для графика пока не получены данные с устройства
+        self.w.plot_overlay = QLabel(self.w.plt34)
+        self.stub_image = QPixmap("stub_screen.png")
+        self.w.plot_overlay.setPixmap(self.stub_image)
         return
 
     def init_led_colors(self):
@@ -276,16 +282,43 @@ class HandlerClass:
     def init_plot(self):
         self.w.plt34.showGrid(x = True, y = True)
         self.w.plt34.setBackground('w')
-        pen = pg.mkPen(color=(255, 0, 0), width=2)
-        self.w.plt34.setPen(pen)
+        #pen = pg.mkPen(color=(255, 0, 0), width=2)
+        #self.w.plt34.setPen(pen)
         styles = {'color':'r', 'font-size':'20px'}
-        self.w.plt34.setLabel('left', 'Момент [Н*м]', **styles)
-        self.w.plt34.setLabel('bottom', 'Время', **styles)
+
+        self.w.plt34.setLabel('left', 'F [кгс]', **styles)
+        self.w.plt34.setLabel('bottom', 'Положение, мм', **styles)
+
+        font=QtGui.QFont()
+        font.setPixelSize(20)
+        self.hLine = pg.InfiniteLine(angle=0, movable=False,
+            pen=pg.mkPen(color=QColor(Qt.blue),
+            width = 2, style=Qt.DashDotLine),
+            label='{value:0.1f}',
+            labelOpts={'position':0.95, 'color': (255,0,0),
+                       'movable': False, 'fill': (0, 0, 200, 100)})
+        #self.hLine.setPos(pg.Point(0.0, 10.0))
+        self.hLine.setValue(0.5)
+        self.hLine.setZValue(1)
+        self.w.plt34.addItem(self.hLine, ignoreBounds=True)
+
+        self.vLine = pg.InfiniteLine(angle=90, movable=False,
+            pen=pg.mkPen(color=QColor(Qt.blue), width = 2, style=Qt.DashDotLine))
+        #self.vLine.setPos(pg.Point(1.0, 0.0))
+        self.vLine.setValue(0.5)
+        self.vLine.setZValue(1)
+        self.w.plt34.addItem(self.vLine, ignoreBounds=True)
+
+        font=QtGui.QFont()
+        font.setPixelSize(20)
+        #plot.getAxis("bottom").tickFont = font
+        self.w.plt34.getAxis("bottom").setStyle(tickFont = font)
+        self.w.plt34.getAxis("left").setStyle(tickFont = font)
         # self.graphWidget.setXRange(5, 20, padding=0)
         # self.graphWidget.setYRange(30, 40, padding=0)
         # курсор на графике https://stackoverflow.com/questions/50512391/can-i-share-the-crosshair-with-two-graph-in-pyqtgraph-pyqt5
         # https://stackoverflow.com/questions/52410731/drawing-and-displaying-objects-and-labels-over-the-axis-in-pyqtgraph-how-to-do
-
+        return
     def pinCnagedCallback(self, data):
         halpin_name = self.w.sender().text()
 
@@ -331,7 +364,7 @@ class HandlerClass:
 
         # соответствие пинов float и табличек, на которых нужно отображать значение
         halpins_labels_match_precision2 = { # отображать с точностью 2 знака после запятой
-            'position-pin31':self.w.lblPosition31,
+
             }
 
         if(halpin_name in halpins_labels_match_precision2):
@@ -422,17 +455,15 @@ class HandlerClass:
         self.datalog.write("Дата: " + self.DATE + "\n")
 
     #TODO в принципе функция не нужна, т.к. linuxcnc сам поддерживает передачу параметров из ini
-    def load_ini(self, n_form):
-        ini_control_match_dict = (
-        # для формы 3.4
-        {
-            'NOM_DSP' : [self.w.sldDsp34, self.w.spnDsp34],
-            'NOM_OMG': [self.w.sldOmg34, self.w.spnOmg34],
+    def load_ini(self):
+        ini_control_match_dict = {# для формы 3.4
+            'NOM_TRAVEL' : [self.w.sldDsp34, self.w.spnDsp34],
+            'NOM_OMEGA': [self.w.sldOmg34, self.w.spnOmg34],
             'NOM_ACCEL_COEFF': [self.w.sldAccel_Coeff34, self.w.spnAccel_Coeff34],
             'NOM_F1': [self.w.sldF1_34, self.w.spnF1_34],
             'NOM_F2': [self.w.sldF2_34, self.w.spnF2_34]
         }
-        )
+
 
         #self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
         #print "*** self.TYPE = ", self.TYPE
@@ -443,7 +474,9 @@ class HandlerClass:
         self.PART = INFO.INI.findall("BALLSCREWPARAMS", "PART")[0]
         #self.datalog.write("Номер изделия: " + self.PART + "\n")
         #self.datalog.write("Дата: " + self.DATE + "\n")
-        for key, controls in ini_control_match_dict[int(self.TYPE)-1].items():
+        for key, controls in ini_control_match_dict.items():
+            print '***controls[0] = ', controls[0].objectName()
+            print '***controls[1] = ', controls[1].objectName()
             controls[0].setMinimum(int(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MIN')[0])*100))
             controls[0].setMaximum(int(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MAX')[0])*100))
             controls[0].setValue(int(float(INFO.INI.findall("BALLSCREWPARAMS", key)[0])*100))

@@ -90,4 +90,4 @@ net active_5 => BallScrewVCP4.btnTestActive5
 
 loadusr halscope
 
-net machine_on BallScrewVCP4.actionbutton_mdi-led <= halui.machine.is-on
+# net machine_on BallScrewVCP4.actionbutton_mdi-led <= halui.machine.is-on
