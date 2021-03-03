@@ -23,6 +23,8 @@ from PyQt5.QtWidgets import QFileDialog#, QHalLabel
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
 #from qtvcp.widgets import FocusOverlay, HALLabel
+from qtvcp.widgets.overlay_widget import FocusOverlay
+from qtvcp.widgets.dialog_widget import LcncDialog
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
 from qtvcp.widgets.gcode_editor import GcodeEditor as GCODE
 from qtvcp.lib.keybindings import Keylookup
@@ -49,6 +51,7 @@ KEYBIND = Keylookup()
 STATUS = Status()
 INFO = Info()
 ACTION = Action()
+MSG = LcncDialog()
 ###################################
 # **** HANDLER CLASS SECTION **** #
 ###################################
@@ -331,9 +334,24 @@ class HandlerClass:
         return
 
     def closeEvent(self, event):
-        # TODO по закрытию приложения
-        # закрывать файл
-        # вопрос про выключение
+
+        # оверлей с запросом на выключение
+        self.w.overlay.text='Выключить?'
+        self.w.overlay.bg_color = QtGui.QColor(0, 0, 0,150)
+        self.w.overlay.show()
+
+        #if self.shutdown_check:
+        answer = MSG.showdialog('Выключить приложение?',
+            details='',
+            display_type='YESNO')
+        if not answer:
+            self.w.overlay.hide()
+            event.ignore()
+            return
+
+        self.w.overlay.hide()
+
+        # дождаться записи файла и закрыть
         self.datalogfile.flush()
         self.datalogfile.close()
         print "*** closeEvent"
@@ -377,6 +395,11 @@ class HandlerClass:
         #self.w.lblTest.setText("!!!HAL Label!!!")
         # self.w.gridLayout_29.addWidget(self.w.lblTest, 3, 2)
         self.init_plot()
+
+        # создать оверлей для диалого завершения
+        self.w.overlay = FocusOverlay(self.w)
+        self.w.overlay.setGeometry(0, 0, 800, 600)
+        self.w.overlay.hide()
         return
 
     def init_led_colors(self):
