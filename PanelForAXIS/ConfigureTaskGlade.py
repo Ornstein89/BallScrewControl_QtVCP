@@ -3,6 +3,7 @@
 import hal
 import glib
 import time
+import gtk
 
 class HandlerClass:
     '''
@@ -29,9 +30,21 @@ class HandlerClass:
             print "***", index[0] , " *** ", index[1]
             i = index[1]
             print "*** i = ", i 
+            #pixbuf = gtk.gdk.new_from_file_at_scale(image_list[i], 400, 800, True)
+            #pixbuf = gtk.gdk.GdkPixbuf.Pixbuf.new_from_file_at_scale(image_list[i], 400, 800, True)
+            #pixbuf = gtk.gdk.Pixbuf.new_from_file_at_scale(image_list[i], 400, 800, True)
+            #imgDrawing = imgDrawing.set_from_pixbuf(pixbuf)
+            
             imgDrawing = imgDrawing.set_from_file(image_list[i])
         #self.nhits += 1
         #self.builder.get_object('hits').set_label("Hits: %d" % (self.nhits))
+    
+    def on_btnSave_clicked(self):
+        #<_i> = 0  // переменная счётчика
+        #<_N> = 40 // количество отверстий (интервалов)
+        #<_alpha> = 0  // переменная текущего углового положения
+        #<_beta> 
+        pass
 
     def __init__(self, halcomp,builder,useropts):
         '''
