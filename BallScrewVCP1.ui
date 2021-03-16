@@ -84,6 +84,14 @@ font: 15pt bold;</string>
            </spacer>
           </item>
           <item>
+           <widget class="QLabel" name="label_55">
+            <property name="text">
+             <string>Левый
+концевик</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="LED" name="ledSw1_31">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -140,6 +148,14 @@ font: 15pt bold;</string>
             </property>
             <property name="diameter">
              <number>20</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_56">
+            <property name="text">
+             <string>Правый
+концевик</string>
             </property>
            </widget>
           </item>
@@ -261,8 +277,12 @@ font: 15pt bold;</string>
           </item>
           <item row="0" column="2">
            <widget class="ActionButton" name="actionbutton">
+            <property name="styleSheet">
+             <string notr="true">font: bold;</string>
+            </property>
             <property name="text">
-             <string>E Stop</string>
+             <string>Выкл
+(E Stop)</string>
             </property>
             <property name="indicator_option" stdset="0">
              <bool>true</bool>
@@ -404,23 +424,6 @@ background-image: url(./resources/stripes.png);
 }</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
-           <item row="1" column="0">
-            <widget class="PushButton" name="btnTestActive0">
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(252, 233, 79);</string>
-             </property>
-             <property name="text">
-              <string>test
-active_0</string>
-             </property>
-             <property name="checkable">
-              <bool>true</bool>
-             </property>
-             <property name="checked_state_text_option" stdset="0">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
            <item row="2" column="0">
             <widget class="PushButton" name="btnTestAppend_Buffer31">
              <property name="styleSheet">
@@ -449,7 +452,7 @@ append_file</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
+           <item row="5" column="0">
             <spacer name="verticalSpacer_3">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -474,6 +477,30 @@ font: bold</string>
              </property>
              <property name="margin">
               <number>5</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="PushButton" name="btnTestActive0">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(252, 233, 79);</string>
+             </property>
+             <property name="text">
+              <string>test
+active_0</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="checked_state_text_option" stdset="0">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QPushButton" name="btnTest">
+             <property name="text">
+              <string>testButton</string>
              </property>
             </widget>
            </item>
@@ -510,7 +537,24 @@ font: bold</string>
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>btnTest</sender>
+   <signal>clicked()</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onBtnTest()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>72</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>5</x>
+     <y>238</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <slots>
   <slot>onBtnTempShow34()</slot>
   <slot>onBtnTempShow33()</slot>
@@ -522,5 +566,6 @@ font: bold</string>
   <slot>onSldAcceleration31Moved()</slot>
   <slot>onSpnVelocity31Changed()</slot>
   <slot>onSpnAcceleration31Changed()</slot>
+  <slot>onBtnTest()</slot>
  </slots>
 </ui>

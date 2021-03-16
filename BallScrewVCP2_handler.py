@@ -22,11 +22,13 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QFileDialog#, QHalLabel
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
+
 #from qtvcp.widgets import FocusOverlay, HALLabel
-from qtvcp.widgets.overlay_widget import FocusOverlay
-from qtvcp.widgets.dialog_widget import LcncDialog
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
 from qtvcp.widgets.gcode_editor import GcodeEditor as GCODE
+from qtvcp.widgets.dialog_widget import LcncDialog
+from qtvcp.widgets.overlay_widget import FocusOverlay
+
 from qtvcp.lib.keybindings import Keylookup
 from qtvcp.lib.gcodes import GCodes
 from qtvcp.core import Status, Action, Info
@@ -79,6 +81,7 @@ class HandlerClass:
     # widgets allows access to  widgets from the qtvcp files
     # at this point the widgets and hal pins are not instantiated
     def __init__(self, halcomp,widgets,paths):
+        os.system("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 128") #TODO возможно есть более рациональная команда
         self.initialized = False
         self.hal = halcomp
         self.PATHS = paths
@@ -111,6 +114,7 @@ class HandlerClass:
                 self.w.btnStart_Ccw32.setChecked(True)
             else:
                 self.w.btnStart_Ccw32.setChecked(False)
+                self.w.btnStart_Ccw32.setEnabled(False)
             #print '*** Qt.Key_Left'
 
         if event.key() == Qt.Key_Right and self.w.btnStart_Cw32.isEnabled():
@@ -118,6 +122,7 @@ class HandlerClass:
                 self.w.btnStart_Cw32.setChecked(True)
             else:
                 self.w.btnStart_Cw32.setChecked(False)
+                self.w.btnStart_Cw32.setEnabled(False)
             #print '*** Qt.Key_Right'
 
     ########################
@@ -133,7 +138,10 @@ class HandlerClass:
         'time_current-pin32': [None, self.onUpdateFloatSignals],
         'time-pin32': [None, self.onUpdateFloatSignals],
         'duration-pin32':[None, self.onUpdateFloatSignals],
-        'torque_set-pin32': [None, self.onTorque_SetChanged], # пин связан с графиком, поэтому в отдельный слот для повышения производительности
+
+        # 16 марта 2021 - в ТЗ неточность, сигнал не нужен, привязка к BRAKE_TORQUE из формы 2.2
+        #'torque_set-pin32': [None, self.onTorque_SetChanged], # пин связан с графиком, поэтому в отдельный слот для повышения производительности
+
         'torque_actual-pin32': [None, self.onTorque_ActualChanged], # пин связан с графиком, поэтому в отдельный слот для повышения производительности
         'omega_actual-pin32': [None, self.onUpdateFloatSignals],
         'geartorque_error_value-pin32': [None, self.onUpdateFloatSignals],
@@ -187,21 +195,22 @@ class HandlerClass:
         print "*** on_state_off, data=", data
         pass
 
-    def onTorque_SetChanged(self, data):
-        if not self.initialized:
-            return
-
-        torque_set_value = self.hal['torque_set-pin32'] * 0.1 + 1.0
-        self.w.lblTorque_Set32.setText("{:10.1f}".format(torque_set_value))
-        #self.hLine.setPos(pg.Point(torque_set_value, 0.0))
-        self.hLine.setValue(torque_set_value)
-        return
+    # # 16 марта 2021 - в ТЗ неточность, сигнал не нужен, привязка к BRAKE_TORQUE из формы 2.2
+    # def onTorque_SetChanged(self, data):
+    #     if not self.initialized:
+    #         return
+    #
+    #     torque_set_value = self.hal['torque_set-pin32'] # * 0.1 + 1.0
+    #     self.w.lblTorque_Set32.setText("{:10.1f}".format(torque_set_value))
+    #     #self.hLine.setPos(pg.Point(torque_set_value, 0.0))
+    #     self.hLine.setValue(torque_set_value)
+    #     return
 
     def onTorque_ActualChanged(self, data):
         if not self.initialized:
             return
 
-        torque_actual_value = self.hal['torque_actual-pin32'] * 0.1 + 1.0
+        torque_actual_value = self.hal['torque_actual-pin32'] # * 0.1 + 1.0
         self.w.lblTorque_Actual32.setText("{:10.1f}".format(torque_actual_value))
         time_value = self.hal['time-pin32']
         time_range = 15.0 #TODO заменить на сторонний сигнал
@@ -215,12 +224,14 @@ class HandlerClass:
             plotindex += 1
         self.plot_data_buffer[0] = self.plot_data_buffer[0][plotindex:]
         self.plot_data_buffer[1] = self.plot_data_buffer[1][plotindex:]
-        YMax = 1.2#max(self.plot_data_buffer[1]) * 1.1
-        # обновить график
-        self.update_plot()
+        YMax = self.BRAKE_TORQUE*1.2
+        self.hLine.setValue(self.BRAKE_TORQUE) #TODO ближайшие кратные 1, 2 и 5
+        #TODO обновлять YMax если график улетает в космос
+
+        self.update_plot() # обновить график
         #self.vLine.setPos(pg.Point(0.0, time_value))
         self.w.plt32.setXRange(time_value - time_range, time_value + time_range*0.1)
-        self.w.plt32.setYRange(0.0, YMax)
+        self.w.plt32.setYRange(min([0.0, min(self.plot_data_buffer[1])]), max([YMax, max(self.plot_data_buffer[1])]))
         self.w.plt32.clear() # обязательно очищать, иначе утечка памяти, объекты копятся на графике
         self.w.plt32.addItem(self.hLine, ignoreBounds=True, label='*Y')
         self.w.plt32.addItem(self.vLine, ignoreBounds=True, label='*X')
@@ -237,6 +248,8 @@ class HandlerClass:
                             labelOpts={'position':0.95, 'color': (255,0,0),
                                        'movable': False, 'fill': (0, 0, 200, 100)})
         self.vLine.setValue(time_value)
+        self.w.lblTorque_Set32.setText("{:10.1f}".format(self.BRAKE_TORQUE)) # сигнал torque_set выведен из исп. 16 марта, вместо него BRAKE_TORQUE
+        self.hLine.setValue(self.BRAKE_TORQUE)
         return
 
     def onUpdateFloatSignals(self, data):
@@ -337,8 +350,10 @@ class HandlerClass:
 
         # оверлей с запросом на выключение
         self.w.overlay.text='Выключить?'
-        self.w.overlay.bg_color = QtGui.QColor(0, 0, 0,150)
+        #self.w.overlay.bg_color = QtGui.QColor(0, 0, 0, 150)
+        self.w.overlay.resize(self.w.size())
         self.w.overlay.show()
+        self.w.overlay.update()
 
         #if self.shutdown_check:
         answer = MSG.showdialog('Выключить приложение?',
@@ -349,7 +364,7 @@ class HandlerClass:
             event.ignore()
             return
 
-        self.w.overlay.hide()
+        self.w.overlay.text='Закрытие файлов и выключение'
 
         # дождаться записи файла и закрыть
         self.datalogfile.flush()
@@ -379,16 +394,22 @@ class HandlerClass:
         # STATUS.connect('state-estop-reset', lambda w: self.w.btnDevice_Off32.setEnabled(False))
 
         self.w.btnDevice_Off32.clicked.connect(self.onBtnDevice_Off)
+
+        #TODO связать с action-сигналом
         STATUS.connect('state-on', lambda _: (self.w.btnStart_Ccw32.setEnabled(True),
                                               self.w.btnStop32.setEnabled(True),
                                               self.w.btnStart_Cw32.setEnabled(True)))
         STATUS.connect('state-off', lambda _:(self.w.btnStart_Ccw32.setEnabled(False),
                                               self.w.btnStop32.setEnabled(False),
                                               self.w.btnStart_Cw32.setEnabled(False)))
-        self.w.btnStart_Ccw32.clicked.connect(lambda x: self.w.btnStart_Cw32.setChecked(False) if self.w.btnStart_Ccw32.isChecked() else None)
-        self.w.btnStart_Cw32.clicked.connect(lambda x: self.w.btnStart_Ccw32.setChecked(False) if self.w.btnStart_Cw32.isChecked() else None)
+        self.w.btnStart_Ccw32.clicked.connect(lambda x: (self.w.btnStart_Cw32.setChecked(False) if self.w.btnStart_Ccw32.isChecked() else None,
+            self.w.btnStart_Cw32.setEnabled(False) if self.w.btnStart_Ccw32.isChecked() else None))
+        self.w.btnStart_Cw32.clicked.connect(lambda x: (self.w.btnStart_Ccw32.setChecked(False) if self.w.btnStart_Cw32.isChecked() else None,
+            self.w.btnStart_Ccw32.setEnabled(False) if self.w.btnStart_Cw32.isChecked() else None))
         self.w.btnStop32.clicked.connect(lambda x: (self.w.btnStart_Cw32.setChecked(False),
-            self.w.btnStart_Ccw32.setChecked(False)))
+                                         self.w.btnStart_Cw32.setEnabled(True),
+                                         self.w.btnStart_Ccw32.setChecked(False),
+                                         self.w.btnStart_Ccw32.setEnabled(True)))
 
         #STATUS.connect('state-estop-reset', lambda w: self._flip_state(False))
         #self.w.lblTest = QHalLabel()
@@ -398,9 +419,14 @@ class HandlerClass:
 
         # создать оверлей для диалого завершения
         self.w.overlay = FocusOverlay(self.w)
-        self.w.overlay.setGeometry(0, 0, 800, 600)
+        self.w.overlay.setGeometry(self.w.geometry())
         self.w.overlay.hide()
         return
+
+    def resizeEvent(self, event):
+        print "*** resizeEvent(), newSize"
+        self.w.overlay.resize(self.w.size())
+        event.accept()
 
     def init_led_colors(self):
         # настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
@@ -439,8 +465,11 @@ class HandlerClass:
             labelOpts={'position':0.95, 'color': (255,0,0),
                        'movable': False, 'fill': (0, 0, 200, 100)})
         #self.hLine.setPos(pg.Point(0.0, 10.0))
-        self.hLine.setValue(0.5)
+        YMax = self.BRAKE_TORQUE*1.2
+        self.hLine.setValue(self.BRAKE_TORQUE) #TODO ближайшие кратные 1, 2 и 5
         self.hLine.setZValue(1)
+        self.w.plt32.setYRange(0.0, YMax)
+        self.w.plt32.enableAutoRange(axis = "y", enable = True)
         self.w.plt32.addItem(self.hLine, ignoreBounds=True)
 
         self.vLine = pg.InfiniteLine(angle=90, movable=False,
@@ -474,7 +503,7 @@ class HandlerClass:
 
         halpins_labels_match_precision1 = { # отображать с точностью 1 знак после запятой
             # На форме 3.2
-            'torque_set-pin32':self.w.lblTorque_Set32,
+            #'torque_set-pin32':self.w.lblTorque_Set32, # сигнал torque_set выведен из исп. 16 марта, вместо него BRAKE_TORQUE
             'torque_actual-pin32':self.w.lblTorque_Actual32,
             'omega_actual-pin32':self.w.lblOmega_Actual32,
 
@@ -546,9 +575,10 @@ class HandlerClass:
         self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
         self.datalogfileFILENAME = INFO.INI.findall("BALLSCREWPARAMS", "LOGFILE")[0]
         self.MODEL = INFO.INI.findall("BALLSCREWPARAMS", "MODEL")[0]
+        self.BRAKE_TORQUE = float(INFO.INI.findall("BALLSCREWPARAMS", "BRAKE_TORQUE")[0])
         self.DATE = INFO.INI.findall("BALLSCREWPARAMS", "DATE")[0]
         self.PART = INFO.INI.findall("BALLSCREWPARAMS", "PART")[0]
-        #self.datalogfile.write("Номер изделия: " + self.PART + "\n")
+        #self.datalogfile.write("Номе изделия: " + self.PART + "\n")
         #self.datalogfile.write("Дата: " + self.DATE + "\n")
         #TODO обработка ошибок и исключений: 1) нет файла - сообщение и заполнение по умолчанию, создание конфига
         #TODO обработка ошибок и исключений: 2) нет ключей в конфиге - сообщение и заполнение по умолчанию

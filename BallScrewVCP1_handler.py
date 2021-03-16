@@ -18,12 +18,16 @@ import sys, os, configparser
 import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
 
 # пакеты GUI
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtCore import Qt
+
 #from qtvcp.widgets import FocusOverlay
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
 from qtvcp.widgets.gcode_editor import GcodeEditor as GCODE
+from qtvcp.widgets.dialog_widget import LcncDialog
+from qtvcp.widgets.overlay_widget import FocusOverlay
+
 from qtvcp.lib.keybindings import Keylookup
 from qtvcp.lib.gcodes import GCodes
 from qtvcp.core import Status, Action, Info
@@ -48,6 +52,7 @@ KEYBIND = Keylookup()
 STATUS = Status()
 INFO = Info()
 ACTION = Action()
+MSG = LcncDialog()
 ###################################
 # **** HANDLER CLASS SECTION **** #
 ###################################
@@ -60,6 +65,7 @@ class HandlerClass:
     # widgets allows access to  widgets from the qtvcp files
     # at this point the widgets and hal pins are not instantiated
     def __init__(self, halcomp,widgets,paths):
+        os.system("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 128") #TODO возможно есть более рациональная команда
         self.hal = halcomp
         self.PATHS = paths
         #self.gcodes = GCodes()
@@ -81,12 +87,11 @@ class HandlerClass:
     # This is where you make HAL pins or initialize state of widgets etc
     def initialized__(self):
         self.init_gui()
-        self.w.ledPos_Alarm31.setOffColor(Qt.yellow)
 
         # self.gcodes.setup_list() инструкция нужна только для отображения справочного списка команд
 
-        #fov = FocusOverlay(self)
-        #fov.show()
+        # fov = FocusOverlay(self)
+        # fov.show()
 
     def processed_key_event__(self,receiver,event,is_pressed,key,code,shift,cntrl):
         if event.key() == Qt.Key_Left and self.w.btnJog_Minus31.isEnabled():
@@ -125,9 +130,22 @@ class HandlerClass:
             # event.accept()
 
     def closeEvent(self, event):
-            #ACTION.
-            print '*** closeEvent'
-            event.accept()
+        self.w.overlay.text='Выключить?'
+#        self.w.overlay.bg_color = QtGui.QColor(0, 0, 0,150)
+        self.w.overlay.resize(self.w.size())
+        self.w.overlay.show()
+        self.w.overlay.update()
+
+        answer = MSG.showdialog('Do you want to shutdown now?',
+            details='You can set a preference to not see this message',
+            display_type='YESNO')
+        if not answer:
+            self.w.overlay.hide()
+            event.ignore()
+            return
+        #TODO дождаться записи файла и закрыть
+        event.accept()
+        print '*** closeEvent'
 
     ########################
     # CALLBACKS FROM STATUS#
@@ -214,12 +232,40 @@ class HandlerClass:
         STATUS.connect('state-off', lambda _:(self.w.btnJog_Minus31.setEnabled(False),
                                               self.w.btnJog_Plus31.setEnabled(False),
                                               self.w.btnLog_Trigger31.setEnabled(False)))
+        self.w.ledPos_Alarm31.setOffColor(Qt.yellow)
+        # add overlay to topWidget
+        self.w.overlay = FocusOverlay(self.w)
+        self.w.overlay.setGeometry(0, 0, self.w.width(), self.w.height())
+        self.w.overlay.hide()
         return
+
+    # def resizeEvent(self, event):
+    #     print "*** resizeEvent(), newSize"
+    #     self.w.overlay.resize(self.w.size())
+    #     event.accept()
 
     def onPositionChanged(self, data):
         halpin_value = self.hal['position-pin31']
         self.w.lblPosition31.setText("{:10.2f}".format(halpin_value))
         pass
+
+    def onBtnTest(self, data):
+        ### Тестирование правильной отрисовки оверлея
+        self.w.overlay.text='Выключить?'
+#        self.w.overlay.bg_color = QtGui.QColor(0, 0, 0,150)
+        self.w.overlay.resize(self.w.size())
+        self.w.overlay.show()
+        self.w.overlay.update() # !!!!!!!! именно этой строчки не хватало
+#        self.w.overlay.setVisible(not self.w.overlay.isVisible())
+
+        answer = MSG.showdialog('Do you want to shutdown now?',
+            details='You can set a preference to not see this message',
+            display_type='YESNO')
+        if not answer:
+            self.w.overlay.hide()
+#            event.ignore()
+            return
+        return
 
     def onPosition_ActualChanged(self, data):
         halpin_value = self.hal['position_actual-pin31']

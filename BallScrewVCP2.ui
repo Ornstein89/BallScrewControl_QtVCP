@@ -141,150 +141,30 @@ font: bold</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="2">
-         <layout class="QHBoxLayout" name="horizontalLayout_14">
-          <item>
-           <spacer name="horizontalSpacer_24">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="LED" name="ledIs_Running_Ccw32">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="diameter">
-             <number>20</number>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="PushButton" name="btnStart_Ccw32">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>42</width>
-              <height>42</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(138, 226, 52);</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>resources/circular-arrow-left.png</normaloff>resources/circular-arrow-left.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="PushButton" name="btnStop32">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>42</width>
-              <height>42</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(239, 41, 41);</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>resources/stop.png</normaloff>resources/stop.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="PushButton" name="btnStart_Cw32">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>42</width>
-              <height>42</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(138, 226, 52);</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>resources/circular-arrow-right.png</normaloff>resources/circular-arrow-right.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="LED" name="ledIs_Running_Cw32">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="diameter">
-             <number>20</number>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_25">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
+        <item row="0" column="2" colspan="2">
+         <widget class="QLabel" name="label_135">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(114, 159, 207);
+font: 15pt bold;</string>
+          </property>
+          <property name="text">
+           <string>3.2 Обкатка редуктора</string>
+          </property>
+         </widget>
         </item>
-        <item row="1" column="3" rowspan="9">
+        <item row="5" column="3" rowspan="5">
          <layout class="QGridLayout" name="gridLayout_34">
           <item row="1" column="0" colspan="2">
            <layout class="QGridLayout" name="gridLayout_29">
@@ -322,7 +202,13 @@ font: bold</string>
               </property>
               <property name="minimumSize">
                <size>
-                <width>60</width>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>80</width>
                 <height>0</height>
                </size>
               </property>
@@ -365,7 +251,13 @@ font: bold</string>
               </property>
               <property name="minimumSize">
                <size>
-                <width>60</width>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>80</width>
                 <height>0</height>
                </size>
               </property>
@@ -422,7 +314,13 @@ font: bold</string>
               </property>
               <property name="minimumSize">
                <size>
-                <width>60</width>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>80</width>
                 <height>0</height>
                </size>
               </property>
@@ -441,7 +339,13 @@ font: bold</string>
               </property>
               <property name="minimumSize">
                <size>
-                <width>60</width>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>80</width>
                 <height>0</height>
                </size>
               </property>
@@ -486,7 +390,13 @@ font: bold</string>
               </property>
               <property name="minimumSize">
                <size>
-                <width>60</width>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>80</width>
                 <height>0</height>
                </size>
               </property>
@@ -505,7 +415,13 @@ font: bold</string>
               </property>
               <property name="minimumSize">
                <size>
-                <width>60</width>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>80</width>
                 <height>0</height>
                </size>
               </property>
@@ -524,7 +440,13 @@ font: bold</string>
               </property>
               <property name="minimumSize">
                <size>
-                <width>60</width>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>80</width>
                 <height>0</height>
                </size>
               </property>
@@ -543,7 +465,13 @@ font: bold</string>
               </property>
               <property name="minimumSize">
                <size>
-                <width>60</width>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>80</width>
                 <height>0</height>
                </size>
               </property>
@@ -562,40 +490,18 @@ font: bold</string>
               </property>
               <property name="minimumSize">
                <size>
-                <width>60</width>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>80</width>
                 <height>0</height>
                </size>
               </property>
               <property name="text">
                <string>---</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0" colspan="4">
-             <widget class="LED" name="ledEnable32">
-              <property name="minimumSize">
-               <size>
-                <width>20</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">qproperty-color: green;
-qproperty-off_color: red;
-qproperty-diameter: 100;</string>
-              </property>
-              <property name="diameter">
-               <number>100</number>
-              </property>
-              <property name="color">
-               <color>
-                <red>255</red>
-                <green>0</green>
-                <blue>0</blue>
-               </color>
-              </property>
-              <property name="flashing" stdset="0">
-               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -622,7 +528,13 @@ qproperty-diameter: 100;</string>
               </property>
               <property name="minimumSize">
                <size>
-                <width>60</width>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>80</width>
                 <height>0</height>
                </size>
               </property>
@@ -644,25 +556,251 @@ qproperty-diameter: 100;</string>
               </property>
              </spacer>
             </item>
+            <item row="0" column="0" colspan="4">
+             <widget class="LED" name="ledEnable32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">qproperty-color: green;
+qproperty-off_color: red;
+qproperty-diameter: 100;</string>
+              </property>
+              <property name="diameter">
+               <number>100</number>
+              </property>
+              <property name="color">
+               <color>
+                <red>255</red>
+                <green>0</green>
+                <blue>0</blue>
+               </color>
+              </property>
+              <property name="flashing" stdset="0">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
+         </layout>
+        </item>
+        <item row="1" column="2" rowspan="2" colspan="2">
+         <layout class="QGridLayout" name="gridLayout_4">
           <item row="0" column="0">
-           <layout class="QGridLayout" name="gridLayout_35">
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_127">
-              <property name="text">
-               <string>Нагрузка заданная, Н*м</string>
+           <layout class="QHBoxLayout" name="horizontalLayout_14">
+            <item>
+             <spacer name="horizontalSpacer_24">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="LED" name="ledIs_Running_Ccw32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="diameter">
+               <number>20</number>
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_128">
-              <property name="text">
-               <string>Нагрузка фактическая, Н*м</string>
+            <item>
+             <widget class="PushButton" name="btnStart_Ccw32">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>42</width>
+                <height>42</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(138, 226, 52);</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>resources/circular-arrow-left.png</normaloff>resources/circular-arrow-left.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>80</width>
+                <height>80</height>
+               </size>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
               </property>
              </widget>
+            </item>
+            <item>
+             <widget class="PushButton" name="btnStop32">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>42</width>
+                <height>42</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(239, 41, 41);</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>resources/stop.png</normaloff>resources/stop.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>80</width>
+                <height>80</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="PushButton" name="btnStart_Cw32">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>42</width>
+                <height>42</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(138, 226, 52);</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>resources/circular-arrow-right.png</normaloff>resources/circular-arrow-right.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>80</width>
+                <height>80</height>
+               </size>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="LED" name="ledIs_Running_Cw32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="diameter">
+               <number>20</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_25">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <layout class="QGridLayout" name="gridLayout_38">
+            <item row="0" column="0">
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="0" column="2">
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
             <item row="0" column="1">
+             <widget class="QGroupBox" name="gbLoad">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="title">
+               <string> Нагружение</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_2">
+               <item row="0" column="2">
+                <widget class="RadioButton" name="Load_Active_On32">
+                 <property name="text">
+                  <string>On</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="RadioButton" name="Load_Active_Off32">
+                 <property name="text">
+                  <string>Off</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="0" column="1" rowspan="2">
+           <layout class="QGridLayout" name="gridLayout_35">
+            <item row="0" column="2">
              <widget class="QLabel" name="lblTime_Current32">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -681,59 +819,7 @@ qproperty-diameter: 100;</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_126">
-              <property name="text">
-               <string>Время работы</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_129">
-              <property name="text">
-               <string>Скорость фактическая, об/мин</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2">
-             <widget class="QLabel" name="lblTime_Current32_2">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>60</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>из</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="3">
-             <widget class="QLabel" name="lblDuration32">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>60</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>---</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1" colspan="3">
+            <item row="1" column="2" colspan="3">
              <widget class="QLabel" name="lblTorque_Set32">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -752,26 +838,7 @@ qproperty-diameter: 100;</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="1" colspan="3">
-             <widget class="QLabel" name="lblTorque_Actual32">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>60</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>---</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1" colspan="3">
+            <item row="3" column="2" colspan="3">
              <widget class="QLabel" name="lblOmega_Actual32">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -790,9 +857,94 @@ qproperty-diameter: 100;</string>
               </property>
              </widget>
             </item>
+            <item row="0" column="4">
+             <widget class="QLabel" name="lblDuration32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="label_128">
+              <property name="text">
+               <string>Нагрузка фактическая, Н*м</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2" colspan="3">
+             <widget class="QLabel" name="lblTorque_Actual32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="label_126">
+              <property name="text">
+               <string>Время работы</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="label_129">
+              <property name="text">
+               <string>Скорость фактическая, об/мин</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QLabel" name="lblTime_Current32_2">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>из</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="label_127">
+              <property name="text">
+               <string>Нагрузка заданная, Н*м</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
-          <item row="0" column="1">
+          <item row="0" column="2" rowspan="2">
            <layout class="QGridLayout" name="gridLayout_36">
             <item row="1" column="0">
              <widget class="LED" name="ledLoad_Is_On32">
@@ -887,88 +1039,6 @@ qproperty-diameter: 100;</string>
            </layout>
           </item>
          </layout>
-        </item>
-        <item row="4" column="2">
-         <layout class="QGridLayout" name="gridLayout_38">
-          <item row="0" column="1">
-           <widget class="QGroupBox" name="gbLoad">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="title">
-             <string> Нагружение</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_2">
-             <item row="0" column="2">
-              <widget class="RadioButton" name="Load_Active_On32">
-               <property name="text">
-                <string>On</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="RadioButton" name="Load_Active_Off32">
-               <property name="text">
-                <string>Off</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <spacer name="horizontalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="2">
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item row="0" column="2" colspan="2">
-         <widget class="QLabel" name="label_135">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>50</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>50</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(114, 159, 207);
-font: 15pt bold;</string>
-          </property>
-          <property name="text">
-           <string>3.2 Обкатка редуктора</string>
-          </property>
-         </widget>
         </item>
        </layout>
       </widget>

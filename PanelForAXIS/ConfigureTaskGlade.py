@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+#!/usr/bin/python
 
 import hal
 import glib
@@ -39,11 +40,56 @@ class HandlerClass:
         #self.nhits += 1
         #self.builder.get_object('hits').set_label("Hits: %d" % (self.nhits))
     
-    def on_btnSave_clicked(self):
-        #<_i> = 0  // переменная счётчика
-        #<_N> = 40 // количество отверстий (интервалов)
-        #<_alpha> = 0  // переменная текущего углового положения
-        #<_beta> 
+    def on_btnSave_clicked(self,widget):
+        #чтение шаблона
+        f1 = open("Сверление с комментариями.ngc",'rb')
+        filedata1 = f1.read()
+        f1.close()
+        
+        print "\nФайл 1\n=========================="
+        print filedata1
+        
+        f2 = open("Фрезерование паза с комментриями.ngc",'rb')
+        filedata2 = f2.read()
+        f2.close()
+        
+        print "\nФайл 2\n=========================="
+        print filedata2
+        #["Сверление с комментариями.ngc", "Фрезерование паза с комментриями.ngc"]
+        #замена
+        replacements = [["#<_i>",],
+            ["#<_N>",],
+            ["#<_alpha>",],
+            ["#<_beta>",],
+            ["#<_beta>",],
+            ["#<_F>",]]
+        
+        #https://python-gtk-3-tutorial.readthedocs.io/en/latest/dialogs.html
+        dialog = gtk.FileChooserDialog(
+            "Please choose a file", parent=self.builder.get_object('mainWindow'),
+            gtk.FILE_CHOOSER_ACTION_OPEN,
+            (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+             gtk.STOCK_OPEN, gtk.RESPONSE_OK))#, action=gtk.FileChooserAction.OPEN
+        
+        #dialog.add_buttons(
+        #    gtk.STOCK_CANCEL,
+        #    gtk.ResponseType.CANCEL,
+        #    gtk.STOCK_OPEN,
+        #    gtk.ResponseType.OK,
+        #)
+
+        #self.add_filters(dialog)
+
+        response = dialog.run()
+        #for replacement in replacements:
+        #    filedata = filedata.replace(replacement[0], replacement[1])
+        #    
+        ##диалог выбора названия файла
+        #
+        ##создание и запись нового файла
+        #configfile = codecs.open(self.NAME,'ab+','utf-8')
+        #config.write(configfile)
+        #configfile.close()
         pass
 
     def __init__(self, halcomp,builder,useropts):
@@ -62,8 +108,6 @@ class HandlerClass:
         self.halcomp = halcomp
         self.builder = builder
         self.nhits = 0
-
-
 
 
 def get_handlers(halcomp,builder,useropts):

@@ -1,4 +1,7 @@
 # This Python file uses the following encoding: utf-8
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import sys, os, codecs
 import configparser
 from shutil import copyfile

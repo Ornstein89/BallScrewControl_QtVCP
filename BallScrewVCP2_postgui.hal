@@ -21,7 +21,7 @@ net sine0 =>  BallScrewVCP2.time_current-pin32 # для ТЕСТА
 net cosine0 =>  BallScrewVCP2.duration-pin32 # для ТЕСТА
 
 #net torque_set =>  BallScrewVCP2.torque_set-pin32         # FLOAT	IN	Числовой индикатор
-net sine0 =>  BallScrewVCP2.torque_set-pin32 # для ТЕСТА
+#net sine0 =>  BallScrewVCP2.torque_set-pin32 # для ТЕСТА #!!! выведен из использования 16 марта, заменён на параметр BRAKE_TORQUE
 
 #net torque_actual =>  BallScrewVCP2.torque_actual-pin32   # FLOAT	IN	Числовой индикатор
 net cosine0 =>  BallScrewVCP2.torque_actual-pin32 # для ТЕСТА
