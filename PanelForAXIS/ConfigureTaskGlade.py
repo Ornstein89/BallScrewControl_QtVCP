@@ -22,7 +22,7 @@ class HandlerClass:
         print "*** on_cmbMillType_changed"
         
         image_list = ["diagonal.png", "diagonalRL.png",
-            "cone.png", "perforation.png", "transverse.png"]
+            "perforation.png", "transverse.png", "cone.png"]
             
         control_list = ["diagonal", "diagonalRL", "perforation",
         "transverse", "cone"] # порядок типов фрезеровки в conbobox

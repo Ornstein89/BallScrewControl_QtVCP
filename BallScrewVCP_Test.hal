@@ -6,6 +6,7 @@ loadrt wcomp # компаратор для перевода изначально
 loadrt timedelay count=5 # задержки для повышения разнообразия тестовых сигналов
 loadrt sum2 count=1
 loadrt threads name1=test-thread period1=10000000
+
 # loadrt conv_float_s32
 # loadrt conv_float_s32
 # loadrt conv_s32_bit

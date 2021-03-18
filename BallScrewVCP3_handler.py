@@ -24,9 +24,13 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QFileDialog, QMessageBox, QLabel
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor, QPixmap
+
 #from qtvcp.widgets import FocusOverlay
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
 from qtvcp.widgets.gcode_editor import GcodeEditor as GCODE
+from qtvcp.widgets.dialog_widget import LcncDialog
+from qtvcp.widgets.overlay_widget import FocusOverlay
+
 from qtvcp.lib.keybindings import Keylookup
 from qtvcp.lib.gcodes import GCodes
 from qtvcp.core import Status, Action, Info
@@ -51,6 +55,7 @@ KEYBIND = Keylookup()
 STATUS = Status()
 INFO = Info()
 ACTION = Action()
+MSG = LcncDialog()
 ###################################
 # **** HANDLER CLASS SECTION **** #
 ###################################
@@ -368,6 +373,10 @@ class HandlerClass:
         self.onActive4Changed(None)
         self.onActive5Changed(None)
 
+        self.w.overlay = FocusOverlay(self.w)
+        self.w.overlay.setGeometry(0, 0, self.w.width(), self.w.height())
+        self.w.overlay.hide()
+
     def init_led_colors(self):
         # настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
         diodes_redgreen = (
@@ -633,19 +642,20 @@ class HandlerClass:
         #inifile.close()
 
     def closeEvent(self, event):
-        #self.w.overlay.text='     SHUTDOWN?'
-        #self.w.overlay.bg_color = QtGui.QColor(0, 0, 0,150)
-        #self.w.overlay.show()
+        self.w.overlay.text='Выключить?'
+#        self.w.overlay.bg_color = QtGui.QColor(0, 0, 0,150)
+        self.w.overlay.resize(self.w.size())
+        self.w.overlay.show()
+        self.w.overlay.update()
 
-        #if self.shutdown_check:
-        #    answer = MSG.showdialog('Do you want to shutdown now?',
-        #        details='You can set a preference to not see this message',
-        #         display_type='YESNO')
-        #    if not answer:
-        #        self.w.overlay.hide()
-        #        event.ignore()
-        #        return
-        #self.w.overlay.hide()
+        answer = MSG.showdialog('Do you want to shutdown now?',
+            details='You can set a preference to not see this message',
+            display_type='YESNO')
+        if not answer:
+            self.w.overlay.hide()
+            event.ignore()
+            return
+        #TODO дождаться записи файла и закрыть
         self.update_ini()
         event.accept()
 

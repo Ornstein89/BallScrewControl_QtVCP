@@ -12,8 +12,10 @@ net append_file <= BallScrewVCP1.btnTestAppend_File31
 #net sw1 => BallScrewVCP1.ledSw1_31           # Цветовой индикатор (серый / красный)
 net bit0 => BallScrewVCP1.ledSw1_31           # Цветовой индикатор (серый / красный)
 
-net jog_minus <= BallScrewVCP1.btnJog_Minus31# Кнопка
-net jog_plus <= BallScrewVCP1.btnJog_Plus31  # Кнопка
+net jog-x-neg  <= BallScrewVCP1.btnJog_Minus31# Кнопка
+net jog-x-pos  <= BallScrewVCP1.btnJog_Plus31  # Кнопка
+setp halui.mode.teleop 1
+setp halui.axis.jog-speed 5000
 
 #net sw2 => BallScrewVCP1.ledSw2_31           # Цветовой индикатор (серый / красный)
 net bit1 => BallScrewVCP1.ledSw2_31           # Цветовой индикатор (серый / красный)

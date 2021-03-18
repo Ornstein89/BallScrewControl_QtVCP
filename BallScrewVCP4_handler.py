@@ -18,13 +18,16 @@ import sys, os, configparser
 import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
 
 # пакеты GUI
-from PyQt5 import QtCore, QtWidgets, QtGui
+from PyQt5 import QtCore, QtWidgets, QtGui, Qt
 from PyQt5.QtWidgets import QFileDialog, QLabel
-from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor, QPixmap
+
 #from qtvcp.widgets import FocusOverlay
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
 from qtvcp.widgets.gcode_editor import GcodeEditor as GCODE
+from qtvcp.widgets.dialog_widget import LcncDialog
+from qtvcp.widgets.overlay_widget import FocusOverlay
+
 from qtvcp.lib.keybindings import Keylookup
 from qtvcp.lib.gcodes import GCodes
 from qtvcp.core import Status, Action, Info
@@ -49,6 +52,8 @@ KEYBIND = Keylookup()
 STATUS = Status()
 INFO = Info()
 ACTION = Action()
+MSG = LcncDialog()
+
 ###################################
 # **** HANDLER CLASS SECTION **** #
 ###################################
@@ -120,6 +125,25 @@ class HandlerClass:
 
             #print '*** Qt.Key_Right'
             # event.accept()
+
+
+    def closeEvent(self, event):
+        self.w.overlay.text='Выключить?'
+#        self.w.overlay.bg_color = QtGui.QColor(0, 0, 0,150)
+        self.w.overlay.resize(self.w.size())
+        self.w.overlay.show()
+        self.w.overlay.update()
+
+        answer = MSG.showdialog('Do you want to shutdown now?',
+            details='You can set a preference to not see this message',
+            display_type='YESNO')
+        if not answer:
+            self.w.overlay.hide()
+            event.ignore()
+            return
+        #TODO дождаться записи файла и закрыть
+        event.accept()
+        print '*** closeEvent'
 
     ########################
     # CALLBACKS FROM STATUS#
@@ -251,6 +275,10 @@ class HandlerClass:
         self.w.plot_overlay = QLabel(self.w.plt34)
         self.stub_image = QPixmap("stub_screen.png")
         self.w.plot_overlay.setPixmap(self.stub_image)
+
+        self.w.overlay = FocusOverlay(self.w)
+        self.w.overlay.setGeometry(0, 0, self.w.width(), self.w.height())
+        self.w.overlay.hide()
         return
 
     def init_led_colors(self):

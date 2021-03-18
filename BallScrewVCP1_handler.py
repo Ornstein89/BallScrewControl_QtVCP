@@ -12,7 +12,7 @@
 # **** IMPORT SECTION **** #
 ############################
 # стандартные пакеты
-import sys, os, configparser
+import sys, os, configparser, subprocess
 
 # пакеты linuxcnc
 import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
@@ -65,7 +65,7 @@ class HandlerClass:
     # widgets allows access to  widgets from the qtvcp files
     # at this point the widgets and hal pins are not instantiated
     def __init__(self, halcomp,widgets,paths):
-        os.system("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 128") #TODO возможно есть более рациональная команда
+        # os.system("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 128") # заменено на subprocess
         self.hal = halcomp
         self.PATHS = paths
         #self.gcodes = GCodes()
@@ -89,9 +89,6 @@ class HandlerClass:
         self.init_gui()
 
         # self.gcodes.setup_list() инструкция нужна только для отображения справочного списка команд
-
-        # fov = FocusOverlay(self)
-        # fov.show()
 
     def processed_key_event__(self,receiver,event,is_pressed,key,code,shift,cntrl):
         if event.key() == Qt.Key_Left and self.w.btnJog_Minus31.isEnabled():
@@ -179,6 +176,32 @@ class HandlerClass:
             self.VCP_halpins_bit[key][0] = tmpPin
             tmpPin.value_changed.connect(self.VCP_halpins_bit[key][1])
 
+        # создание пинов для управления реле RODOS
+        ucomp = hal.component("axisui.user")
+        ucomp.newpin('RODOS4_1_on', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_2_on', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_3_on', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_4_on', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_5_on', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_6_on', hal.HAL_BIT, hal.HAL_IN)
+
+        ucomp.newpin('RODOS4_1_off', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_2_off', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_3_off', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_4_off', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_5_off', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_6_off', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.ready()
+
+        try:
+            #p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
+            return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 128", shell=False)
+            print "*** subprocess.call() returns ", return_code
+            return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c4 128", shell=False)
+            print "*** subprocess.call() returns ", return_code
+        except Exception as exc:
+            print "***Ошибка при запуске RODOS4. ", exc
+
         return
 
     def onBtnSaveState31(self):
@@ -265,6 +288,8 @@ class HandlerClass:
             self.w.overlay.hide()
 #            event.ignore()
             return
+
+        ### Тестирование ...
         return
 
     def onPosition_ActualChanged(self, data):
