@@ -193,20 +193,50 @@ class HandlerClass:
         ucomp.newpin('RODOS4_6_off', hal.HAL_BIT, hal.HAL_IN)
         ucomp.ready()
 
-        try:
-            #p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
-            return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 128", shell=False)
-            print "*** subprocess.call() returns ", return_code
-            return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c4 128", shell=False)
-            print "*** subprocess.call() returns ", return_code
-        except Exception as exc:
-            print "***Ошибка при запуске RODOS4. ", exc
+        # try:
+        #     #p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
+        #     return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 128", shell=False)
+        #     print "*** subprocess.call() returns ", return_code
+        #     return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c4 128", shell=False)
+        #     print "*** subprocess.call() returns ", return_code
+        # except Exception as exc:
+        #     print "***Ошибка при запуске RODOS4. ", exc
 
         return
 
     def onBtnSaveState31(self):
         #TODO
         pass
+
+    def onBtnOn31(self):
+        # https://github.com/LinuxCNC/linuxcnc/blob/master/share/qtvcp/screens/qt_cnc_800x600/qt_cnc_800x600_handler.py
+        # ACTION.SET_MACHINE_STATE(not STATUS.machine_is_on())
+
+        # http://linuxcnc.org/docs/2.8/html/gui/qtvcp_custom_widgets.html#_custom_hal_widgets
+        # STATUS.connect('state-on', lambda w:self._flip_state(True))
+        if not STATUS.machine_is_on():
+            ACTION.SET_MACHINE_STATE(True)
+            try:
+                #p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
+                return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 128", shell=False)
+                print "*** subprocess.call() returns ", return_code
+                return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c4 128", shell=False)
+                print "*** subprocess.call() returns ", return_code
+            except Exception as exc:
+                print "***Ошибка при запуске RODOS4. ", exc
+        #self.w.btnDevice_Off31_2.setChecked(False)
+
+    def onBtnOff31(self):
+        try:
+            #p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
+            return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 0", shell=False)
+            print "*** subprocess.call() returns ", return_code
+            return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c4 0", shell=False)
+            print "*** subprocess.call() returns ", return_code
+        except Exception as exc:
+            print "***Ошибка при запуске RODOS4. ", exc
+        ACTION.SET_MACHINE_STATE(False)
+        # self.w.btnDevice_On31_2.setChecked(False)
 
     def keyPressEvent(self, event):
         #TODO
@@ -249,12 +279,18 @@ class HandlerClass:
         self.w.sldAcceleration31.valueChanged.connect(lambda val: self.w.spnAcceleration31.setValue(float(val)/100.0))
         self.w.spnAcceleration31.valueChanged.connect(lambda val: self.w.sldAcceleration31.setValue(int(val*100)))
 
-        STATUS.connect('state-on', lambda _: (self.w.btnJog_Minus31.setEnabled(True),
+        STATUS.connect('state-estop', lambda w: (self.w.btnDevice_On31_2.setEnabled(False)))
+        STATUS.connect('state-estop-reset', lambda w: (self.w.btnDevice_On31_2.setEnabled(not STATUS.machine_is_on())))
+
+        STATUS.connect('state-on', lambda w: (self.w.btnJog_Minus31.setEnabled(True),
                                               self.w.btnJog_Plus31.setEnabled(True),
-                                              self.w.btnLog_Trigger31.setEnabled(True)))
-        STATUS.connect('state-off', lambda _:(self.w.btnJog_Minus31.setEnabled(False),
+                                              self.w.btnLog_Trigger31.setEnabled(True),
+                                              self.w.btnDevice_On31_2.setEnabled(False)))
+
+        STATUS.connect('state-off', lambda w:(self.w.btnJog_Minus31.setEnabled(False),
                                               self.w.btnJog_Plus31.setEnabled(False),
-                                              self.w.btnLog_Trigger31.setEnabled(False)))
+                                              self.w.btnLog_Trigger31.setEnabled(False),
+                                              self.w.btnDevice_On31_2.setEnabled(STATUS.estop_is_clear())))
         self.w.ledPos_Alarm31.setOffColor(Qt.yellow)
         # add overlay to topWidget
         self.w.overlay = FocusOverlay(self.w)

@@ -176,6 +176,33 @@ class HandlerClass:
 
         STATUS.connect('state-on', self.on_state_on)
         STATUS.connect('state-off', self.on_state_off)
+
+        # создание пинов для управления реле RODOS
+        ucomp = hal.component("axisui.user")
+        ucomp.newpin('RODOS4_1_on', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_2_on', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_3_on', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_4_on', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_5_on', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_6_on', hal.HAL_BIT, hal.HAL_IN)
+
+        ucomp.newpin('RODOS4_1_off', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_2_off', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_3_off', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_4_off', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_5_off', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.newpin('RODOS4_6_off', hal.HAL_BIT, hal.HAL_IN)
+        ucomp.ready()
+
+        try:
+            #p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
+            return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 128", shell=False)
+            print "*** subprocess.call() returns ", return_code
+            return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c5 128", shell=False)
+            print "*** subprocess.call() returns ", return_code
+        except Exception as exc:
+            print "***Ошибка при запуске RODOS4. ", exc
+
         return
 
     def keyPressEvent(self, event):
@@ -469,7 +496,7 @@ class HandlerClass:
         self.hLine.setValue(self.BRAKE_TORQUE) #TODO ближайшие кратные 1, 2 и 5
         self.hLine.setZValue(1)
         self.w.plt32.setYRange(0.0, YMax)
-        self.w.plt32.enableAutoRange(axis = "y", enable = True)
+        #self.w.plt32.enableAutoRange(axis = "y", enable = True)
         self.w.plt32.addItem(self.hLine, ignoreBounds=True)
 
         self.vLine = pg.InfiniteLine(angle=90, movable=False,

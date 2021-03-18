@@ -176,6 +176,19 @@ font: 15pt bold;</string>
         </item>
         <item row="1" column="3">
          <layout class="QGridLayout" name="gridLayout_40">
+          <item row="1" column="3">
+           <spacer name="horizontalSpacer_23">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
           <item row="1" column="0">
            <spacer name="horizontalSpacer_22">
             <property name="orientation">
@@ -188,6 +201,136 @@ font: 15pt bold;</string>
              </size>
             </property>
            </spacer>
+          </item>
+          <item row="0" column="2">
+           <widget class="ActionButton" name="btnDevice_On31">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(138, 226, 52);</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>resources/vertical_line.png</normaloff>resources/vertical_line.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="indicator_option" stdset="0">
+             <bool>false</bool>
+            </property>
+            <property name="machine_on_action" stdset="0">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="ActionButton" name="btnDevice_Off31">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(239, 41, 41);</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>resources/circle.png</normaloff>resources/circle.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+            <property name="invert_the_status" stdset="0">
+             <bool>false</bool>
+            </property>
+            <property name="is_on_status" stdset="0">
+             <bool>true</bool>
+            </property>
+            <property name="machine_on_action" stdset="0">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="ActionButton" name="actionbutton">
+            <property name="styleSheet">
+             <string notr="true">font: bold;</string>
+            </property>
+            <property name="text">
+             <string>Выкл
+(E Stop)</string>
+            </property>
+            <property name="indicator_option" stdset="0">
+             <bool>true</bool>
+            </property>
+            <property name="indicator_status_option" stdset="0">
+             <bool>true</bool>
+            </property>
+            <property name="is_estopped_status" stdset="0">
+             <bool>true</bool>
+            </property>
+            <property name="estop_action" stdset="0">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="PushButton" name="btnDevice_On31_2">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(138, 226, 52);</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>resources/vertical_line.png</normaloff>resources/vertical_line.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="PushButton" name="btnDevice_Off31_2">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(239, 41, 41);</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>resources/circle.png</normaloff>resources/circle.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+           </widget>
           </item>
           <item row="1" column="1">
            <widget class="LED" name="ledOn31">
@@ -210,91 +353,6 @@ font: 15pt bold;</string>
               <green>233</green>
               <blue>79</blue>
              </color>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <spacer name="horizontalSpacer_23">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="1">
-           <widget class="ActionButton" name="btnDevice_On31">
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(138, 226, 52);</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>resources/vertical_line.png</normaloff>resources/vertical_line.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>40</width>
-              <height>40</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>false</bool>
-            </property>
-            <property name="indicator_option" stdset="0">
-             <bool>false</bool>
-            </property>
-            <property name="machine_on_action" stdset="0">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="ActionButton" name="btnDevice_Off31">
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(239, 41, 41);</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>resources/circle.png</normaloff>resources/circle.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>40</width>
-              <height>40</height>
-             </size>
-            </property>
-            <property name="machine_on_action" stdset="0">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="ActionButton" name="actionbutton">
-            <property name="styleSheet">
-             <string notr="true">font: bold;</string>
-            </property>
-            <property name="text">
-             <string>Выкл
-(E Stop)</string>
-            </property>
-            <property name="indicator_option" stdset="0">
-             <bool>true</bool>
-            </property>
-            <property name="indicator_status_option" stdset="0">
-             <bool>true</bool>
-            </property>
-            <property name="is_estopped_status" stdset="0">
-             <bool>true</bool>
-            </property>
-            <property name="estop_action" stdset="0">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -554,6 +612,70 @@ active_0</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btnDevice_On31_2</sender>
+   <signal>clicked()</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onBtnOn31()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>897</x>
+     <y>91</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>951</x>
+     <y>6</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnDevice_Off31_2</sender>
+   <signal>clicked()</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onBtnOff31()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>897</x>
+     <y>186</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>693</x>
+     <y>2</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnDevice_On31</sender>
+   <signal>clicked()</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onBtnOn31()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>962</x>
+     <y>102</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1123</x>
+     <y>3</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnDevice_Off31</sender>
+   <signal>clicked()</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onBtnOff31()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>940</x>
+     <y>178</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>919</x>
+     <y>2</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onBtnTempShow34()</slot>
@@ -567,5 +689,7 @@ active_0</string>
   <slot>onSpnVelocity31Changed()</slot>
   <slot>onSpnAcceleration31Changed()</slot>
   <slot>onBtnTest()</slot>
+  <slot>onBtnOn31()</slot>
+  <slot>onBtnOff31()</slot>
  </slots>
 </ui>
