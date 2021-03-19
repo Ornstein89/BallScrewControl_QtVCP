@@ -226,34 +226,50 @@ class HandlerClass:
         pass
 
     def onBtnOn31(self):
-        # https://github.com/LinuxCNC/linuxcnc/blob/master/share/qtvcp/screens/qt_cnc_800x600/qt_cnc_800x600_handler.py
+        #INFO https://github.com/LinuxCNC/linuxcnc/blob/master/share/qtvcp/screens/qt_cnc_800x600/qt_cnc_800x600_handler.py
         # ACTION.SET_MACHINE_STATE(not STATUS.machine_is_on())
 
-        # http://linuxcnc.org/docs/2.8/html/gui/qtvcp_custom_widgets.html#_custom_hal_widgets
+        #INFO http://linuxcnc.org/docs/2.8/html/gui/qtvcp_custom_widgets.html#_custom_hal_widgets
         # STATUS.connect('state-on', lambda w:self._flip_state(True))
+
         if not STATUS.machine_is_on():
-            ACTION.SET_MACHINE_STATE(True) # http://linuxcnc.org/docs/2.8/html/gui/qtvcp_libraries.html#_action
-            dir_path = os.path.dirname(os.path.realpath(__file__))
-            print "*** dir_path = ", dir_path
-            print "*** os.getcwd() = ", os.getcwd()
-            try:
-                #p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
-                return_code = subprocess.call(["pwd"], shell=True)
-                return_code = subprocess.call(["sudo ls"], shell=True)
-                print "*** subprocess.call([\"sudo\", \"ls\"]) returns ", return_code
-                return_code = subprocess.call("sudo /home/mdrives/RODOS4/RODOS4 -a --c3 128", shell=True)
-                print "*** subprocess.call() returns ", return_code
-                return_code = subprocess.call("sudo /home/mdrives/RODOS4/RODOS4 -a --c4 128", shell=True)
-                print "*** subprocess.call() returns ", return_code
-            except Exception as exc:
-                print "***Ошибка при запуске RODOS4. ", exc
-        #self.w.btnDevice_Off31_2.setChecked(False)
+            ACTION.SET_MACHINE_STATE(True) #INFO http://linuxcnc.org/docs/2.8/html/gui/qtvcp_libraries.html#_action
+            #DEBUG dir_path = os.path.dirname(os.path.realpath(__file__))
+            #DEBUG print "*** dir_path = ", dir_path
+            #DEBUG print "*** os.getcwd() = ", os.getcwd()
+        return
+
+    def runRODOS_31(self):
+        try:
+            #DEBUG p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
+            #DEBUG return_code = subprocess.call(["pwd"], shell=True)
+            #DEBUG return_code = subprocess.call(["sudo ls"], shell=True)
+            #DEBUG print "*** subprocess.call([\"sudo\", \"ls\"]) returns ", return_code
+            return_code = subprocess.call("sudo /home/mdrives/RODOS4/RODOS4 -a --c3 128", shell=True)
+            print "*** subprocess.call() returns ", return_code
+            return_code = subprocess.call("sudo /home/mdrives/RODOS4/RODOS4 -a --c4 128", shell=True)
+            print "*** subprocess.call() returns ", return_code
+        except Exception as exc:
+            print "***Ошибка при запуске RODOS4. ", exc
+
+    def stopRODOS_31(self):
+        try:
+            #DEBUG p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
+            #DEBUG return_code = subprocess.call(["pwd"], shell=True)
+            #DEBUG return_code = subprocess.call(["sudo ls"], shell=True)
+            #DEBUG print "*** subprocess.call([\"sudo\", \"ls\"]) returns ", return_code
+            return_code = subprocess.call("sudo /home/mdrives/RODOS4/RODOS4 -a --c3 0", shell=True)
+            print "*** subprocess.call() returns ", return_code
+            return_code = subprocess.call("sudo /home/mdrives/RODOS4/RODOS4 -a --c4 0", shell=True)
+            print "*** subprocess.call() returns ", return_code
+        except Exception as exc:
+            print "***Ошибка при запуске RODOS4. ", exc
 
     def onBtnOff31(self):
         try:
-            # run  - рекомендован по сравнению с call, но его нет в Python 2
-            # Popen - неблокирующий
-            # call - обёртка над Popen + wait (блокирующий), call = ACTIONrun(...).returncode
+            #INFO run  - рекомендован по сравнению с call, но его нет в Python 2
+            #INFO Popen - неблокирующий
+            #INFO call - обёртка над Popen + wait (блокирующий), call = ACTIONrun(...).returncode
 
             #p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
             return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 0", shell=False)
@@ -309,15 +325,17 @@ class HandlerClass:
         STATUS.connect('state-estop', lambda w: (self.w.btnDevice_On31_2.setEnabled(False)))
         STATUS.connect('state-estop-reset', lambda w: (self.w.btnDevice_On31_2.setEnabled(not STATUS.machine_is_on())))
 
-        STATUS.connect('state-on', lambda w: (self.w.btnJog_Minus31.setEnabled(True),
+        STATUS.connect('state-on', lambda w: (self.runRODOS_31(),
+                                              self.w.btnJog_Minus31.setEnabled(True),
                                               self.w.btnJog_Plus31.setEnabled(True),
                                               self.w.btnLog_Trigger31.setEnabled(True),
-                                              self.w.btnDevice_On31_2.setEnabled(False)))
+                                              self.w.btnDevice_On31_2.setEnabled(False) ))
 
-        STATUS.connect('state-off', lambda w:(self.w.btnJog_Minus31.setEnabled(False),
+        STATUS.connect('state-off', lambda w:(self.stopRODOS_31(),
+                                              self.w.btnJog_Minus31.setEnabled(False),
                                               self.w.btnJog_Plus31.setEnabled(False),
                                               self.w.btnLog_Trigger31.setEnabled(False),
-                                              self.w.btnDevice_On31_2.setEnabled(STATUS.estop_is_clear())))
+                                              self.w.btnDevice_On31_2.setEnabled(STATUS.estop_is_clear()) ))
         self.w.ledPos_Alarm31.setOffColor(Qt.yellow)
         # add overlay to topWidget
         self.w.overlay = FocusOverlay(self.w)
