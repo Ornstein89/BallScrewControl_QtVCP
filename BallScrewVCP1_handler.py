@@ -51,7 +51,7 @@ LOG = logger.getLogger(__name__)
 KEYBIND = Keylookup()
 STATUS = Status()
 INFO = Info()
-ACTION = Action()
+ACTION = Action() # http://linuxcnc.org/docs/2.8/html/gui/qtvcp_libraries.html#_action
 MSG = LcncDialog()
 ###################################
 # **** HANDLER CLASS SECTION **** #
@@ -162,36 +162,53 @@ class HandlerClass:
         self.VCP_halpins_bit = {
             'active_0-pin':[None, self.onActive0Changed],
             'append_buffer-pin31': [None, self.onAppend_BufferChanged],
-            'append_file-pin31': [None, self.onAppend_FileChanged]
+            'append_file-pin31': [None, self.onAppend_FileChanged],
+
+            'RODOS4_1_on': [None, None],
+            'RODOS4_2_on': [None, None],
+            'RODOS4_3_on': [None, None],
+            'RODOS4_4_on': [None, None],
+            'RODOS4_5_on': [None, None],
+            'RODOS4_6_on': [None, None],
+
+            'RODOS4_1_off': [None, None],
+            'RODOS4_2_off': [None, None],
+            'RODOS4_3_off': [None, None],
+            'RODOS4_4_off': [None, None],
+            'RODOS4_5_off': [None, None],
+            'RODOS4_6_off': [None, None]
         }
 
-        # создание пинов и связывание событий изменения HAL с обработчиком
+        # создание числовых пинов и связывание событий изменения HAL с обработчиком
         for key in self.VCP_halpins_float:
             tmpPin = self.hal.newpin(key, hal.HAL_FLOAT, hal.HAL_IN)
-            self.VCP_halpins_float[key][0] = tmpPin
-            tmpPin.value_changed.connect(self.VCP_halpins_float[key][1])
-            # создание пинов и связывание событий изменения HAL с обработчиком
+            self.VCP_halpins_float[key][0] = tmpPin # получить ссылку чтобы не обращаться через словарь
+            if self.VCP_halpins_float[key][1] is not None: # если не None - назначить обработчик
+                tmpPin.value_changed.connect(self.VCP_halpins_float[key][1])
+
+        # создание битовых пинов и связывание событий изменения HAL с обработчиком
         for key in self.VCP_halpins_bit:
             tmpPin = self.hal.newpin(key, hal.HAL_BIT, hal.HAL_IN)
-            self.VCP_halpins_bit[key][0] = tmpPin
-            tmpPin.value_changed.connect(self.VCP_halpins_bit[key][1])
+            self.VCP_halpins_bit[key][0] = tmpPin # получить ссылку чтобы не обращаться через словарь
+            if self.VCP_halpins_bit[key][1] is not None: # если не None - назначить обработчик
+                tmpPin.value_changed.connect(self.VCP_halpins_bit[key][1])
 
         # создание пинов для управления реле RODOS
-        ucomp = hal.component("axisui.user")
-        ucomp.newpin('RODOS4_1_on', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_2_on', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_3_on', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_4_on', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_5_on', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_6_on', hal.HAL_BIT, hal.HAL_IN)
-
-        ucomp.newpin('RODOS4_1_off', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_2_off', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_3_off', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_4_off', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_5_off', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_6_off', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.ready()
+        #ucomp = hal.component("axisui.user")
+        # self.hal.newpin('RODOS4_1_on', hal.HAL_BIT, hal.HAL_IN)
+        # self.hal.newpin('RODOS4_2_on', hal.HAL_BIT, hal.HAL_IN)
+        # self.hal.newpin('RODOS4_3_on', hal.HAL_BIT, hal.HAL_IN)
+        # self.hal.newpin('RODOS4_4_on', hal.HAL_BIT, hal.HAL_IN)
+        # self.hal.newpin('RODOS4_5_on', hal.HAL_BIT, hal.HAL_IN)
+        # self.hal.newpin('RODOS4_6_on', hal.HAL_BIT, hal.HAL_IN)
+        #
+        # self.hal.newpin('RODOS4_1_off', hal.HAL_BIT, hal.HAL_IN)
+        # self.hal.newpin('RODOS4_2_off', hal.HAL_BIT, hal.HAL_IN)
+        # self.hal.newpin('RODOS4_3_off', hal.HAL_BIT, hal.HAL_IN)
+        # self.hal.newpin('RODOS4_4_off', hal.HAL_BIT, hal.HAL_IN)
+        # self.hal.newpin('RODOS4_5_off', hal.HAL_BIT, hal.HAL_IN)
+        # self.hal.newpin('RODOS4_6_off', hal.HAL_BIT, hal.HAL_IN)
+        # self.hal.ready()
 
         # try:
         #     #p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
@@ -215,12 +232,18 @@ class HandlerClass:
         # http://linuxcnc.org/docs/2.8/html/gui/qtvcp_custom_widgets.html#_custom_hal_widgets
         # STATUS.connect('state-on', lambda w:self._flip_state(True))
         if not STATUS.machine_is_on():
-            ACTION.SET_MACHINE_STATE(True)
+            ACTION.SET_MACHINE_STATE(True) # http://linuxcnc.org/docs/2.8/html/gui/qtvcp_libraries.html#_action
+            dir_path = os.path.dirname(os.path.realpath(__file__))
+            print "*** dir_path = ", dir_path
+            print "*** os.getcwd() = ", os.getcwd()
             try:
                 #p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
-                return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 128", shell=False)
+                return_code = subprocess.call(["pwd"], shell=True)
+                return_code = subprocess.call(["sudo ls"], shell=True)
+                print "*** subprocess.call([\"sudo\", \"ls\"]) returns ", return_code
+                return_code = subprocess.call("sudo /home/mdrives/RODOS4/RODOS4 -a --c3 128", shell=True)
                 print "*** subprocess.call() returns ", return_code
-                return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c4 128", shell=False)
+                return_code = subprocess.call("sudo /home/mdrives/RODOS4/RODOS4 -a --c4 128", shell=True)
                 print "*** subprocess.call() returns ", return_code
             except Exception as exc:
                 print "***Ошибка при запуске RODOS4. ", exc
@@ -228,6 +251,10 @@ class HandlerClass:
 
     def onBtnOff31(self):
         try:
+            # run  - рекомендован по сравнению с call, но его нет в Python 2
+            # Popen - неблокирующий
+            # call - обёртка над Popen + wait (блокирующий), call = ACTIONrun(...).returncode
+
             #p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
             return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 0", shell=False)
             print "*** subprocess.call() returns ", return_code
