@@ -429,7 +429,7 @@ class HandlerClass:
             return
 
         try:
-            return_code = subprocess.call(["sudo", self.RODOS_PATH, "-a", "--c"+str(number-1), ("128" if turn_on else "0")], shell=True)
+            return_code = subprocess.call("sudo " + self.RODOS_PATH + " -a" + " --c"+str(number-1) + (" 128" if turn_on else " 0"), shell=True)
             print "*** subprocess.call(sudo",self.RODOS_PATH, " --c"+str(number-1),("128" if turn_on else "0"), ") returns ", return_code
         except Exception as exc:
             print "***Ошибка при запуске RODOS4. ", exc
