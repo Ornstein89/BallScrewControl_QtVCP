@@ -65,13 +65,14 @@ class HandlerClass:
     # widgets allows access to  widgets from the qtvcp files
     # at this point the widgets and hal pins are not instantiated
     def __init__(self, halcomp,widgets,paths):
-        # os.system("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 128") # заменено на subprocess
+        #DEBUG os.system("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 128") # заменено на subprocess
         self.hal = halcomp
         self.PATHS = paths
         #self.gcodes = GCodes()
         self.data = [[None for _ in range(10000)],[None for _ in range(10000)]]
         self.current_plot_n = 0
         self.w = widgets
+        self.RODOS_PATH = "/home/mdrives/RODOS4/./RODOS4"
         self.position_buffer = []
         self.load_ini()
         self.start_log()
@@ -164,19 +165,19 @@ class HandlerClass:
             'append_buffer-pin31': [None, self.onAppend_BufferChanged],
             'append_file-pin31': [None, self.onAppend_FileChanged],
 
-            'RODOS4_1_on': [None, None],
-            'RODOS4_2_on': [None, None],
-            'RODOS4_3_on': [None, None],
-            'RODOS4_4_on': [None, None],
-            'RODOS4_5_on': [None, None],
-            'RODOS4_6_on': [None, None],
+            'RODOS4_1_on': [None, lambda s: self.onRODOS_changed(s,'RODOS4_1_on', 1, True)],
+            'RODOS4_2_on': [None, lambda s: self.onRODOS_changed(s,'RODOS4_2_on', 2, True)],
+            'RODOS4_3_on': [None, lambda s: self.onRODOS_changed(s,'RODOS4_3_on', 3, True)],
+            'RODOS4_4_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_4_on', 4, True)],
+            'RODOS4_5_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_5_on', 5, True)],
+            'RODOS4_6_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_6_on', 6, True)],
 
-            'RODOS4_1_off': [None, None],
-            'RODOS4_2_off': [None, None],
-            'RODOS4_3_off': [None, None],
-            'RODOS4_4_off': [None, None],
-            'RODOS4_5_off': [None, None],
-            'RODOS4_6_off': [None, None]
+            'RODOS4_1_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_1_off', 1, False)],
+            'RODOS4_2_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_2_off', 2, False)],
+            'RODOS4_3_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_3_off', 3, False)],
+            'RODOS4_4_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_4_off', 4, False)],
+            'RODOS4_5_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_5_off', 5, False)],
+            'RODOS4_6_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_6_off', 6, False)]
         }
 
         # создание числовых пинов и связывание событий изменения HAL с обработчиком
@@ -192,23 +193,6 @@ class HandlerClass:
             self.VCP_halpins_bit[key][0] = tmpPin # получить ссылку чтобы не обращаться через словарь
             if self.VCP_halpins_bit[key][1] is not None: # если не None - назначить обработчик
                 tmpPin.value_changed.connect(self.VCP_halpins_bit[key][1])
-
-        # создание пинов для управления реле RODOS
-        #ucomp = hal.component("axisui.user")
-        # self.hal.newpin('RODOS4_1_on', hal.HAL_BIT, hal.HAL_IN)
-        # self.hal.newpin('RODOS4_2_on', hal.HAL_BIT, hal.HAL_IN)
-        # self.hal.newpin('RODOS4_3_on', hal.HAL_BIT, hal.HAL_IN)
-        # self.hal.newpin('RODOS4_4_on', hal.HAL_BIT, hal.HAL_IN)
-        # self.hal.newpin('RODOS4_5_on', hal.HAL_BIT, hal.HAL_IN)
-        # self.hal.newpin('RODOS4_6_on', hal.HAL_BIT, hal.HAL_IN)
-        #
-        # self.hal.newpin('RODOS4_1_off', hal.HAL_BIT, hal.HAL_IN)
-        # self.hal.newpin('RODOS4_2_off', hal.HAL_BIT, hal.HAL_IN)
-        # self.hal.newpin('RODOS4_3_off', hal.HAL_BIT, hal.HAL_IN)
-        # self.hal.newpin('RODOS4_4_off', hal.HAL_BIT, hal.HAL_IN)
-        # self.hal.newpin('RODOS4_5_off', hal.HAL_BIT, hal.HAL_IN)
-        # self.hal.newpin('RODOS4_6_off', hal.HAL_BIT, hal.HAL_IN)
-        # self.hal.ready()
 
         # try:
         #     #p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
@@ -240,46 +224,48 @@ class HandlerClass:
         return
 
     def runRODOS_31(self):
-        try:
-            #DEBUG p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
-            #DEBUG return_code = subprocess.call(["pwd"], shell=True)
-            #DEBUG return_code = subprocess.call(["sudo ls"], shell=True)
-            #DEBUG print "*** subprocess.call([\"sudo\", \"ls\"]) returns ", return_code
-            return_code = subprocess.call("sudo /home/mdrives/RODOS4/RODOS4 -a --c3 128", shell=True)
-            print "*** subprocess.call() returns ", return_code
-            return_code = subprocess.call("sudo /home/mdrives/RODOS4/RODOS4 -a --c4 128", shell=True)
-            print "*** subprocess.call() returns ", return_code
-        except Exception as exc:
-            print "***Ошибка при запуске RODOS4. ", exc
+        pass
+        #try:
+        #    #DEBUG p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
+        #    #DEBUG return_code = subprocess.call(["pwd"], shell=True)
+        #    #DEBUG return_code = subprocess.call(["sudo ls"], shell=True)
+        #    #DEBUG print "*** subprocess.call([\"sudo\", \"ls\"]) returns ", return_code
+        #    return_code = subprocess.call("sudo /home/mdrives/RODOS4/RODOS4 -a --c3 128", shell=True)
+        #    print "*** subprocess.call() returns ", return_code
+        #    return_code = subprocess.call("sudo /home/mdrives/RODOS4/RODOS4 -a --c4 128", shell=True)
+        #    print "*** subprocess.call() returns ", return_code
+        #except Exception as exc:
+        #    print "***Ошибка при запуске RODOS4. ", exc
 
     def stopRODOS_31(self):
-        try:
-            #DEBUG p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
-            #DEBUG return_code = subprocess.call(["pwd"], shell=True)
-            #DEBUG return_code = subprocess.call(["sudo ls"], shell=True)
-            #DEBUG print "*** subprocess.call([\"sudo\", \"ls\"]) returns ", return_code
-            return_code = subprocess.call("sudo /home/mdrives/RODOS4/RODOS4 -a --c3 0", shell=True)
-            print "*** subprocess.call() returns ", return_code
-            return_code = subprocess.call("sudo /home/mdrives/RODOS4/RODOS4 -a --c4 0", shell=True)
-            print "*** subprocess.call() returns ", return_code
-        except Exception as exc:
-            print "***Ошибка при запуске RODOS4. ", exc
+        pass
+        #try:
+        #    #DEBUG p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
+        #    #DEBUG return_code = subprocess.call(["pwd"], shell=True)
+        #    #DEBUG return_code = subprocess.call(["sudo ls"], shell=True)
+        #    #DEBUG print "*** subprocess.call([\"sudo\", \"ls\"]) returns ", return_code
+        #    return_code = subprocess.call("sudo /home/mdrives/RODOS4/RODOS4 -a --c3 0", shell=True)
+        #    print "*** subprocess.call() returns ", return_code
+        #    return_code = subprocess.call("sudo /home/mdrives/RODOS4/RODOS4 -a --c4 0", shell=True)
+        #    print "*** subprocess.call() returns ", return_code
+        #except Exception as exc:
+        #    print "***Ошибка при запуске RODOS4. ", exc
 
     def onBtnOff31(self):
-        try:
-            #INFO run  - рекомендован по сравнению с call, но его нет в Python 2
-            #INFO Popen - неблокирующий
-            #INFO call - обёртка над Popen + wait (блокирующий), call = ACTIONrun(...).returncode
-
-            #p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
-            return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 0", shell=False)
-            print "*** subprocess.call() returns ", return_code
-            return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c4 0", shell=False)
-            print "*** subprocess.call() returns ", return_code
-        except Exception as exc:
-            print "***Ошибка при запуске RODOS4. ", exc
+        #try:
+        #    #INFO run  - рекомендован по сравнению с call, но его нет в Python 2
+        #    #INFO Popen - неблокирующий
+        #    #INFO call - обёртка над Popen + wait (блокирующий), call = ACTIONrun(...).returncode
+        #
+        #    #p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
+        #    return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 0", shell=False)
+        #    print "*** subprocess.call() returns ", return_code
+        #    return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c4 0", shell=False)
+        #    print "*** subprocess.call() returns ", return_code
+        #except Exception as exc:
+        #    print "***Ошибка при запуске RODOS4. ", exc
         ACTION.SET_MACHINE_STATE(False)
-        # self.w.btnDevice_On31_2.setChecked(False)
+        # self.w.btnDevice_On31.setChecked(False)
 
     def keyPressEvent(self, event):
         #TODO
@@ -322,20 +308,20 @@ class HandlerClass:
         self.w.sldAcceleration31.valueChanged.connect(lambda val: self.w.spnAcceleration31.setValue(float(val)/100.0))
         self.w.spnAcceleration31.valueChanged.connect(lambda val: self.w.sldAcceleration31.setValue(int(val*100)))
 
-        STATUS.connect('state-estop', lambda w: (self.w.btnDevice_On31_2.setEnabled(False)))
-        STATUS.connect('state-estop-reset', lambda w: (self.w.btnDevice_On31_2.setEnabled(not STATUS.machine_is_on())))
+        STATUS.connect('state-estop', lambda w: (self.w.btnDevice_On31.setEnabled(False)))
+        STATUS.connect('state-estop-reset', lambda w: (self.w.btnDevice_On31.setEnabled(not STATUS.machine_is_on())))
 
-        STATUS.connect('state-on', lambda w: (self.runRODOS_31(),
+        STATUS.connect('state-on', lambda w: (#self.runRODOS_31(),
                                               self.w.btnJog_Minus31.setEnabled(True),
                                               self.w.btnJog_Plus31.setEnabled(True),
                                               self.w.btnLog_Trigger31.setEnabled(True),
-                                              self.w.btnDevice_On31_2.setEnabled(False) ))
+                                              self.w.btnDevice_On31.setEnabled(False) ))
 
-        STATUS.connect('state-off', lambda w:(self.stopRODOS_31(),
+        STATUS.connect('state-off', lambda w:(#self.stopRODOS_31(),
                                               self.w.btnJog_Minus31.setEnabled(False),
                                               self.w.btnJog_Plus31.setEnabled(False),
                                               self.w.btnLog_Trigger31.setEnabled(False),
-                                              self.w.btnDevice_On31_2.setEnabled(STATUS.estop_is_clear()) ))
+                                              self.w.btnDevice_On31.setEnabled(STATUS.estop_is_clear()) ))
         self.w.ledPos_Alarm31.setOffColor(Qt.yellow)
         # add overlay to topWidget
         self.w.overlay = FocusOverlay(self.w)
@@ -430,6 +416,25 @@ class HandlerClass:
         #TODO
         self.position_buffer = [] # очистить буфер после записи
         pass
+
+    def onRODOS_changed(self, state, pinname, number, turn_on):
+        #INFO http://linuxcnc.org/docs/2.8/html/gui/qtvcp_code_snippets.html#_add_hal_pins_that_call_functions
+
+        if not self.hal[pinname]: # исключить обратный фронт сигнала
+            print "*** onRODOS_changed, нисходящий фронт, return"
+            return
+
+        if not state:
+            print "*** onRODOS_changed, not state, return"
+            return
+
+        try:
+            return_code = subprocess.call(["sudo", self.RODOS_PATH, "-a", "--c"+str(number-1), ("128" if turn_on else "0")], shell=True)
+            print "*** subprocess.call(sudo",self.RODOS_PATH, " --c"+str(number-1),("128" if turn_on else "0"), ") returns ", return_code
+        except Exception as exc:
+            print "***Ошибка при запуске RODOS4. ", exc
+        pass
+
 
     #def pinCnagedCallback(self, data):
     #    """
