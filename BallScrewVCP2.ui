@@ -754,19 +754,6 @@ qproperty-diameter: 100;</string>
               </property>
              </spacer>
             </item>
-            <item row="0" column="2">
-             <spacer name="horizontalSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
             <item row="0" column="1">
              <widget class="QGroupBox" name="gbLoad">
               <property name="enabled">
@@ -796,12 +783,32 @@ qproperty-diameter: 100;</string>
               </layout>
              </widget>
             </item>
+            <item row="0" column="2">
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
            </layout>
           </item>
           <item row="0" column="1" rowspan="2">
            <layout class="QGridLayout" name="gridLayout_35">
-            <item row="0" column="2">
-             <widget class="QLabel" name="lblTime_Current32">
+            <item row="3" column="1">
+             <widget class="QLabel" name="label_129">
+              <property name="text">
+               <string>Скорость фактическая, об/мин</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2" colspan="3">
+             <widget class="QLabel" name="lblTorque_Actual32">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -857,65 +864,6 @@ qproperty-diameter: 100;</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="4">
-             <widget class="QLabel" name="lblDuration32">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>60</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>---</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLabel" name="label_128">
-              <property name="text">
-               <string>Нагрузка фактическая, Н*м</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="2" colspan="3">
-             <widget class="QLabel" name="lblTorque_Actual32">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>60</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>---</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLabel" name="label_126">
-              <property name="text">
-               <string>Время работы</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QLabel" name="label_129">
-              <property name="text">
-               <string>Скорость фактическая, об/мин</string>
-              </property>
-             </widget>
-            </item>
             <item row="0" column="3">
              <widget class="QLabel" name="lblTime_Current32_2">
               <property name="sizePolicy">
@@ -935,12 +883,77 @@ qproperty-diameter: 100;</string>
               </property>
              </widget>
             </item>
+            <item row="0" column="4">
+             <widget class="QLabel" name="lblDuration32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLabel" name="lblTime_Current32">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>---</string>
+              </property>
+             </widget>
+            </item>
             <item row="1" column="1">
              <widget class="QLabel" name="label_127">
               <property name="text">
                <string>Нагрузка заданная, Н*м</string>
               </property>
              </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="label_128">
+              <property name="text">
+               <string>Нагрузка фактическая, Н*м</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="label_126">
+              <property name="text">
+               <string>Время работы</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1" colspan="4">
+             <spacer name="horizontalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
            </layout>
           </item>
@@ -957,67 +970,7 @@ qproperty-diameter: 100;</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
-             <widget class="LED" name="ledPos_Is_On32">
-              <property name="color">
-               <color>
-                <red>252</red>
-                <green>233</green>
-                <blue>79</blue>
-               </color>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0" colspan="2">
-             <widget class="ActionButton" name="btnDevice_Off32">
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(239, 41, 41);</string>
-              </property>
-              <property name="icon">
-               <iconset>
-                <normaloff>resources/circle.png</normaloff>resources/circle.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-              <property name="invert_the_status" stdset="0">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0" colspan="2">
-             <widget class="ActionButton" name="btnDevice_On32">
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(138, 226, 52);</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="icon">
-               <iconset>
-                <normaloff>resources/vertical_line.png</normaloff>resources/vertical_line.png</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <property name="machine_on_action" stdset="0">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2">
+            <item row="0" column="3">
              <widget class="ActionButton" name="actionbutton">
               <property name="text">
                <string>E Stop</string>
@@ -1035,6 +988,64 @@ qproperty-diameter: 100;</string>
                <bool>true</bool>
               </property>
              </widget>
+            </item>
+            <item row="2" column="0" colspan="3">
+             <widget class="PushButton" name="btnDevice_Off32">
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(239, 41, 41);</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>resources/circle.png</normaloff>resources/circle.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>40</width>
+                <height>40</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0" colspan="3">
+             <widget class="PushButton" name="btnDevice_On32">
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(138, 226, 52);</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>resources/vertical_line.png</normaloff>resources/vertical_line.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>40</width>
+                <height>40</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1" colspan="2">
+             <widget class="LED" name="ledPos_Is_On32">
+              <property name="color">
+               <color>
+                <red>252</red>
+                <green>233</green>
+                <blue>79</blue>
+               </color>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0" colspan="4">
+             <spacer name="verticalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
             </item>
            </layout>
           </item>
@@ -1076,7 +1087,24 @@ qproperty-diameter: 100;</string>
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>btnDevice_Off32</sender>
+   <signal>clicked()</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onBtnDeviceOff()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1092</x>
+     <y>201</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>927</x>
+     <y>2</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <slots>
   <slot>onBtnTempShow34()</slot>
   <slot>onBtnTempShow33()</slot>
@@ -1085,5 +1113,6 @@ qproperty-diameter: 100;</string>
   <slot>onBtnLoadGCode()</slot>
   <slot>onBtnTestActive0(bool)</slot>
   <slot>onBtnDeviceOn()</slot>
+  <slot>onBtnDeviceOff()</slot>
  </slots>
 </ui>

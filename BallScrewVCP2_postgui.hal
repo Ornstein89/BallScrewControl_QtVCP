@@ -3,7 +3,7 @@
 ## Перед подключением сигнала к GUI убедиться, что сигнал существует (генерируется тестовым генератором или оборудованием)
 
 ### Форма 32
-loadusr -W T42_2
+# loadusr -W T42_2 # !!!ВЕРНУТЬ НА БОЕВОМ, ЗАКОММЕНТИРОВАЛ ДЛЯ ЗАПУСКА НА ВИРТ. МАШИНЕ
 
 
 #net is_running_ccw =>  BallScrewVCP2.ledIs_Running_Ccw32  # BIT	IN	Цветовой индикатор (красный / зелёный)
@@ -11,7 +11,7 @@ net bit0 =>  BallScrewVCP2.ledIs_Running_Ccw32  # BIT	IN	Цветовой инд
 
 net start_ccw <=  BallScrewVCP2.btnStart_Ccw32            # BIT	OUT	Кнопка
 net stop <=  BallScrewVCP2.btnStop32                      # BIT	OUT	Кнопка
-net start_cw T42_2.request <=  BallScrewVCP2.btnStart_Cw32              # BIT	OUT	Кнопка
+# net start_cw T42_2.request <=  BallScrewVCP2.btnStart_Cw32               # !!!ВЕРНУТЬ НА БОЕВОМ, ЗАКОММЕНТИРОВАЛ ДЛЯ ЗАПУСКА НА ВИРТ. МАШИНЕ
 
 #net is_running_cw =>  BallScrewVCP2.ledIs_Running_Cw32    # BIT	IN	Цветовой индикатор (красный / зелёный)
 net bit1 =>  BallScrewVCP2.ledIs_Running_Cw32 # для ТЕСТА
@@ -23,10 +23,10 @@ net sine0 =>  BallScrewVCP2.time_current-pin32 # для ТЕСТА
 net cosine0 =>  BallScrewVCP2.duration-pin32 # для ТЕСТА
 
 #net torque_set =>  BallScrewVCP2.torque_set-pin32         # FLOAT	IN	Числовой индикатор
-net sine0 =>  BallScrewVCP2.torque_set-pin32 # для ТЕСТА
+#net sine0 =>  BallScrewVCP2.torque_set-pin32 # для ТЕСТА    # !!!ВЕРНУТЬ НА БОЕВОМ, ЗАКОММЕНТИРОВАЛ ДЛЯ ЗАПУСКА НА ВИРТ. МАШИНЕ
 
 
-net torque_actual T42_2.torque =>  BallScrewVCP2.torque_actual-pin32   # FLOAT	IN	Числовой индикатор
+# net torque_actual T42_2.torque =>  BallScrewVCP2.torque_actual-pin32    # !!!ВЕРНУТЬ НА БОЕВОМ, ЗАКОММЕНТИРОВАЛ ДЛЯ ЗАПУСКА НА ВИРТ. МАШИНЕ
 #net cosine0 =>  BallScrewVCP2.torque_actual-pin32 # для ТЕСТА
 
 #net omega_actual =>  BallScrewVCP2.omega_actual-pin32     # FLOAT	IN	Числовой индикатор

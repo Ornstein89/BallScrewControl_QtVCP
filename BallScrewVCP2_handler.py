@@ -73,6 +73,8 @@ class TimeAxisItem(pg.AxisItem):
     def tickStrings(self, values, scale, spacing):
         return [datetime.datetime.fromtimestamp(value).strftime("%M:%S") for value in values]
 
+    #TODO возможно сюда как-то можно перенести проставление делений осей, чтобы сетка строилась по минутам и секундам
+
 class HandlerClass:
 
     ########################
@@ -81,10 +83,10 @@ class HandlerClass:
     # widgets allows access to  widgets from the qtvcp files
     # at this point the widgets and hal pins are not instantiated
     def __init__(self, halcomp,widgets,paths):
-        os.system("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 128") #TODO возможно есть более рациональная команда
         self.initialized = False
         self.hal = halcomp
         self.PATHS = paths
+        self.RODOS_PATH = "/home/mdrives/RODOS4/RODOS4"
         self.gcodes = GCodes()
         self.plot_data_buffer = [[],[]]
         self.log_data_buffer = []
@@ -160,48 +162,38 @@ class HandlerClass:
         'append_buffer-pin32':[None, self.onAppend_BufferChanged],
         'append_file-pin32':[None,self.onAppend_FileChanged],
         'append_title-pin32':[None, self.onAppend_TitleChanged],
+
+        'RODOS4_1_on': [None, lambda s: self.onRODOS_changed(s,'RODOS4_1_on', 1, True)],
+        'RODOS4_2_on': [None, lambda s: self.onRODOS_changed(s,'RODOS4_2_on', 2, True)],
+        'RODOS4_3_on': [None, lambda s: self.onRODOS_changed(s,'RODOS4_3_on', 3, True)],
+        'RODOS4_4_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_4_on', 4, True)],
+        'RODOS4_5_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_5_on', 5, True)],
+        'RODOS4_6_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_6_on', 6, True)],
+
+        'RODOS4_1_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_1_off', 1, False)],
+        'RODOS4_2_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_2_off', 2, False)],
+        'RODOS4_3_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_3_off', 3, False)],
+        'RODOS4_4_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_4_off', 4, False)],
+        'RODOS4_5_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_5_off', 5, False)],
+        'RODOS4_6_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_6_off', 6, False)]
         }
 
         # создание пинов и связывание событий изменения HAL с обработчиком
         for key in self.VCP_halpins_float:
             tmp_pin = self.hal.newpin(key, hal.HAL_FLOAT, hal.HAL_IN)
             self.VCP_halpins_float[key][0] = tmp_pin
-            tmp_pin.value_changed.connect(self.VCP_halpins_float[key][1])
+            if self.VCP_halpins_float[key][1] is not None:
+                tmp_pin.value_changed.connect(self.VCP_halpins_float[key][1])
 
             # создание пинов и связывание событий изменения HAL с обработчиком
         for key in self.VCP_halpins_bit:
             tmp_pin = self.hal.newpin(key, hal.HAL_BIT, hal.HAL_IN)
             self.VCP_halpins_bit[key][0] = tmp_pin
-            tmp_pin.value_changed.connect(self.VCP_halpins_bit[key][1])
+            if self.VCP_halpins_bit[key][1] is not None:
+                tmp_pin.value_changed.connect(self.VCP_halpins_bit[key][1])
 
         STATUS.connect('state-on', self.on_state_on)
         STATUS.connect('state-off', self.on_state_off)
-
-        # создание пинов для управления реле RODOS
-        ucomp = hal.component("axisui.user")
-        ucomp.newpin('RODOS4_1_on', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_2_on', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_3_on', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_4_on', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_5_on', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_6_on', hal.HAL_BIT, hal.HAL_IN)
-
-        ucomp.newpin('RODOS4_1_off', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_2_off', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_3_off', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_4_off', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_5_off', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.newpin('RODOS4_6_off', hal.HAL_BIT, hal.HAL_IN)
-        ucomp.ready()
-
-        try:
-            #p = subprocess.Popen(["sh","-c",name_file]) # записывает в файл
-            return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 128", shell=False)
-            print "*** subprocess.call() returns ", return_code
-            return_code = subprocess.call("sudo /home/mdrives/RODOS4/./RODOS4 -a --c5 128", shell=False)
-            print "*** subprocess.call() returns ", return_code
-        except Exception as exc:
-            print "***Ошибка при запуске RODOS4. ", exc
 
         return
 
@@ -215,7 +207,7 @@ class HandlerClass:
         return
 
     def on_state_on(self, data):
-        print "*** on_state_on, data=",data
+        print "*** on_state_on, data=", data
         pass
 
     def on_state_off(self, data):
@@ -258,7 +250,10 @@ class HandlerClass:
         self.update_plot() # обновить график
         #self.vLine.setPos(pg.Point(0.0, time_value))
         self.w.plt32.setXRange(time_value - time_range, time_value + time_range*0.1)
-        self.w.plt32.setYRange(min([0.0, min(self.plot_data_buffer[1])]), max([YMax, max(self.plot_data_buffer[1])]))
+
+        # автомасштаб
+        self.w.plt32.setYRange(min([0.0, min(self.plot_data_buffer[1])]),
+                               max([YMax, max(self.plot_data_buffer[1])]))
         self.w.plt32.clear() # обязательно очищать, иначе утечка памяти, объекты копятся на графике
         self.w.plt32.addItem(self.hLine, ignoreBounds=True, label='*Y')
         self.w.plt32.addItem(self.vLine, ignoreBounds=True, label='*X')
@@ -373,6 +368,24 @@ class HandlerClass:
         self.log_data_buffer = []
         return
 
+    def onRODOS_changed(self, state, pinname, number, turn_on):
+        #INFO http://linuxcnc.org/docs/2.8/html/gui/qtvcp_code_snippets.html#_add_hal_pins_that_call_functions
+
+        if not self.hal[pinname]: # исключить обратный фронт сигнала
+            print "*** onRODOS_changed, нисходящий фронт, return"
+            return
+
+        if not state:
+            print "*** onRODOS_changed, not state, return"
+            return
+
+        try:
+            return_code = subprocess.call("sudo " + self.RODOS_PATH + " -a" + " --c"+str(number-1) + (" 128" if turn_on else " 0"), shell=True)
+            print "*** subprocess.call(sudo", self.RODOS_PATH, " --c"+str(number-1),("128" if turn_on else "0"), ") returns ", return_code
+        except Exception as exc:
+            print "***Ошибка при запуске RODOS4. ", exc
+        pass
+
     def closeEvent(self, event):
 
         # оверлей с запросом на выключение
@@ -403,8 +416,9 @@ class HandlerClass:
     def onDirChanged(self, data):
         pass
 
-    def onBtnDevice_Off(self):
-        ACTION.SET_MACHINE_STATE(linuxcnc.STATE_OFF)
+    def onBtnDeviceOff(self):
+        #ACTION.SET_MACHINE_STATE(linuxcnc.STATE_OFF)
+        ACTION.SET_MACHINE_STATE(False)
 
     #####################
     # GENERAL FUNCTIONS #
@@ -420,23 +434,37 @@ class HandlerClass:
         # STATUS.connect('state-off', lambda w: self.w.btnDevice_Off32.setEnabled(False))
         # STATUS.connect('state-estop-reset', lambda w: self.w.btnDevice_Off32.setEnabled(False))
 
-        self.w.btnDevice_Off32.clicked.connect(self.onBtnDevice_Off)
-
         #TODO связать с action-сигналом
+        STATUS.connect('state-estop',
+                        lambda w: (self.w.btnDevice_On32.setEnabled(False)))
+        STATUS.connect('state-estop-reset',
+                        lambda w: (self.w.btnDevice_On32.setEnabled(not STATUS.machine_is_on())))
+
+
+        self.w.btnDevice_On32.clicked.connect(lambda x: ACTION.SET_MACHINE_STATE(True))
+
         STATUS.connect('state-on', lambda _: (self.w.btnStart_Ccw32.setEnabled(True),
                                               self.w.btnStop32.setEnabled(True),
-                                              self.w.btnStart_Cw32.setEnabled(True)))
+                                              self.w.btnStart_Cw32.setEnabled(True),
+                                              self.w.btnDevice_On32.setEnabled(False)))
+
         STATUS.connect('state-off', lambda _:(self.w.btnStart_Ccw32.setEnabled(False),
                                               self.w.btnStop32.setEnabled(False),
-                                              self.w.btnStart_Cw32.setEnabled(False)))
-        self.w.btnStart_Ccw32.clicked.connect(lambda x: (self.w.btnStart_Cw32.setChecked(False) if self.w.btnStart_Ccw32.isChecked() else None,
-            self.w.btnStart_Cw32.setEnabled(False) if self.w.btnStart_Ccw32.isChecked() else None))
-        self.w.btnStart_Cw32.clicked.connect(lambda x: (self.w.btnStart_Ccw32.setChecked(False) if self.w.btnStart_Cw32.isChecked() else None,
-            self.w.btnStart_Ccw32.setEnabled(False) if self.w.btnStart_Cw32.isChecked() else None))
+                                              self.w.btnStart_Cw32.setEnabled(False),
+                                              self.w.btnDevice_On32.setEnabled(STATUS.estop_is_clear()) ))
+
+        self.w.btnStart_Ccw32.clicked.connect(
+            lambda x: (self.w.btnStart_Cw32.setChecked(False) if self.w.btnStart_Ccw32.isChecked() else None,
+                       self.w.btnStart_Cw32.setEnabled(False) if self.w.btnStart_Ccw32.isChecked() else None))
+
+        self.w.btnStart_Cw32.clicked.connect(lambda x: (
+            self.w.btnStart_Ccw32.setChecked(False) if self.w.btnStart_Cw32.isChecked() else None,
+            self.w.btnStart_Ccw32.setEnabled(False) if self.w.btnStart_Cw32.isChecked() else None ))
+
         self.w.btnStop32.clicked.connect(lambda x: (self.w.btnStart_Cw32.setChecked(False),
-                                         self.w.btnStart_Cw32.setEnabled(True),
+                                         self.w.btnStart_Cw32.setEnabled(STATUS.machine_is_on()),
                                          self.w.btnStart_Ccw32.setChecked(False),
-                                         self.w.btnStart_Ccw32.setEnabled(True)))
+                                         self.w.btnStart_Ccw32.setEnabled(STATUS.machine_is_on()) ))
 
         #STATUS.connect('state-estop-reset', lambda w: self._flip_state(False))
         #self.w.lblTest = QHalLabel()
@@ -477,7 +505,6 @@ class HandlerClass:
             led.setOffColor(Qt.green)
 
     def init_plot(self):
-        self.w.plt32.showGrid(x = True, y = True)
         self.w.plt32.setBackground('w')
         styles = {'color':'r', 'font-size':'20px'}
         self.w.plt32.setLabel('left', 'T [Н*м]', **styles)
@@ -513,6 +540,11 @@ class HandlerClass:
         self.w.plt32.setAxisItems({'bottom': TimeAxisItem(orientation='bottom')})
         self.w.plt32.getAxis("bottom").setStyle(tickFont = font)
         self.w.plt32.getAxis("left").setStyle(tickFont = font)
+
+        # деления на оси X чтобы по ним строилась сетка
+        self.w.plt32.showGrid(x = True, y = True, alpha = 1.0)
+        self.w.plt32.getAxis('bottom').setTickSpacing(major=60, minor=1) # деления на оси X чтобы по ним строилась сетка
+        self.w.plt32.getAxis('bottom').setGrid(255)
         # self.graphWidget.setXRange(5, 20, padding=0)
         # self.graphWidget.setYRange(30, 40, padding=0)
         # курсор на графике https://stackoverflow.com/questions/50512391/can-i-share-the-crosshair-with-two-graph-in-pyqtgraph-pyqt5

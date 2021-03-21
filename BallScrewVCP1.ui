@@ -295,6 +295,14 @@ font: 15pt bold;</string>
             </property>
            </widget>
           </item>
+          <item row="0" column="0">
+           <widget class="CheckBox" name="chkActivation31">
+            <property name="text">
+             <string>Активация
+привода</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item row="2" column="1">
@@ -525,6 +533,11 @@ active_0</string>
   <customwidget>
    <class>PushButton</class>
    <extends>QPushButton</extends>
+   <header>qtvcp.widgets.simple_widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>CheckBox</class>
+   <extends>QCheckBox</extends>
    <header>qtvcp.widgets.simple_widgets</header>
   </customwidget>
   <customwidget>

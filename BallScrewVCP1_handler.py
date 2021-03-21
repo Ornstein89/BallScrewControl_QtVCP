@@ -64,15 +64,14 @@ class HandlerClass:
     ########################
     # widgets allows access to  widgets from the qtvcp files
     # at this point the widgets and hal pins are not instantiated
-    def __init__(self, halcomp,widgets,paths):
-        #DEBUG os.system("sudo /home/mdrives/RODOS4/./RODOS4 -a --c3 128") # заменено на subprocess
+    def __init__(self, halcomp, widgets, paths):
         self.hal = halcomp
         self.PATHS = paths
         #self.gcodes = GCodes()
         self.data = [[None for _ in range(10000)],[None for _ in range(10000)]]
         self.current_plot_n = 0
         self.w = widgets
-        self.RODOS_PATH = "/home/mdrives/RODOS4/./RODOS4"
+        self.RODOS_PATH = "/home/mdrives/RODOS4/RODOS4"
         self.position_buffer = []
         self.load_ini()
         self.start_log()
@@ -165,9 +164,9 @@ class HandlerClass:
             'append_buffer-pin31': [None, self.onAppend_BufferChanged],
             'append_file-pin31': [None, self.onAppend_FileChanged],
 
-            'RODOS4_1_on': [None, lambda s: self.onRODOS_changed(s,'RODOS4_1_on', 1, True)],
-            'RODOS4_2_on': [None, lambda s: self.onRODOS_changed(s,'RODOS4_2_on', 2, True)],
-            'RODOS4_3_on': [None, lambda s: self.onRODOS_changed(s,'RODOS4_3_on', 3, True)],
+            'RODOS4_1_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_1_on', 1, True)],
+            'RODOS4_2_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_2_on', 2, True)],
+            'RODOS4_3_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_3_on', 3, True)],
             'RODOS4_4_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_4_on', 4, True)],
             'RODOS4_5_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_5_on', 5, True)],
             'RODOS4_6_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_6_on', 6, True)],
@@ -311,17 +310,16 @@ class HandlerClass:
         STATUS.connect('state-estop', lambda w: (self.w.btnDevice_On31.setEnabled(False)))
         STATUS.connect('state-estop-reset', lambda w: (self.w.btnDevice_On31.setEnabled(not STATUS.machine_is_on())))
 
-        STATUS.connect('state-on', lambda w: (#self.runRODOS_31(),
-                                              self.w.btnJog_Minus31.setEnabled(True),
+        STATUS.connect('state-on', lambda w: (self.w.btnJog_Minus31.setEnabled(True),
                                               self.w.btnJog_Plus31.setEnabled(True),
                                               self.w.btnLog_Trigger31.setEnabled(True),
                                               self.w.btnDevice_On31.setEnabled(False) ))
 
-        STATUS.connect('state-off', lambda w:(#self.stopRODOS_31(),
-                                              self.w.btnJog_Minus31.setEnabled(False),
+        STATUS.connect('state-off', lambda w:(self.w.btnJog_Minus31.setEnabled(False),
                                               self.w.btnJog_Plus31.setEnabled(False),
                                               self.w.btnLog_Trigger31.setEnabled(False),
                                               self.w.btnDevice_On31.setEnabled(STATUS.estop_is_clear()) ))
+
         self.w.ledPos_Alarm31.setOffColor(Qt.yellow)
         # add overlay to topWidget
         self.w.overlay = FocusOverlay(self.w)
@@ -430,7 +428,7 @@ class HandlerClass:
 
         try:
             return_code = subprocess.call("sudo " + self.RODOS_PATH + " -a" + " --c"+str(number-1) + (" 128" if turn_on else " 0"), shell=True)
-            print "*** subprocess.call(sudo",self.RODOS_PATH, " --c"+str(number-1),("128" if turn_on else "0"), ") returns ", return_code
+            print "*** subprocess.call(sudo", self.RODOS_PATH, " --c"+str(number-1),("128" if turn_on else "0"), ") returns ", return_code
         except Exception as exc:
             print "***Ошибка при запуске RODOS4. ", exc
         pass
