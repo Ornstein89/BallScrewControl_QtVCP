@@ -2,6 +2,7 @@
 <interface>
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
+  <object class="GtkAction" id="action1"/>
   <object class="GtkAdjustment" id="adjustmentD">
     <property name="lower">3</property>
     <property name="upper">8</property>
@@ -67,6 +68,16 @@
     <property name="value">2.5</property>
     <property name="step_increment">0.5</property>
     <property name="page_increment">1</property>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-media-play</property>
+  </object>
+  <object class="GtkImage" id="image2">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-floppy</property>
   </object>
   <object class="GtkListStore" id="liststoreBelt">
     <columns>
@@ -800,11 +811,11 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="btnSave">
-                        <property name="label">gtk-save-as</property>
+                        <property name="label">Сохранить как</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="use_stock">True</property>
+                        <property name="image">image2</property>
                         <signal name="clicked" handler="on_btnSave_clicked" swapped="no"/>
                       </object>
                       <packing>
@@ -815,7 +826,20 @@
                       </packing>
                     </child>
                     <child>
-                      <placeholder/>
+                      <object class="GtkButton" id="btnSaveAndOpen">
+                        <property name="label" translatable="yes">Сохранить и
+открыть</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="image">image1</property>
+                        <signal name="clicked" handler="on_btnSaveAndOpen_clicked" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
                     </child>
                   </object>
                   <packing>

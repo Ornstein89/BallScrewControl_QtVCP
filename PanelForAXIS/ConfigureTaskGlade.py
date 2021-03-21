@@ -5,6 +5,8 @@ import hal
 import glib
 import time
 import gtk
+import linuxcnc
+import os
 
 class HandlerClass:
     '''
@@ -74,6 +76,7 @@ class HandlerClass:
         "spnD"
         "spnS"
         "spn_p2"
+        
         #чтение шаблона
         f1 = open("Сверление с комментариями.ngc",'rb')
         filedata1 = f1.read()
@@ -104,7 +107,7 @@ class HandlerClass:
             gtk.FILE_CHOOSER_ACTION_SAVE,
             (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
             gtk.STOCK_OK, gtk.RESPONSE_OK))#, action=gtk.FileChooserAction.OPEN
-        
+        filename = []
         try :
             filt = gtk.FileFilter()
             filt.set_name("NGC")
@@ -127,16 +130,27 @@ class HandlerClass:
         finally :
             filechooserdialog.destroy()
         
-        #for replacement in replacements:
-        #    filedata = filedata.replace(replacement[0], replacement[1])
-        #    
-        ##диалог выбора названия файла
-        #
-        ##создание и запись нового файла
-        #configfile = codecs.open(self.NAME,'ab+','utf-8')
+        #TODO создание и запись нового файла когда будут готовы шаблоны
+        #configfile = codecs.open(filename,'ab+','utf-8')
         #config.write(configfile)
         #configfile.close()
-        pass
+    
+    def on_btnSaveAndOpen_clicked(self, widget):
+        #TODO сохранение
+        
+        #print "*** on_btnSaveAndOpen_clicked"
+        #dir_path = os.path.dirname(os.path.realpath(__file__))
+        #print "*** dir_path = ", dir_path
+        #print "*** os.getcwd() = ", os.getcwd()
+        #lxcnc = linuxcnc.command()
+        #lxcnc.mode(linuxcnc.MODE_MDI)
+        
+        # загрузка сохранённого файла
+        filename = "sample.ngc"
+        #lxcnc.program_open(filename)
+        #os.system("axis-remote --reload ")
+        os.system("axis-remote " + filename)
+        #lxcnc.mode(linuxcnc.MODE_MANUAL)
 
     def __init__(self, halcomp,builder,useropts):
         '''
