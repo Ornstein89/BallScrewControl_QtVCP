@@ -158,23 +158,41 @@ class HandlerClass:
         self.VCP_halpins_float = {
 
         }
+
         self.VCP_halpins_bit = {
-        'active_0-pin':None,
-        'active_1-pin':None,
-        'active_2-pin':None,
-        'active_3-pin':None,
-        'active_4-pin':None,
-        'active_5-pin':None
+        'active_0-pin':[None,self.pinCnagedCallback],
+        'active_1-pin':[None,self.pinCnagedCallback],
+        'active_2-pin':[None,self.pinCnagedCallback],
+        'active_3-pin':[None,self.pinCnagedCallback],
+        'active_4-pin':[None,self.pinCnagedCallback],
+        'active_5-pin':[None,self.pinCnagedCallback],
+
+        'RODOS4_1_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_1_on', 1, True)],
+        'RODOS4_2_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_2_on', 2, True)],
+        'RODOS4_3_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_3_on', 3, True)],
+        'RODOS4_4_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_4_on', 4, True)],
+        'RODOS4_5_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_5_on', 5, True)],
+        'RODOS4_6_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_6_on', 6, True)],
+
+        'RODOS4_1_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_1_off', 1, False)],
+        'RODOS4_2_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_2_off', 2, False)],
+        'RODOS4_3_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_3_off', 3, False)],
+        'RODOS4_4_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_4_off', 4, False)],
+        'RODOS4_5_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_5_off', 5, False)],
+        'RODOS4_6_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_6_off', 6, False)]
         }
 
         # создание пинов и связывание событий изменения HAL с обработчиком
         for key in self.VCP_halpins_float:
             self.VCP_halpins_float[key] = self.hal.newpin(key, hal.HAL_FLOAT, hal.HAL_IN)
             self.VCP_halpins_float[key].value_changed.connect(lambda s: self.pinCnagedCallback(s))
-            # создание пинов и связывание событий изменения HAL с обработчиком
+
+        # создание пинов и связывание событий изменения HAL с обработчиком
         for key in self.VCP_halpins_bit:
-            self.VCP_halpins_bit[key] = self.hal.newpin(key, hal.HAL_BIT, hal.HAL_IN)
-            self.VCP_halpins_bit[key].value_changed.connect(lambda s: self.pinCnagedCallback(s))
+            tmp_newpin = self.hal.newpin(key, hal.HAL_BIT, hal.HAL_IN)
+            self.VCP_halpins_bit[key][0] = tmp_newpin
+            if self.VCP_halpins_bit[key][1] is not None:
+                tmp_newpin.value_changed.connect(self.VCP_halpins_bit[key][1])
         return
 
     def onBtnLoadGCode34(self):
@@ -348,6 +366,7 @@ class HandlerClass:
         # курсор на графике https://stackoverflow.com/questions/50512391/can-i-share-the-crosshair-with-two-graph-in-pyqtgraph-pyqt5
         # https://stackoverflow.com/questions/52410731/drawing-and-displaying-objects-and-labels-over-the-axis-in-pyqtgraph-how-to-do
         return
+
     def pinCnagedCallback(self, data):
         halpin_name = self.w.sender().text()
 
@@ -436,6 +455,24 @@ class HandlerClass:
         #print "Test pin value changed to:" % (data) # ВЫВОДИТ ВСЕГДА 0 - ВИДИМО ОШИБКА В ДОКУМЕНТАЦИИ
         #print 'halpin object =', self.w.sender()
         #print 'Halpin type: ',self.w.sender().get_type()
+
+    def onRODOS_changed(self, state, pinname, number, turn_on):
+        #INFO http://linuxcnc.org/docs/2.8/html/gui/qtvcp_code_snippets.html#_add_hal_pins_that_call_functions
+
+        if not self.hal[pinname]: # исключить обратный фронт сигнала
+            print "*** onRODOS_changed, нисходящий фронт, return"
+            return
+
+        if not state:
+            print "*** onRODOS_changed, not state, return"
+            return
+
+        try:
+            return_code = subprocess.call("sudo " + self.RODOS_PATH + " -a" + " --c"+str(number-1) + (" 128" if turn_on else " 0"), shell=True)
+            print "*** subprocess.call(sudo", self.RODOS_PATH, " --c"+str(number-1),("128" if turn_on else "0"), ") returns ", return_code
+        except Exception as exc:
+            print "***Ошибка при запуске RODOS4. ", exc
+        pass
 
     def append_data(self, x, y):
         self.data[0][self.current_plot_n] = x

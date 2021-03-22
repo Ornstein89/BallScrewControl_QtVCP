@@ -202,6 +202,11 @@ class HandlerClass:
         # except Exception as exc:
         #     print "***Ошибка при запуске RODOS4. ", exc
 
+        #OLD если задавать пин scale в слайдерах - то они сами пересчитывают value во float
+        # float-пины для слайдеров вместо целочисленных
+        #self.sldVelocity31float = self.hal.newpin('sldVelocity31float', hal.HAL_FLOAT, hal.HAL_OUT)
+        #self.sldAcceleration31float = self.hal.newpin('sldAcceleration31float', hal.HAL_FLOAT, hal.HAL_OUT)
+
         return
 
     def onBtnSaveState31(self):
@@ -308,7 +313,18 @@ class HandlerClass:
         self.w.spnAcceleration31.valueChanged.connect(lambda val: self.w.sldAcceleration31.setValue(int(val*100)))
 
         STATUS.connect('state-estop', lambda w: (self.w.btnDevice_On31.setEnabled(False)))
-        STATUS.connect('state-estop-reset', lambda w: (self.w.btnDevice_On31.setEnabled(not STATUS.machine_is_on())))
+        STATUS.connect('state-estop-reset', lambda w: (
+            self.w.btnDevice_On31.setEnabled(not STATUS.machine_is_on()),
+            #tempVal=self.w.sldVelocity31.value(),
+            self.w.sldVelocity31.setValue(self.w.sldVelocity31.value()),
+            self.w.sldVelocity31.valueChanged.emit(self.w.sldVelocity31.value()),
+            self.w.sldVelocity31.sliderMoved.emit(self.w.sldVelocity31.value()),
+            self.w.sldVelocity31.sliderReleased.emit(),
+
+            #tempVal=self.w.sldAcceleration31.value(),
+            self.w.sldAcceleration31.setValue(self.w.sldAcceleration31.value()),
+            self.w.sldAcceleration31.valueChanged.emit(self.w.sldAcceleration31.value())
+            ))
 
         STATUS.connect('state-on', lambda s: (self.w.btnJog_Minus31.setEnabled(self.w.chkActivation31.isChecked()),
                                               self.w.btnJog_Plus31.setEnabled(self.w.chkActivation31.isChecked()),
@@ -327,6 +343,27 @@ class HandlerClass:
                         and self.w.chkActivation31.isChecked()),
                       self.w.btnJog_Plus31.setEnabled(STATUS.machine_is_on()
                         and self.w.chkActivation31.isChecked())))
+        #self.hal["sldVelocity31-scale"]=0.01
+        #self.hal["sldAcceleration31-scale"]=0.01
+
+        #OLD если задавать пин scale в слайдерах - то они сами пересчитывают value во float
+        # self.w.sldVelocity31.valueChanged.connect(
+        #     lambda s: self.sldVelocity31float.set(float(self.w.sldVelocity31.value())/100.0))
+        # self.w.sldAcceleration31.valueChanged.connect(
+        #     lambda s: self.sldAcceleration31float.set(float(self.w.sldAcceleration31.value())/100.0))
+
+        #OLD попытка заставить работать sldVelocity31-scale и sldAcceleration31-scale
+        # т.к. если слайдер не двигать, то ldVelocity31-f и dAcceleration31-f не делится на масштаб
+        #tempVal=self.w.sldVelocity31.value()
+        #self.w.sldVelocity31.setValue(tempVal+10)
+        #self.w.sldVelocity31.valueChanged.emit(tempVal+10)
+        #self.w.sldVelocity31.sliderMoved.emit(tempVal+10)
+        #self.w.sldVelocity31.sliderReleased.emit()
+        #
+        #tempVal=self.w.sldAcceleration31.value()
+        #self.w.sldAcceleration31.setValue(tempVal+0.01)
+        #self.w.sldAcceleration31.valueChanged.emit(tempVal)
+
         self.w.ledPos_Alarm31.setOffColor(Qt.yellow)
         # add overlay to topWidget
         self.w.overlay = FocusOverlay(self.w)

@@ -31,7 +31,9 @@ net sine0 => BallScrewVCP1.position-pin31 # Числовой индикатор
 #net position_actual => BallScrewVCP1.position_actual-pin31   # Числовой индикатор
 net cosine0 => BallScrewVCP1.position_actual-pin31   # Числовой индикатор
 
+setp BallScrewVCP1.sldVelocity31-scale 0.01
 net velocity <= BallScrewVCP1.sldVelocity31-f  # Ползунок с возможностью тонкой настройки и индикацией значения
+setp BallScrewVCP1.sldAcceleration31-scale 0.01
 net acceleration <= BallScrewVCP1.sldAcceleration31-f  # Ползунок с возможностью тонкой настройки и индикацией значения
 
 #net pos_alarm => BallScrewVCP1.ledPos_Alarm31        # Цветовой индикатор (красный / зелёный)

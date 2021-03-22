@@ -174,7 +174,21 @@ class HandlerClass:
             'active_2-pin':[None,self.onActive2Changed],
             'active_3-pin':[None,self.onActive3Changed],
             'active_4-pin':[None,self.onActive4Changed],
-            'active_5-pin':[None,self.onActive5Changed]
+            'active_5-pin':[None,self.onActive5Changed],
+
+            'RODOS4_1_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_1_on', 1, True)],
+            'RODOS4_2_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_2_on', 2, True)],
+            'RODOS4_3_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_3_on', 3, True)],
+            'RODOS4_4_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_4_on', 4, True)],
+            'RODOS4_5_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_5_on', 5, True)],
+            'RODOS4_6_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_6_on', 6, True)],
+
+            'RODOS4_1_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_1_off', 1, False)],
+            'RODOS4_2_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_2_off', 2, False)],
+            'RODOS4_3_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_3_off', 3, False)],
+            'RODOS4_4_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_4_off', 4, False)],
+            'RODOS4_5_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_5_off', 5, False)],
+            'RODOS4_6_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_6_off', 6, False)]
         }
 
         # создание пинов и связывание событий изменения HAL с обработчиком
@@ -349,6 +363,24 @@ class HandlerClass:
         self.w.btnProgram_Run33.setEnabled(self.hal['active_5-pin'] and STATUS.machine_is_on())
         self.w.btnProgram_Stop33.setEnabled(self.hal['active_5-pin'] and STATUS.machine_is_on())
         self.w.gcode_editor33.setEnabled(self.hal['active_5-pin'] and STATUS.machine_is_on())
+
+    def onRODOS_changed(self, state, pinname, number, turn_on):
+        #INFO http://linuxcnc.org/docs/2.8/html/gui/qtvcp_code_snippets.html#_add_hal_pins_that_call_functions
+
+        if not self.hal[pinname]: # исключить обратный фронт сигнала
+            print "*** onRODOS_changed, нисходящий фронт, return"
+            return
+
+        if not state:
+            print "*** onRODOS_changed, not state, return"
+            return
+
+        try:
+            return_code = subprocess.call("sudo " + self.RODOS_PATH + " -a" + " --c"+str(number-1) + (" 128" if turn_on else " 0"), shell=True)
+            print "*** subprocess.call(sudo", self.RODOS_PATH, " --c"+str(number-1),("128" if turn_on else "0"), ") returns ", return_code
+        except Exception as exc:
+            print "***Ошибка при запуске RODOS4. ", exc
+        pass
 
     #####################
     # GENERAL FUNCTIONS #

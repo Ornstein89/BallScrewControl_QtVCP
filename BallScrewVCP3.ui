@@ -70,95 +70,7 @@ font: 15pt bold;</string>
         </item>
         <item row="1" column="2">
          <layout class="QGridLayout" name="gridLayout_19">
-          <item row="1" column="5">
-           <widget class="LED" name="ledPos_Is_On33">
-            <property name="color">
-             <color>
-              <red>252</red>
-              <green>233</green>
-              <blue>79</blue>
-             </color>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0" rowspan="3">
-           <widget class="LED" name="ledEnable33">
-            <property name="minimumSize">
-             <size>
-              <width>20</width>
-              <height>20</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">qproperty-color: green;
-qproperty-off_color: red;
-qproperty-diameter: 100;</string>
-            </property>
-            <property name="diameter">
-             <number>70</number>
-            </property>
-            <property name="off_color" stdset="0">
-             <color>
-              <red>255</red>
-              <green>0</green>
-              <blue>0</blue>
-             </color>
-            </property>
-            <property name="currentstate" stdset="0">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3" colspan="3">
-           <widget class="ActionButton" name="btnDevice_On33">
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(138, 226, 52);</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>resources/vertical_line.png</normaloff>resources/vertical_line.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>40</width>
-              <height>40</height>
-             </size>
-            </property>
-            <property name="indicator_option" stdset="0">
-             <bool>true</bool>
-            </property>
-            <property name="indicator_status_option" stdset="0">
-             <bool>true</bool>
-            </property>
-            <property name="is_on_status" stdset="0">
-             <bool>true</bool>
-            </property>
-            <property name="machine_on_action" stdset="0">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="3" colspan="3">
-           <widget class="ActionButton" name="btnDevice_Off33">
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(239, 41, 41);</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>resources/circle.png</normaloff>resources/circle.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>40</width>
-              <height>40</height>
-             </size>
-            </property>
-            <property name="machine_on_action" stdset="0">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="6">
+          <item row="1" column="7">
            <spacer name="horizontalSpacer_17">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -170,37 +82,6 @@ qproperty-diameter: 100;</string>
              </size>
             </property>
            </spacer>
-          </item>
-          <item row="0" column="6">
-           <widget class="ActionButton" name="actionbutton">
-            <property name="text">
-             <string>Machine
-on</string>
-            </property>
-            <property name="indicator_option" stdset="0">
-             <bool>true</bool>
-            </property>
-            <property name="indicator_status_option" stdset="0">
-             <bool>true</bool>
-            </property>
-            <property name="is_estopped_status" stdset="0">
-             <bool>true</bool>
-            </property>
-            <property name="estop_action" stdset="0">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="3" colspan="2">
-           <widget class="LED" name="ledLoad_Is_On33">
-            <property name="color">
-             <color>
-              <red>252</red>
-              <green>233</green>
-              <blue>79</blue>
-             </color>
-            </property>
-           </widget>
           </item>
           <item row="0" column="1" rowspan="3">
            <layout class="QGridLayout" name="gridLayout_33">
@@ -234,6 +115,63 @@ on</string>
             </item>
            </layout>
           </item>
+          <item row="1" column="4" colspan="2">
+           <widget class="LED" name="ledLoad_Is_On33">
+            <property name="color">
+             <color>
+              <red>252</red>
+              <green>233</green>
+              <blue>79</blue>
+             </color>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="PushButton" name="btnDevice_On33"/>
+          </item>
+          <item row="2" column="4" colspan="3">
+           <widget class="ActionButton" name="btnDevice_Off33_2">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(239, 41, 41);</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>resources/circle.png</normaloff>resources/circle.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="machine_on_action" stdset="0">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="3">
+           <widget class="PushButton" name="btnDevice_Off33"/>
+          </item>
+          <item row="0" column="7">
+           <widget class="ActionButton" name="actionbutton">
+            <property name="text">
+             <string>Machine
+on</string>
+            </property>
+            <property name="indicator_option" stdset="0">
+             <bool>true</bool>
+            </property>
+            <property name="indicator_status_option" stdset="0">
+             <bool>true</bool>
+            </property>
+            <property name="is_estopped_status" stdset="0">
+             <bool>true</bool>
+            </property>
+            <property name="estop_action" stdset="0">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="2" rowspan="3">
            <spacer name="horizontalSpacer_16">
             <property name="orientation">
@@ -246,6 +184,74 @@ on</string>
              </size>
             </property>
            </spacer>
+          </item>
+          <item row="0" column="0" rowspan="3">
+           <widget class="LED" name="ledEnable33">
+            <property name="minimumSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">qproperty-color: green;
+qproperty-off_color: red;
+qproperty-diameter: 100;</string>
+            </property>
+            <property name="diameter">
+             <number>100</number>
+            </property>
+            <property name="off_color" stdset="0">
+             <color>
+              <red>255</red>
+              <green>0</green>
+              <blue>0</blue>
+             </color>
+            </property>
+            <property name="currentstate" stdset="0">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="6">
+           <widget class="LED" name="ledPos_Is_On33">
+            <property name="color">
+             <color>
+              <red>252</red>
+              <green>233</green>
+              <blue>79</blue>
+             </color>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4" colspan="3">
+           <widget class="ActionButton" name="btnDevice_On33_2">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(138, 226, 52);</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>resources/vertical_line.png</normaloff>resources/vertical_line.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="indicator_option" stdset="0">
+             <bool>true</bool>
+            </property>
+            <property name="indicator_status_option" stdset="0">
+             <bool>true</bool>
+            </property>
+            <property name="is_on_status" stdset="0">
+             <bool>true</bool>
+            </property>
+            <property name="machine_on_action" stdset="0">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -717,8 +723,8 @@ on</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>513</width>
-             <height>599</height>
+             <width>571</width>
+             <height>597</height>
             </rect>
            </property>
            <attribute name="label">
@@ -950,8 +956,8 @@ on</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>513</width>
-             <height>599</height>
+             <width>571</width>
+             <height>597</height>
             </rect>
            </property>
            <attribute name="label">
