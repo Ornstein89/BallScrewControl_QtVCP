@@ -66,6 +66,9 @@ font: 15pt bold;</string>
           <property name="text">
            <string>3.1 Измерение хода</string>
           </property>
+          <property name="margin">
+           <number>5</number>
+          </property>
          </widget>
         </item>
         <item row="1" column="1">

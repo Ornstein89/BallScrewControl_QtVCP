@@ -280,8 +280,8 @@ class HandlerClass:
         halpins_labels_match_precision1 = { # отображать с точностью 2 знака после запятой
         'geartorque_error_value-pin32':[self.w.lblGeartorque_Error_Value32, '%'],
         'geartorque_error_value_max32':[self.w.lblGeartorque_Error_Value_Max32, '%'],
-        'brakeorque_error_value-pin32':[self.w.lblBraketorque_Error_Value32, '%'],
-        'braketorque_error_value_max32':[self.w.lblBraketorque_Error_Value_Max32, '%'],
+        # убрали из ТЗ 22.03.2021 'braketorque_error_value-pin32':[self.w.lblBraketorque_Error_Value32, '%'],
+        # убрали из ТЗ 22.03.2021 'braketorque_error_value_max32':[self.w.lblBraketorque_Error_Value_Max32, '%'],
         'load_error_value-pin32':[self.w.lblLoad_Error_Value32, ''],
         'load_error_value_max-pin32':[self.w.lblLoad_Error_Value_Max32, ''],
         'load_temperature-pin32':[self.w.lblLoad_Temperature32, ''],
@@ -490,7 +490,7 @@ class HandlerClass:
         self.w.ledIs_Running_Cw32,
         self.w.ledGeartorque_Error32,#.setOffColor(Qt.red)
         self.w.ledGeartorque_Error32,#.setColor(Qt.green)
-        self.w.ledBraketorque_Error32,
+        # убрали из ТЗ 22.03.2021  self.w.ledBraketorque_Error32,
         self.w.ledEstop_Ext32,
         self.w.ledLoad_Is_On2_32,
         self.w.ledLoad_Alarm32,

@@ -66,6 +66,9 @@ font: 15pt bold;</string>
           <property name="text">
            <string>3.3 Измерение момента страгивания</string>
           </property>
+          <property name="margin">
+           <number>5</number>
+          </property>
          </widget>
         </item>
         <item row="1" column="2">
@@ -127,7 +130,18 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item row="0" column="3">
-           <widget class="PushButton" name="btnDevice_On33"/>
+           <widget class="PushButton" name="btnDevice_On33">
+            <property name="icon">
+             <iconset>
+              <normaloff>resources/vertical_line.png</normaloff>resources/vertical_line.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
+            </property>
+           </widget>
           </item>
           <item row="2" column="4" colspan="3">
            <widget class="ActionButton" name="btnDevice_Off33_2">
@@ -150,7 +164,18 @@ font: 15pt bold;</string>
            </widget>
           </item>
           <item row="2" column="3">
-           <widget class="PushButton" name="btnDevice_Off33"/>
+           <widget class="PushButton" name="btnDevice_Off33">
+            <property name="icon">
+             <iconset>
+              <normaloff>resources/circle.png</normaloff>resources/circle.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
+            </property>
+           </widget>
           </item>
           <item row="0" column="7">
            <widget class="ActionButton" name="actionbutton">
@@ -724,7 +749,7 @@ qproperty-diameter: 100;</string>
              <x>0</x>
              <y>0</y>
              <width>571</width>
-             <height>597</height>
+             <height>599</height>
             </rect>
            </property>
            <attribute name="label">
@@ -957,7 +982,7 @@ qproperty-diameter: 100;</string>
              <x>0</x>
              <y>0</y>
              <width>571</width>
-             <height>597</height>
+             <height>599</height>
             </rect>
            </property>
            <attribute name="label">

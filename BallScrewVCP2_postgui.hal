@@ -42,7 +42,7 @@ net bit2 => BallScrewVCP2.ledLoad_Is_On32 # для ТЕСТА
 net bit3 => BallScrewVCP2.ledPos_Is_On32 # для ТЕСТА
 
 # стандартная ActionButton net device_off <=  BallScrewVCP2.btnDevice_Off32        # BIT	OUT	Кнопка
-net load_active <=  BallScrewVCP2.Load_Active_On32 # для ТЕСТА
+net load_active <=  BallScrewVCP2.rbLoad_Active_On32 # для ТЕСТА
 
 #net enable => BallScrewVCP2.ledEnable32                  # BIT	IN	Цветовой индикатор (красный / зелёный)
 net  bit0 => BallScrewVCP2.ledEnable32 # для ТЕСТА
@@ -51,7 +51,7 @@ net  bit0 => BallScrewVCP2.ledEnable32 # для ТЕСТА
 net bit1 => BallScrewVCP2.ledGeartorque_Error32 # для ТЕСТА
 
 #net braketorque_error => BallScrewVCP2.ledBraketorque_Error32# BIT	IN	Цветовой индикатор (красный / зелёный)
-net bit2 => BallScrewVCP2.ledBraketorque_Error32 # для ТЕСТА
+#убрали из ТЗ 22.03.2021 net bit2 => BallScrewVCP2.ledBraketorque_Error32 # для ТЕСТА
 
 #net estop_ext => BallScrewVCP2.ledEstop_Ext32            # BIT	IN	Цветовой индикатор (красный / зелёный)
 net bit3 => BallScrewVCP2.ledEstop_Ext32 # для ТЕСТА
@@ -72,11 +72,11 @@ net sine0 => BallScrewVCP2.geartorque_error_value-pin32 # для ТЕСТА
 #net geartorque_error_value_max => BallScrewVCP2.geartorque_error_value_max32 # ограничение по длине имени пина 47 символов #	FLOAT	IN	Числовой индикатор
 net cosine0 => BallScrewVCP2.geartorque_error_value_max32 # для ТЕСТА
 
-#net brakeorque_error_value  => BallScrewVCP2.brakeorque_error_value-pin32    #
-net sine0 => BallScrewVCP2.brakeorque_error_value-pin32 # для ТЕСТА
+#убрали из ТЗ 22.03.2021 net braketorque_error_value  => BallScrewVCP2.braketorque_error_value-pin32    #
+#убрали из ТЗ 22.03.2021 net sine0 => BallScrewVCP2.braketorque_error_value-pin32 # для ТЕСТА
 
-#net braketorque_error_value_max => BallScrewVCP2.braketorque_error_value_max32 # ограничение по длине имени пина 47 символов #	FLOAT	IN	Числовой индикатор
-net cosine0 => BallScrewVCP2.braketorque_error_value_max32 # для ТЕСТА
+#убрали из ТЗ 22.03.2021 net braketorque_error_value_max => BallScrewVCP2.braketorque_error_value_max32 # ограничение по длине имени пина 47 символов #	FLOAT	IN	Числовой индикатор
+#убрали из ТЗ 22.03.2021 net cosine0 => BallScrewVCP2.braketorque_error_value_max32 # для ТЕСТА
 
 #net load_error_value => BallScrewVCP2.load_error_value-pin32                 #
 net sine0 => BallScrewVCP2.load_error_value-pin32 # для ТЕСТА
