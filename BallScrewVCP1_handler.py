@@ -310,16 +310,23 @@ class HandlerClass:
         STATUS.connect('state-estop', lambda w: (self.w.btnDevice_On31.setEnabled(False)))
         STATUS.connect('state-estop-reset', lambda w: (self.w.btnDevice_On31.setEnabled(not STATUS.machine_is_on())))
 
-        STATUS.connect('state-on', lambda w: (self.w.btnJog_Minus31.setEnabled(True),
-                                              self.w.btnJog_Plus31.setEnabled(True),
+        STATUS.connect('state-on', lambda s: (self.w.btnJog_Minus31.setEnabled(self.w.chkActivation31.isChecked()),
+                                              self.w.btnJog_Plus31.setEnabled(self.w.chkActivation31.isChecked()),
                                               self.w.btnLog_Trigger31.setEnabled(True),
-                                              self.w.btnDevice_On31.setEnabled(False) ))
+                                              self.w.btnDevice_On31.setEnabled(False),
+                                              self.w.chkActivation31.setEnabled(True)))
 
-        STATUS.connect('state-off', lambda w:(self.w.btnJog_Minus31.setEnabled(False),
+        STATUS.connect('state-off', lambda s:(self.w.btnJog_Minus31.setEnabled(False),
                                               self.w.btnJog_Plus31.setEnabled(False),
                                               self.w.btnLog_Trigger31.setEnabled(False),
-                                              self.w.btnDevice_On31.setEnabled(STATUS.estop_is_clear()) ))
+                                              self.w.btnDevice_On31.setEnabled(STATUS.estop_is_clear()),
+                                              self.w.chkActivation31.setEnabled(False)))
 
+        self.w.chkActivation31.stateChanged.connect(
+            lambda s:(self.w.btnJog_Minus31.setEnabled(STATUS.machine_is_on()
+                        and self.w.chkActivation31.isChecked()),
+                      self.w.btnJog_Plus31.setEnabled(STATUS.machine_is_on()
+                        and self.w.chkActivation31.isChecked())))
         self.w.ledPos_Alarm31.setOffColor(Qt.yellow)
         # add overlay to topWidget
         self.w.overlay = FocusOverlay(self.w)

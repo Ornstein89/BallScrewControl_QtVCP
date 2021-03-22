@@ -68,6 +68,7 @@ class HandlerClass:
     def __init__(self, halcomp,widgets,paths):
         self.hal = halcomp
         self.PATHS = paths
+        self.RODOS_PATH = "/home/mdrives/RODOS4/RODOS4"
         self.gcodes = GCodes()
         self.data = [[None for _ in range(10000)],[None for _ in range(10000)]]
         self.current_plot_n = 0

@@ -146,6 +146,7 @@ class HandlerClass:
         #lxcnc.mode(linuxcnc.MODE_MDI)
         
         # загрузка сохранённого файла
+        # https://www.forum.linuxcnc.org/41-guis/34454-python-open-ngc
         filename = "sample.ngc"
         #lxcnc.program_open(filename)
         #os.system("axis-remote --reload ")
