@@ -197,10 +197,13 @@ class BallScrew(QMainWindow):
             'TRAVEL' : self.spnTravel21,
             'NOM_VEL' : self.spnNom_Vel21,
             'NOM_ACCEL' : self.spnNom_Accel21},
+
             {'GEAR' : self.spnGear22,
             'NOM_VEL' : self.spnNom_Vel22,
             'BRAKE_TORQUE' : self.spnBrake_Torque22,
-            'DURATION' : self.spnDuration22},
+            'DURATION' : self.spnDuration22,
+            'EFFICIENCY' : self.spnEfficiency22},
+
             {'GEAR' : self.spnGear23,
             'PITCH' : self.spnPitch23,
             'NOM_DSP_IDLE' : self.spnNom_Dsp_Idle23,
@@ -211,6 +214,7 @@ class BallScrew(QMainWindow):
             'NOM_ACCEL_MEASURE' : self.spnNom_Accel_Measure23,
             'NOM_LOAD' : self.spnNom_Load23,
             'NOM_POS_MEASURE' : self.spnNom_Pos_Measure23},
+
             {'GEAR' : self.spnGear24,
             'PITCH' : self.spnPitch24,
             'NOM_TRAVEL' : self.spnNom_Travel24,

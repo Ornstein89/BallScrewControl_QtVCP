@@ -204,42 +204,6 @@ font: bold</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="0" rowspan="3">
-           <widget class="LED" name="ledEnable34">
-            <property name="minimumSize">
-             <size>
-              <width>20</width>
-              <height>20</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">qproperty-color: green;
-qproperty-off_color: red;
-qproperty-diameter: 100;
-qproperty-flashing: true;
-qproperty-flashRate: 200;</string>
-            </property>
-            <property name="diameter">
-             <number>100</number>
-            </property>
-            <property name="off_color" stdset="0">
-             <color>
-              <red>255</red>
-              <green>0</green>
-              <blue>0</blue>
-             </color>
-            </property>
-            <property name="currentstate" stdset="0">
-             <bool>false</bool>
-            </property>
-            <property name="flashing" stdset="0">
-             <bool>true</bool>
-            </property>
-            <property name="flashRate">
-             <number>200</number>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="1" rowspan="3">
            <layout class="QGridLayout" name="gridLayout_23">
             <item row="0" column="2">
@@ -388,6 +352,31 @@ on</string>
               <width>40</width>
               <height>40</height>
              </size>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" rowspan="3">
+           <widget class="LED" name="ledEnable34">
+            <property name="minimumSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">qproperty-color: green;
+qproperty-off_color: red;
+qproperty-diameter: 70;</string>
+            </property>
+            <property name="diameter">
+             <number>70</number>
+            </property>
+            <property name="off_color" stdset="0">
+             <color>
+              <red>255</red>
+              <green>0</green>
+              <blue>0</blue>
+             </color>
             </property>
            </widget>
           </item>
@@ -814,7 +803,7 @@ on</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>559</width>
+             <width>549</width>
              <height>599</height>
             </rect>
            </property>
@@ -1095,7 +1084,7 @@ on</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>559</width>
+             <width>544</width>
              <height>599</height>
             </rect>
            </property>

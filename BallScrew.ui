@@ -77,7 +77,7 @@ qproperty-diameter: 20;
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_8">
+        <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="1,0,5,0,1">
          <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">
@@ -301,7 +301,7 @@ qproperty-diameter: 20;
        <enum>QFrame::NoFrame</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="page1">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -682,9 +682,6 @@ font: 15pt bold;</string>
            <string>Кинематические параметры</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_8">
-           <item row="1" column="1">
-            <widget class="QDoubleSpinBox" name="spnNom_Vel22"/>
-           </item>
            <item row="0" column="1">
             <widget class="QDoubleSpinBox" name="spnGear22"/>
            </item>
@@ -699,6 +696,29 @@ font: 15pt bold;</string>
             <widget class="QLabel" name="label_28">
              <property name="text">
               <string>Передаточное число</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="spnNom_Vel22"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_25">
+             <property name="text">
+              <string>КПД</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QDoubleSpinBox" name="spnEfficiency22">
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="singleStep">
+              <double>0.050000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.900000000000000</double>
              </property>
             </widget>
            </item>

@@ -221,10 +221,10 @@ on</string>
             <property name="styleSheet">
              <string notr="true">qproperty-color: green;
 qproperty-off_color: red;
-qproperty-diameter: 100;</string>
+qproperty-diameter: 70;</string>
             </property>
             <property name="diameter">
-             <number>100</number>
+             <number>70</number>
             </property>
             <property name="off_color" stdset="0">
              <color>
@@ -981,7 +981,7 @@ qproperty-diameter: 100;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>571</width>
+             <width>541</width>
              <height>599</height>
             </rect>
            </property>

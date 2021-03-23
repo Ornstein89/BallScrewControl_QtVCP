@@ -27,7 +27,7 @@ net cosine0 =>  BallScrewVCP2.duration-pin32 # для ТЕСТА
 
 
 # net torque_actual T42_2.torque =>  BallScrewVCP2.torque_actual-pin32    # !!!ВЕРНУТЬ НА БОЕВОМ, ЗАКОММЕНТИРОВАЛ ДЛЯ ЗАПУСКА НА ВИРТ. МАШИНЕ
-#net cosine0 =>  BallScrewVCP2.torque_actual-pin32 # для ТЕСТА
+net cosine0 =>  BallScrewVCP2.torque_actual-pin32 # для ТЕСТА
 
 #net omega_actual =>  BallScrewVCP2.omega_actual-pin32     # FLOAT	IN	Числовой индикатор
 net sine0 =>  BallScrewVCP2.omega_actual-pin32 # для ТЕСТА
@@ -45,7 +45,7 @@ net bit3 => BallScrewVCP2.ledPos_Is_On32 # для ТЕСТА
 net load_active <=  BallScrewVCP2.rbLoad_Active_On32 # для ТЕСТА
 
 #net enable => BallScrewVCP2.ledEnable32                  # BIT	IN	Цветовой индикатор (красный / зелёный)
-net  bit0 => BallScrewVCP2.ledEnable32 # для ТЕСТА
+# net  bit0 => BallScrewVCP2.ledEnable32 # для ТЕСТА
 
 #net geartorque_error => BallScrewVCP2.ledGeartorque_Error32  # BIT	IN	Цветовой индикатор (красный / зелёный)
 net bit1 => BallScrewVCP2.ledGeartorque_Error32 # для ТЕСТА

@@ -516,10 +516,10 @@ font: 15pt bold;</string>
               <property name="styleSheet">
                <string notr="true">qproperty-color: green;
 qproperty-off_color: red;
-qproperty-diameter: 100;</string>
+qproperty-diameter: 70;</string>
               </property>
               <property name="diameter">
-               <number>100</number>
+               <number>70</number>
               </property>
               <property name="color">
                <color>
@@ -527,9 +527,6 @@ qproperty-diameter: 100;</string>
                 <green>0</green>
                 <blue>0</blue>
                </color>
-              </property>
-              <property name="flashing" stdset="0">
-               <bool>true</bool>
               </property>
              </widget>
             </item>

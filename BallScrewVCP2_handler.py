@@ -243,8 +243,8 @@ class HandlerClass:
             plotindex += 1
         self.plot_data_buffer[0] = self.plot_data_buffer[0][plotindex:]
         self.plot_data_buffer[1] = self.plot_data_buffer[1][plotindex:]
-        YMax = self.BRAKE_TORQUE*1.2
-        self.hLine.setValue(self.BRAKE_TORQUE) #TODO ближайшие кратные 1, 2 и 5
+        YMax = self.TORQUE_SET*1.2
+        self.hLine.setValue(self.TORQUE_SET) #TODO ближайшие кратные 1, 2 и 5
         #TODO обновлять YMax если график улетает в космос
 
         self.update_plot() # обновить график
@@ -270,8 +270,11 @@ class HandlerClass:
                             labelOpts={'position':0.95, 'color': (255,0,0),
                                        'movable': False, 'fill': (0, 0, 200, 100)})
         self.vLine.setValue(time_value)
-        self.w.lblTorque_Set32.setText("{:10.1f}".format(self.BRAKE_TORQUE)) # сигнал torque_set выведен из исп. 16 марта, вместо него BRAKE_TORQUE
-        self.hLine.setValue(self.BRAKE_TORQUE)
+        timedelta1 = datetime.timedelta(seconds=self.hal['time-pin32'])
+        self.vLine.label.format = '%02d' % (timedelta1.seconds // 60) + ':' + '%02d' % (timedelta1.seconds % 60)
+        self.w.lblTorque_Set32.setText("{:10.1f}".format(self.TORQUE_SET)) # сигнал torque_set выведен из исп. 16 марта, вместо него BRAKE_TORQUE
+        self.hLine.setValue(self.TORQUE_SET)
+        #TODO плашка для VLine на графике
         return
 
     def onUpdateFloatSignals(self, data):
@@ -519,15 +522,19 @@ class HandlerClass:
             labelOpts={'position':0.95, 'color': (255,0,0),
                        'movable': False, 'fill': (0, 0, 200, 100)})
         #self.hLine.setPos(pg.Point(0.0, 10.0))
-        YMax = self.BRAKE_TORQUE*1.2
-        self.hLine.setValue(self.BRAKE_TORQUE) #TODO ближайшие кратные 1, 2 и 5
+        YMax = self.TORQUE_SET*1.2
+        self.hLine.setValue(self.TORQUE_SET) #TODO ближайшие кратные 1, 2 и 5
         self.hLine.setZValue(1)
         self.w.plt32.setYRange(0.0, YMax)
         #self.w.plt32.enableAutoRange(axis = "y", enable = True)
         self.w.plt32.addItem(self.hLine, ignoreBounds=True)
 
         self.vLine = pg.InfiniteLine(angle=90, movable=False,
-            pen=pg.mkPen(color=QColor(Qt.blue), width = 2, style=Qt.DashDotLine))
+            pen=pg.mkPen(color=QColor(Qt.blue),
+            width = 2, style=Qt.DashDotLine),
+            label='00:00:00',
+            labelOpts={'position':0.95, 'color': (255,0,0),
+                       'movable': False, 'fill': (0, 0, 200, 100)})
         #self.vLine.setPos(pg.Point(1.0, 0.0))
         self.vLine.setValue(0.5)
         self.vLine.setZValue(1)
@@ -635,6 +642,9 @@ class HandlerClass:
         self.datalogfileFILENAME = INFO.INI.findall("BALLSCREWPARAMS", "LOGFILE")[0]
         self.MODEL = INFO.INI.findall("BALLSCREWPARAMS", "MODEL")[0]
         self.BRAKE_TORQUE = float(INFO.INI.findall("BALLSCREWPARAMS", "BRAKE_TORQUE")[0])
+        self.GEAR = float(INFO.INI.findall("BALLSCREWPARAMS", "GEAR")[0])
+        self.EFFICIENCY = float(INFO.INI.findall("BALLSCREWPARAMS", "EFFICIENCY")[0])
+        self.TORQUE_SET = self.BRAKE_TORQUE / (self.GEAR * self.EFFICIENCY)
         self.DATE = INFO.INI.findall("BALLSCREWPARAMS", "DATE")[0]
         self.PART = INFO.INI.findall("BALLSCREWPARAMS", "PART")[0]
         #self.datalogfile.write("Номе изделия: " + self.PART + "\n")
