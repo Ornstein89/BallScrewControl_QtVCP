@@ -9,7 +9,7 @@ from shutil import copyfile
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QPushButton
 from PyQt5.QtWidgets import QLayout, QSizePolicy
-from PyQt5.QtCore import QFile, QDateTime
+from PyQt5.QtCore import QFile, QDateTime, QTime
 
 # пакет для xlsx
 import openpyxl
@@ -186,9 +186,26 @@ class BallScrew(QMainWindow):
             if 'TYPE_'+str(n_form) not in self.config:
                 return
             val_string = self.config['TYPE_'+str(n_form)][key]
-            control.setMinimum(float(self.config['TYPE_'+str(n_form)][key+'_MIN']))
-            control.setMaximum(float(self.config['TYPE_'+str(n_form)][key+'_MAX']))
-            control.setValue(float(val_string))
+            print "*** set_default_values(): control.__class__.__name__ = ", control.__class__.__name__
+            if (control.__class__.__name__ == 'QTimeEdit'): # если QTimeEdit - перевести значения из секунд
+                print "*** val_string=", val_string
+
+                maxTime = QTime(0,0,0).addSecs(int(self.config['TYPE_'+str(n_form)][key+'_MAX']));
+                print "*** max time=", maxTime
+                control.setMaximumTime(maxTime)
+
+                minTime = QTime(0,0,0).addSecs(int(self.config['TYPE_'+str(n_form)][key+'_MIN']));
+                control.setMinimumTime(minTime)
+
+                tmpTime = QTime(0,0,0).addSecs(int(val_string))
+                control.setTime(tmpTime)
+                #control.setMinimum(float(self.config['TYPE_'+str(n_form)][key+'_MIN']))
+                #control.setMaximum(float(self.config['TYPE_'+str(n_form)][key+'_MAX']))
+                #control.setValue(float(val_string))
+            else: # если обычный QEdit
+                control.setMinimum(float(self.config['TYPE_'+str(n_form)][key+'_MIN']))
+                control.setMaximum(float(self.config['TYPE_'+str(n_form)][key+'_MAX']))
+                control.setValue(float(val_string))
 
     def initParamsGUIMatch(self):
         self.params_and_controls_dict = (
@@ -201,7 +218,7 @@ class BallScrew(QMainWindow):
             {'GEAR' : self.spnGear22,
             'NOM_VEL' : self.spnNom_Vel22,
             'BRAKE_TORQUE' : self.spnBrake_Torque22,
-            'DURATION' : self.spnDuration22,
+            'DURATION' : self.timeEdit, # self.spnDuration22,
             'EFFICIENCY' : self.spnEfficiency22},
 
             {'GEAR' : self.spnGear23,
@@ -236,9 +253,15 @@ class BallScrew(QMainWindow):
         # добавить значения из интерфейса в объект config
         config['BALLSCREWPARAMS'] = {}
         for key, control in self.params_and_controls_dict[n_form-1].items():
-            config['BALLSCREWPARAMS'][key] = str(control.value())
-            config['BALLSCREWPARAMS'][key+'_MIN'] = str(control.minimum())
-            config['BALLSCREWPARAMS'][key+'_MAX'] = str(control.maximum())
+            print "*** class name = ", control.__class__.__name__
+            if (control.__class__.__name__ == 'QTimeEdit'):
+                config['BALLSCREWPARAMS'][key] = str(QTime(0, 0, 0).secsTo(control.time()))
+                config['BALLSCREWPARAMS'][key+'_MIN'] = str(QTime(0, 0, 0).secsTo(control.minimumTime()))
+                config['BALLSCREWPARAMS'][key+'_MAX'] = str(QTime(0, 0, 0).secsTo(control.maximumTime()))
+            else:
+                config['BALLSCREWPARAMS'][key] = str(control.value())
+                config['BALLSCREWPARAMS'][key+'_MIN'] = str(control.minimum())
+                config['BALLSCREWPARAMS'][key+'_MAX'] = str(control.maximum())
         config['BALLSCREWPARAMS']['TYPE'] = str(n_form) #TODO
         config['BALLSCREWPARAMS']['DATE'] = self.DATE
         config['BALLSCREWPARAMS']['MODEL'] = "TODO_change_on_release" #self.MODEL

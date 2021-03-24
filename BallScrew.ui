@@ -731,9 +731,6 @@ font: 15pt bold;</string>
            <string>Параметры нагружения</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_9">
-           <item row="1" column="2">
-            <widget class="QDoubleSpinBox" name="spnDuration22"/>
-           </item>
            <item row="1" column="1">
             <widget class="QLabel" name="label_21">
              <property name="text">
@@ -741,8 +738,8 @@ font: 15pt bold;</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QDoubleSpinBox" name="spnBrake_Torque22"/>
+           <item row="1" column="3">
+            <widget class="QDoubleSpinBox" name="spnDuration22"/>
            </item>
            <item row="0" column="1">
             <widget class="QLabel" name="label_26">
@@ -750,6 +747,19 @@ font: 15pt bold;</string>
               <string>Момент нагрузки, Н*м</string>
              </property>
             </widget>
+           </item>
+           <item row="1" column="4">
+            <widget class="QTimeEdit" name="timeEdit">
+             <property name="currentSection">
+              <enum>QDateTimeEdit::SecondSection</enum>
+             </property>
+             <property name="displayFormat">
+              <string>mm:ss</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3" colspan="2">
+            <widget class="QDoubleSpinBox" name="spnBrake_Torque22"/>
            </item>
           </layout>
          </widget>

@@ -20,7 +20,7 @@ import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
 # пакеты GUI
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QFileDialog#, QHalLabel
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTime, QDateTime
 from PyQt5.QtGui import QColor
 
 #from qtvcp.widgets import FocusOverlay, HALLabel
@@ -229,18 +229,40 @@ class HandlerClass:
         if not self.initialized:
             return
 
+        if not self.TRIAL_IS_ON: # если  прожат stop - не отмечать точку на графике и не вести отсчёт времени
+            return
+
+         # если кнопки не зажаты - не отмечать точку на графике и не вести отсчёт времени
+        if (not self.w.btnStart_Cw32.isChecked()) and (not self.w.btnStart_Ccw32.isChecked()):
+            return
+
+
+        # получить текущее время и отобразить его на label
+        #DEBUG print "*** DATETIME_LAST = ", self.DATETIME_LAST
+        tmpDateTime = QDateTime.currentDateTime()
+        #DEBUG print "*** tmpDateTime = ", tmpDateTime
+        delta_seconds = self.DATETIME0.msecsTo(tmpDateTime)/1000.0 - self.PAUSE_TIME_MS/1000.0 # время от начала испытания
+        #DEBUG print "*** delta_seconds = ", delta_seconds
+        if delta_seconds >= self.DURATION:
+            self.onbtnStop32_clicked()
+
+        self.w.lblTime_Current32.setText('%02d' % (delta_seconds // 60) + ':' + '%02d' % (delta_seconds % 60))
+
+        # получить текущий момент и отобразить его на label
         torque_actual_value = self.hal['torque_actual-pin32'] # * 0.1 + 1.0
         self.w.lblTorque_Actual32.setText("{:10.1f}".format(torque_actual_value))
-        time_value = self.hal['time-pin32']
-        time_range = 15.0 #TODO заменить на сторонний сигнал
+        #time_value = self.hal['time-pin32']# заменить на delta_seconds
+        time_range = (self.w.tmedtTimeRange32.time().hour()*60*60 +
+                      self.w.tmedtTimeRange32.time().minute()*60 +
+                      self.w.tmedtTimeRange32.time().second()) # заменить на self.DURATION
 
-        # добавить точку
-        self.append_plot(time_value, torque_actual_value)
+        self.append_plot(delta_seconds, torque_actual_value)
 
         # оставить только точки в пределах [time_value-timerange, time_value]
         plotindex = 0
-        while self.plot_data_buffer[0][plotindex] < time_value - time_range:
+        while self.plot_data_buffer[0][plotindex] < (delta_seconds - time_range):
             plotindex += 1
+        #plotindex += 1
         self.plot_data_buffer[0] = self.plot_data_buffer[0][plotindex:]
         self.plot_data_buffer[1] = self.plot_data_buffer[1][plotindex:]
         YMax = self.TORQUE_SET*1.2
@@ -249,9 +271,9 @@ class HandlerClass:
 
         self.update_plot() # обновить график
         #self.vLine.setPos(pg.Point(0.0, time_value))
-        self.w.plt32.setXRange(time_value - time_range, time_value + time_range*0.1)
+        self.w.plt32.setXRange(delta_seconds - time_range, delta_seconds + time_range*0.1)
 
-        # автомасштаб
+        # автомасштаб по Y
         self.w.plt32.setYRange(min([0.0, min(self.plot_data_buffer[1])]),
                                max([YMax, max(self.plot_data_buffer[1])]))
         self.w.plt32.clear() # обязательно очищать, иначе утечка памяти, объекты копятся на графике
@@ -269,12 +291,14 @@ class HandlerClass:
                             label='{value:0.1f}',
                             labelOpts={'position':0.95, 'color': (255,0,0),
                                        'movable': False, 'fill': (0, 0, 200, 100)})
-        self.vLine.setValue(time_value)
+        self.vLine.setValue(delta_seconds)
         timedelta1 = datetime.timedelta(seconds=self.hal['time-pin32'])
-        self.vLine.label.format = '%02d' % (timedelta1.seconds // 60) + ':' + '%02d' % (timedelta1.seconds % 60)
+        self.vLine.label.format = '%02d' % (delta_seconds // 60) + ':' + '%02d' % (delta_seconds % 60)
         self.w.lblTorque_Set32.setText("{:10.1f}".format(self.TORQUE_SET)) # сигнал torque_set выведен из исп. 16 марта, вместо него BRAKE_TORQUE
         self.hLine.setValue(self.TORQUE_SET)
+        self.DATETIME_LAST = tmpDateTime
         #TODO плашка для VLine на графике
+
         return
 
     def onUpdateFloatSignals(self, data):
@@ -298,13 +322,13 @@ class HandlerClass:
             halpins_labels_match_precision1[halpin_name][0].setText("{:10.1f}".format(halpin_value)
                 +halpins_labels_match_precision1[halpin_name][1])
 
-        if(halpin_name == 'time-pin32'): #TODO заменить на 'time_current-pin32'
-            timedelta1 = datetime.timedelta(seconds=self.hal['time-pin32']) #TODO заменить на 'time_current-pin32'
-            self.w.lblTime_Current32.setText('%02d' % (timedelta1.seconds // 60) + ':' + '%02d' % (timedelta1.seconds % 60))
+        #if(halpin_name == 'time-pin32'): #TODO заменить на 'time_current-pin32'
+        #    timedelta1 = datetime.timedelta(seconds=self.hal['time-pin32']) #TODO заменить на 'time_current-pin32'
+        #    self.w.lblTime_Current32.setText('%02d' % (timedelta1.seconds // 60) + ':' + '%02d' % (timedelta1.seconds % 60))
             #TODO перевести на сигнал duration
             # timedelta2 = datetime.timedelta(seconds=self.hal['duration-pin32'])
             # self.w.lblDuration32.setText('%02d'%(timedelta2.seconds // 60) + ':' + '%02d'%(timedelta2.seconds % 60))
-            self.w.lblDuration32.setText('10:15')
+
 
         return
 
@@ -371,6 +395,58 @@ class HandlerClass:
         self.log_data_buffer = []
         return
 
+    def onbtnStart_Ccw32_clicked(self, state):
+        if state:
+            self.w.btnStart_Cw32.setChecked(False)
+            self.w.btnStart_Cw32.setEnabled(False)
+
+        #if self.w.btnStart_Ccw32.isChecked():
+        #    self.w.btnStart_Cw32.setChecked(False)
+        #if self.w.btnStart_Ccw32.isChecked():
+        #    self.w.btnStart_Cw32.setEnabled(False)
+        if state and (not self.TRIAL_IS_ON): # первое нажатие после Stop
+            self.DATETIME0 = QDateTime.currentDateTime() # системное время начала цикла испытаний
+            self.DATETIME_LAST = QDateTime.currentDateTime() #
+            self.PAUSE_TIME_MS = 0.0 # кол-во миллисекунд, которые испытания пробыли в паузе
+            self.w.plt32.clear()
+            self.plot_data_buffer = [[],[]]
+        if state and self.TRIAL_IS_ON: # если включение после паузы
+            pause_add_ms = self.DATETIME_LAST.msecsTo(QDateTime.currentDateTime())
+            print "*** pause_add_ms = ", pause_add_ms
+            self.PAUSE_TIME_MS = self.PAUSE_TIME_MS + pause_add_ms
+            print "*** self.PAUSE_TIME_MS = ", self.PAUSE_TIME_MS
+        self.TRIAL_IS_ON = True
+
+    def onbtnStart_Cw32_clicked(self, state):
+        if state:
+            self.w.btnStart_Ccw32.setChecked(False)
+            self.w.btnStart_Ccw32.setEnabled(False)
+        #if self.w.btnStart_Cw32.isChecked():
+        #    self.w.btnStart_Ccw32.setChecked(False)
+        #if self.w.btnStart_Cw32.isChecked():
+        #    self.w.btnStart_Ccw32.setEnabled(False)
+        if state and (not self.TRIAL_IS_ON):  # если включение из положения stop
+            self.DATETIME0 = QDateTime.currentDateTime()# системное время начала цикла испытаний
+            self.DATETIME_LAST = QDateTime.currentDateTime()
+            self.PAUSE_TIME_MS = 0.0 # кол-во миллисекунд, которые испытания пробыли в паузе
+            self.w.plt32.clear()
+            self.plot_data_buffer = [[],[]]
+        if state and self.TRIAL_IS_ON: # если включение после паузы
+            pause_add_ms = self.DATETIME_LAST.msecsTo(QDateTime.currentDateTime())
+            print "*** pause_add_ms = ", pause_add_ms
+            self.PAUSE_TIME_MS = self.PAUSE_TIME_MS + pause_add_ms
+            print "*** self.PAUSE_TIME_MS = ", self.PAUSE_TIME_MS
+        self.TRIAL_IS_ON = True
+
+    def onbtnStop32_clicked(self):
+        self.w.btnStart_Cw32.setChecked(False)
+        self.w.btnStart_Cw32.setEnabled(STATUS.machine_is_on())
+        self.w.btnStart_Ccw32.setChecked(False)
+        self.w.btnStart_Ccw32.setEnabled(STATUS.machine_is_on())
+        #self.DATETIME0 = QDateTime.currentDateTime(),
+        #self.DATETIME_LAST = QDateTime.currentDateTime(),
+        self.TRIAL_IS_ON = False
+
     def onRODOS_changed(self, state, pinname, number, turn_on):
         #INFO http://linuxcnc.org/docs/2.8/html/gui/qtvcp_code_snippets.html#_add_hal_pins_that_call_functions
 
@@ -428,6 +504,10 @@ class HandlerClass:
     #####################
 
     def init_gui(self):
+        self.DATETIME0 = QDateTime.currentDateTime()
+        self.DATETIME_LAST = QDateTime.currentDateTime()
+        self.PAUSE_TIME_MS = 0.0
+        self.TRIAL_IS_ON = False
         self.load_ini()
         self.init_led_colors()
 
@@ -451,24 +531,18 @@ class HandlerClass:
                                               self.w.btnStart_Cw32.setEnabled(True),
                                               self.w.btnDevice_On32.setEnabled(False)))
 
-        STATUS.connect('state-off', lambda _:(self.w.btnStart_Ccw32.setEnabled(False),
+        STATUS.connect('state-off', lambda _:(self.onbtnStop32_clicked(),
+                                              self.w.btnStart_Ccw32.setEnabled(False),
                                               self.w.btnStop32.setEnabled(False),
                                               self.w.btnStart_Cw32.setEnabled(False),
                                               self.w.btnDevice_On32.setEnabled(STATUS.estop_is_clear()) ))
 
-        self.w.btnStart_Ccw32.clicked.connect(
-            lambda x: (self.w.btnStart_Cw32.setChecked(False) if self.w.btnStart_Ccw32.isChecked() else None,
-                       self.w.btnStart_Cw32.setEnabled(False) if self.w.btnStart_Ccw32.isChecked() else None))
+        self.w.btnStart_Ccw32.clicked.connect(self.onbtnStart_Ccw32_clicked)
 
-        self.w.btnStart_Cw32.clicked.connect(lambda x: (
-            self.w.btnStart_Ccw32.setChecked(False) if self.w.btnStart_Cw32.isChecked() else None,
-            self.w.btnStart_Ccw32.setEnabled(False) if self.w.btnStart_Cw32.isChecked() else None ))
+        self.w.btnStart_Cw32.clicked.connect(self.onbtnStart_Cw32_clicked)
 
-        self.w.btnStop32.clicked.connect(lambda x: (self.w.btnStart_Cw32.setChecked(False),
-                                         self.w.btnStart_Cw32.setEnabled(STATUS.machine_is_on()),
-                                         self.w.btnStart_Ccw32.setChecked(False),
-                                         self.w.btnStart_Ccw32.setEnabled(STATUS.machine_is_on()) ))
-
+        self.w.btnStop32.clicked.connect(self.onbtnStop32_clicked)
+        self.w.lblDuration32.setText(QTime(0,0,0).addSecs(self.DURATION).toString("mm:ss"))
         #STATUS.connect('state-estop-reset', lambda w: self._flip_state(False))
         #self.w.lblTest = QHalLabel()
         #self.w.lblTest.setText("!!!HAL Label!!!")
@@ -495,11 +569,11 @@ class HandlerClass:
         self.w.ledGeartorque_Error32,#.setColor(Qt.green)
         # убрали из ТЗ 22.03.2021  self.w.ledBraketorque_Error32,
         self.w.ledEstop_Ext32,
-        self.w.ledLoad_Is_On2_32,
+        # убрали из ТЗ 22.03.2021 self.w.ledLoad_Is_On2_32,
         self.w.ledLoad_Alarm32,
         self.w.ledLoad_Error32,
         self.w.ledLoad_Overheat32,
-        self.w.ledPos_Is_On_2_32,
+        # убрали из ТЗ 22.03.2021 self.w.ledPos_Is_On_2_32,
         self.w.ledPos_Alarm32,
         self.w.ledPos_Overheat32)
 
@@ -645,6 +719,7 @@ class HandlerClass:
         self.GEAR = float(INFO.INI.findall("BALLSCREWPARAMS", "GEAR")[0])
         self.EFFICIENCY = float(INFO.INI.findall("BALLSCREWPARAMS", "EFFICIENCY")[0])
         self.TORQUE_SET = self.BRAKE_TORQUE / (self.GEAR * self.EFFICIENCY)
+        self.DURATION = int(INFO.INI.findall("BALLSCREWPARAMS", "DURATION")[0])
         self.DATE = INFO.INI.findall("BALLSCREWPARAMS", "DATE")[0]
         self.PART = INFO.INI.findall("BALLSCREWPARAMS", "PART")[0]
         #self.datalogfile.write("Номе изделия: " + self.PART + "\n")
