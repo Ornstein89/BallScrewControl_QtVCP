@@ -12,7 +12,7 @@
 # **** IMPORT SECTION **** #
 ############################
 # стандартные пакеты
-import sys, os, configparser
+import sys, os, configparser, subprocess
 
 # пакеты linuxcnc
 import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html

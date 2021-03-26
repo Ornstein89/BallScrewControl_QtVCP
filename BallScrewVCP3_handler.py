@@ -12,7 +12,7 @@
 # **** IMPORT SECTION **** #
 ############################
 # стандартные пакеты
-import sys, os, configparser
+import sys, os, configparser, subprocess
 import codecs
 import re
 

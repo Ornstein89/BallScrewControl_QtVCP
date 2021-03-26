@@ -12,7 +12,7 @@
 # **** IMPORT SECTION **** #
 ############################
 # стандартные пакеты
-import sys, os, configparser, datetime, time
+import sys, os, configparser, datetime, time, subprocess
 
 # пакеты linuxcnc
 import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
@@ -111,21 +111,32 @@ class HandlerClass:
         #fov.show()
 
     def processed_key_event__(self,receiver,event,is_pressed,key,code,shift,cntrl):
-        if event.key() == Qt.Key_Left and self.w.btnStart_Ccw32.isEnabled():
+        print "*** processed_key_event__: event.key() = ", event.key(), ", is_pressed = ", is_pressed
+        if (event.key() == Qt.Key_Left) and self.w.btnStart_Ccw32.isEnabled():
             if is_pressed:
                 self.w.btnStart_Ccw32.setChecked(True)
             else:
                 self.w.btnStart_Ccw32.setChecked(False)
-                self.w.btnStart_Ccw32.setEnabled(False)
             #print '*** Qt.Key_Left'
 
-        if event.key() == Qt.Key_Right and self.w.btnStart_Cw32.isEnabled():
-            if is_pressed:
-                self.w.btnStart_Cw32.setChecked(True)
-            else:
-                self.w.btnStart_Cw32.setChecked(False)
-                self.w.btnStart_Cw32.setEnabled(False)
-            #print '*** Qt.Key_Right'
+        if (event.key() == Qt.Key_Right) and self.w.btnStart_Cw32.isEnabled():
+            if is_pressed and (not self.w.btnStart_Cw32.isChecked()):
+                print "*** 1"
+                self.w.btnStart_Cw32.setChecked(True) #TODO вместо setChecked слот, имитирующий нажатие
+                self.w.onbtnStart_Cw32_clicked(True)
+                #self.w.btnStart_Cw32.pressed()
+                #self.w.btnStart_Cw32.click()
+                #self.w.btnStart_Cw32.animateClick()
+#            elif (not is_pressed) and self.w.btnStart_Cw32.isChecked():
+#                print "*** 2"
+#                self.w.btnStart_Cw32.setChecked(False) #TODO вместо setChecked слот, имитирующий нажатие
+#                self.w.onbtnStart_Cw32_clicked(False)
+#                #self.w.btnStart_Cw32.released()
+#                #self.w.btnStart_Cw32.click()
+#                #self.w.btnStart_Cw32.animateClick()
+#                #print '*** Qt.Key_Right'
+        event.accept()
+        return True
 
     ########################
     # CALLBACKS FROM STATUS#
@@ -197,14 +208,14 @@ class HandlerClass:
 
         return
 
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Left:
-            print '*** Qt.Key_Left'
-            return
-        if event.key() == Qt.Key_Right:
-            print '*** Qt.Key_Right'
-            return
-        return
+#    def keyPressEvent(self, event):
+#        if event.key() == Qt.Key_Left:
+#            print '*** Qt.Key_Left'
+#            return
+#        if event.key() == Qt.Key_Right:
+#            print '*** Qt.Key_Right'
+#            return
+#        return
 
     def on_state_on(self, data):
         print "*** on_state_on, data=", data
@@ -417,14 +428,14 @@ class HandlerClass:
             print "*** self.PAUSE_TIME_MS = ", self.PAUSE_TIME_MS
         self.TRIAL_IS_ON = True
 
-    def onbtnStart_Cw32_clicked(self, state):
+    def onl_clicked(self, state):
         if state:
             self.w.btnStart_Ccw32.setChecked(False)
             self.w.btnStart_Ccw32.setEnabled(False)
-        #if self.w.btnStart_Cw32.isChecked():
-        #    self.w.btnStart_Ccw32.setChecked(False)
-        #if self.w.btnStart_Cw32.isChecked():
-        #    self.w.btnStart_Ccw32.setEnabled(False)
+            #if self.w.btnStart_Cw32.isChecked():
+            #    self.w.btnStart_Ccw32.setChecked(False)
+            #if self.w.btnStart_Cw32.isChecked():
+            #    self.w.btnStart_Ccw32.setEnabled(False)
         if state and (not self.TRIAL_IS_ON):  # если включение из положения stop
             self.DATETIME0 = QDateTime.currentDateTime()# системное время начала цикла испытаний
             self.DATETIME_LAST = QDateTime.currentDateTime()
@@ -449,7 +460,7 @@ class HandlerClass:
 
     def onRODOS_changed(self, state, pinname, number, turn_on):
         #INFO http://linuxcnc.org/docs/2.8/html/gui/qtvcp_code_snippets.html#_add_hal_pins_that_call_functions
-
+        print "*** onRODOS_changed() : pinname=",pinname, ", number=", number, ", turn_on=", turn_on
         if not self.hal[pinname]: # исключить обратный фронт сигнала
             print "*** onRODOS_changed, нисходящий фронт, return"
             return
@@ -562,7 +573,9 @@ class HandlerClass:
 
     def init_led_colors(self):
         # настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
-        diodes_redgreen = (
+
+        diodes_redgreen = ( # набор LED, для которых надо установить красный/зелёный цвета
+        self.w.ledEnable32,
         self.w.ledIs_Running_Ccw32,
         self.w.ledIs_Running_Cw32,
         self.w.ledGeartorque_Error32,#.setOffColor(Qt.red)
@@ -578,7 +591,7 @@ class HandlerClass:
         self.w.ledPos_Overheat32)
 
         for led in diodes_redgreen:
-            led.setColor(Qt.green)
+            led.setColor(Qt.red)
             led.setOffColor(Qt.green)
 
     def init_plot(self):

@@ -124,7 +124,8 @@ class HandlerClass:
                 # self.w.btnJog_Plus31.setCheckable(False)
 
             #print '*** Qt.Key_Right'
-            # event.accept()
+        event.accept()
+        return True
 
     def closeEvent(self, event):
         self.w.overlay.text='Выключить?'
@@ -272,7 +273,7 @@ class HandlerClass:
         # self.w.btnDevice_On31.setChecked(False)
 
     def keyPressEvent(self, event):
-        #TODO
+        #TODO какой путь обработки нажатий выбрать?
         if event.key() == Qt.Key_Left:
             print '*** Qt.Key_Left'
             return

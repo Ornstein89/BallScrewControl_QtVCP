@@ -195,9 +195,16 @@ qproperty-diameter: 70;</string>
               </property>
               <property name="color">
                <color>
-                <red>255</red>
-                <green>0</green>
-                <blue>0</blue>
+                <red>239</red>
+                <green>41</green>
+                <blue>41</blue>
+               </color>
+              </property>
+              <property name="off_color" stdset="0">
+               <color>
+                <red>239</red>
+                <green>41</green>
+                <blue>41</blue>
                </color>
               </property>
              </widget>
@@ -338,28 +345,7 @@ qproperty-diameter: 70;</string>
              </widget>
             </item>
             <item row="1" column="0">
-             <widget class="LED" name="ledGeartorque_Error32">
-              <property name="color">
-               <color>
-                <red>255</red>
-                <green>0</green>
-                <blue>0</blue>
-               </color>
-              </property>
-              <property name="off_color" stdset="0">
-               <color>
-                <red>255</red>
-                <green>0</green>
-                <blue>0</blue>
-               </color>
-              </property>
-              <property name="currentstate" stdset="0">
-               <bool>true</bool>
-              </property>
-              <property name="flashing" stdset="0">
-               <bool>false</bool>
-              </property>
-             </widget>
+             <widget class="LED" name="ledGeartorque_Error32"/>
             </item>
             <item row="6" column="1">
              <widget class="QLabel" name="label_122">
@@ -425,11 +411,7 @@ qproperty-diameter: 70;</string>
              </widget>
             </item>
             <item row="2" column="0">
-             <widget class="LED" name="ledEstop_Ext32">
-              <property name="currentstate" stdset="0">
-               <bool>true</bool>
-              </property>
-             </widget>
+             <widget class="LED" name="ledEstop_Ext32"/>
             </item>
             <item row="3" column="1">
              <widget class="QLabel" name="label_120">
