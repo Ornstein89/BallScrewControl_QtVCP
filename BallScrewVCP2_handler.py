@@ -428,7 +428,7 @@ class HandlerClass:
             print "*** self.PAUSE_TIME_MS = ", self.PAUSE_TIME_MS
         self.TRIAL_IS_ON = True
 
-    def onl_clicked(self, state):
+    def onbtnStart_Cw32_clicked(self, state):
         if state:
             self.w.btnStart_Ccw32.setChecked(False)
             self.w.btnStart_Ccw32.setEnabled(False)
@@ -575,24 +575,30 @@ class HandlerClass:
         # настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
 
         diodes_redgreen = ( # набор LED, для которых надо установить красный/зелёный цвета
-        self.w.ledEnable32,
-        self.w.ledIs_Running_Ccw32,
-        self.w.ledIs_Running_Cw32,
-        self.w.ledGeartorque_Error32,#.setOffColor(Qt.red)
-        self.w.ledGeartorque_Error32,#.setColor(Qt.green)
-        # убрали из ТЗ 22.03.2021  self.w.ledBraketorque_Error32,
-        self.w.ledEstop_Ext32,
-        # убрали из ТЗ 22.03.2021 self.w.ledLoad_Is_On2_32,
-        self.w.ledLoad_Alarm32,
-        self.w.ledLoad_Error32,
-        self.w.ledLoad_Overheat32,
-        # убрали из ТЗ 22.03.2021 self.w.ledPos_Is_On_2_32,
-        self.w.ledPos_Alarm32,
-        self.w.ledPos_Overheat32)
+            self.w.ledGeartorque_Error32,#.setOffColor(Qt.red)
+            self.w.ledGeartorque_Error32,#.setColor(Qt.green)
+            # убрали из ТЗ 22.03.2021  self.w.ledBraketorque_Error32,
+            self.w.ledEstop_Ext32,
+            # убрали из ТЗ 22.03.2021 self.w.ledLoad_Is_On2_32,
+            self.w.ledLoad_Alarm32,
+            self.w.ledLoad_Error32,
+            self.w.ledLoad_Overheat32,
+            # убрали из ТЗ 22.03.2021 self.w.ledPos_Is_On_2_32,
+            self.w.ledPos_Alarm32,
+            self.w.ledPos_Overheat32)
+
+        diodes_greenred = (  # инверсия
+            self.w.ledIs_Running_Cw32,
+            self.w.ledIs_Running_Ccw32,
+            self.w.ledEnable32)
 
         for led in diodes_redgreen:
             led.setColor(Qt.red)
             led.setOffColor(Qt.green)
+
+        for led in diodes_greenred: # инверсия
+            led.setColor(Qt.green)
+            led.setOffColor(Qt.red)
 
     def init_plot(self):
         self.w.plt32.setBackground('w')
