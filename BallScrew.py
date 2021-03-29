@@ -10,6 +10,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QPushButton
 from PyQt5.QtWidgets import QLayout, QSizePolicy
 from PyQt5.QtCore import QFile, QDateTime, QTime
+from PyQt5.QtGui import QIcon
 
 # пакет для xlsx
 import openpyxl
@@ -29,6 +30,7 @@ class BallScrew(QMainWindow):
     def __init__(self):
         super(BallScrew, self).__init__()
         uic.loadUi("BallScrew.ui", self)
+        self.setWindowIcon(QIcon("BallScrewControlIcon.png"))
         self.initParamsGUIMatch()
         self.loadIni()
         self.initGUI()
@@ -250,6 +252,7 @@ class BallScrew(QMainWindow):
         config = configparser.ConfigParser(strict=False) # strict=False - разрешение повторов имени ключа
         config.optionxform = str # имена ключей не будут приведены к нижнему регистру
         #config.read('BallScrewVCP_template.ini', encoding='utf-8')
+
         # добавить значения из интерфейса в объект config
         config['BALLSCREWPARAMS'] = {}
         for key, control in self.params_and_controls_dict[n_form-1].items():
@@ -264,10 +267,22 @@ class BallScrew(QMainWindow):
                 config['BALLSCREWPARAMS'][key+'_MAX'] = str(control.maximum())
         config['BALLSCREWPARAMS']['TYPE'] = str(n_form) #TODO
         config['BALLSCREWPARAMS']['DATE'] = self.DATE
-        config['BALLSCREWPARAMS']['MODEL'] = "TODO_change_on_release" #self.MODEL
+        config['BALLSCREWPARAMS']['MODEL'] = "TODO_need_for_Excel_file" #self.MODEL
         config['BALLSCREWPARAMS']['PART'] = self.PART
         print '***self.LOGFILE=', self.LOGFILE
         config['BALLSCREWPARAMS']['LOGFILE']= self.LOGFILE # "TempLogFile.log" # TODO вызывает ошибку строка в utf-8 с кириллицей
+
+        rodos4_numbers_for_forms = [
+            [0b01000,   # форма 3.1, перпендикулярный
+             0b10000],  # форма 3.1, соосный
+            [0b101000,  # форма 3.2, перпендикулярный
+             0b110000], # форма 3.2, соосный
+            [0b001010,  # форма 3.3, перпендикулярный
+             0b010010], # форма 3.3, соосный
+            [0b001010,  # форма 3.4, перпендикулярный
+             0b010010]] # форма 3.4, соосный
+        config['BALLSCREWPARAMS']['RODOS4_NUMBER']= (
+            str(rodos4_numbers_for_forms[n_form-1][self.DRIVE]))
 
         replacements = [['{{MACHINE}}','BallScrewVCP' + str(n_form)],
             ['{{VCP}}', 'BallScrewVCP' + str(n_form)],

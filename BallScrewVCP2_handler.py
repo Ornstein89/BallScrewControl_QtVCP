@@ -21,7 +21,7 @@ import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QFileDialog#, QHalLabel
 from PyQt5.QtCore import Qt, QTime, QDateTime
-from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QColor, QIcon
 
 #from qtvcp.widgets import FocusOverlay, HALLabel
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
@@ -515,6 +515,7 @@ class HandlerClass:
     #####################
 
     def init_gui(self):
+        self.w.setWindowIcon(QIcon("BallScrewControlIcon.png"))
         self.DATETIME0 = QDateTime.currentDateTime()
         self.DATETIME_LAST = QDateTime.currentDateTime()
         self.PAUSE_TIME_MS = 0.0

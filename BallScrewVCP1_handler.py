@@ -19,8 +19,9 @@ import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
 
 # пакеты GUI
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import QFileDialog
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QFileDialog, QMessageBox
+from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtGui import QIcon
 
 #from qtvcp.widgets import FocusOverlay
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
@@ -208,6 +209,28 @@ class HandlerClass:
         #self.sldVelocity31float = self.hal.newpin('sldVelocity31float', hal.HAL_FLOAT, hal.HAL_OUT)
         #self.sldAcceleration31float = self.hal.newpin('sldAcceleration31float', hal.HAL_FLOAT, hal.HAL_OUT)
 
+        # отдельно создаётся пин на обнуление позиции, т.к. он срабатывает
+        # после подтверждения в диалоге
+
+        self.reset_position_pin = self.hal.newpin('reset_position-pin31', hal.HAL_BIT, hal.HAL_OUT)
+        return
+
+    def onBtnResetPosition31(self):
+        qm = QMessageBox()
+        qm.question(self.w,'Подтверждение',
+            'Вы уверены, что хотите обнулить показания?', qm.Yes | qm.No)
+
+        if qm.Yes:
+            print "*** qm.Yes"
+            #self.reset_position_pin = True
+            self.hal['reset_position-pin31'] = True
+            QTimer.singleShot(500, lambda: self.setResetPositionPin(False))
+        return
+
+    def setResetPositionPin(self, pin_value):
+        print "***setResetPositionPin()"
+        # из-за невозможности присваивания в Lambda пришлось писать такую функцию
+        self.hal['reset_position-pin31'] = pin_value
         return
 
     def onBtnSaveState31(self):
@@ -286,6 +309,7 @@ class HandlerClass:
     # GENERAL FUNCTIONS #
     #####################
     def init_gui(self):
+        self.w.setWindowIcon(QIcon("BallScrewControlIcon.png"))
         # настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
         diodes_redgreen = ( self.w.ledPos_Alarm31, )
 

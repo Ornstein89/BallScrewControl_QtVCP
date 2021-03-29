@@ -23,7 +23,7 @@ import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QFileDialog, QMessageBox, QLabel
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QColor, QPixmap
+from PyQt5.QtGui import QColor, QPixmap, QIcon
 
 #from qtvcp.widgets import FocusOverlay
 from qtvcp.widgets.mdi_line import MDILine as MDI_WIDGET
@@ -386,6 +386,7 @@ class HandlerClass:
     # GENERAL FUNCTIONS #
     #####################
     def init_gui(self):
+        self.w.setWindowIcon(QIcon("BallScrewControlIcon.png"))
         self.load_ini()
         self.init_led_colors()
         #self.w.lblTest = QHalLabel()

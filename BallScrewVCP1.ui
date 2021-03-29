@@ -342,9 +342,6 @@ font: 15pt bold;</string>
         </item>
         <item row="2" column="3" rowspan="2">
          <layout class="QGridLayout" name="gridLayout_11">
-          <item row="0" column="1">
-           <widget class="LED" name="ledPos_Alarm31"/>
-          </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_52">
             <property name="text">
@@ -352,7 +349,10 @@ font: 15pt bold;</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="0" colspan="2" alignment="Qt::AlignHCenter">
+          <item row="0" column="1">
+           <widget class="LED" name="ledPos_Alarm31"/>
+          </item>
+          <item row="2" column="0" colspan="2" alignment="Qt::AlignHCenter">
            <widget class="PushButton" name="btnLog_Trigger31">
             <property name="enabled">
              <bool>false</bool>
@@ -364,7 +364,28 @@ font: 15pt bold;</string>
              </sizepolicy>
             </property>
             <property name="text">
-             <string>Сохранить показание</string>
+             <string>Сохранить
+показание</string>
+            </property>
+            <property name="indicator_HAL_pin_option" stdset="0">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="2" alignment="Qt::AlignHCenter">
+           <widget class="PushButton" name="btnResetPosition31">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Обнулить
+положение</string>
             </property>
             <property name="indicator_HAL_pin_option" stdset="0">
              <bool>false</bool>
@@ -574,8 +595,8 @@ active_0</string>
    <slot>onBtnOn31()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>897</x>
-     <y>91</y>
+     <x>950</x>
+     <y>121</y>
     </hint>
     <hint type="destinationlabel">
      <x>951</x>
@@ -590,12 +611,28 @@ active_0</string>
    <slot>onBtnOff31()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>897</x>
-     <y>186</y>
+     <x>950</x>
+     <y>200</y>
     </hint>
     <hint type="destinationlabel">
      <x>693</x>
      <y>2</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnResetPosition31</sender>
+   <signal>clicked()</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onBtnResetPosition31()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>916</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>543</x>
+     <y>1</y>
     </hint>
    </hints>
   </connection>
@@ -614,5 +651,6 @@ active_0</string>
   <slot>onBtnTest()</slot>
   <slot>onBtnOn31()</slot>
   <slot>onBtnOff31()</slot>
+  <slot>onBtnResetPosition31()</slot>
  </slots>
 </ui>

@@ -301,7 +301,7 @@ qproperty-diameter: 20;
        <enum>QFrame::NoFrame</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page1">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -751,7 +751,7 @@ font: 15pt bold;</string>
            <item row="1" column="4">
             <widget class="QTimeEdit" name="timeEdit">
              <property name="currentSection">
-              <enum>QDateTimeEdit::SecondSection</enum>
+              <enum>QDateTimeEdit::MinuteSection</enum>
              </property>
              <property name="displayFormat">
               <string>mm:ss</string>
