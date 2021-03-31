@@ -169,12 +169,12 @@ class HandlerClass:
         }
 
         self.VCP_halpins_bit = {
-            'active_0-pin':[None,self.onActive0Changed],
-            'active_1-pin':[None,self.onActive1Changed],
-            'active_2-pin':[None,self.onActive2Changed],
-            'active_3-pin':[None,self.onActive3Changed],
-            'active_4-pin':[None,self.onActive4Changed],
-            'active_5-pin':[None,self.onActive5Changed],
+            'active_0-pin':[None, self.guiActivity],
+            'active_1-pin':[None, self.guiActivity],
+            'active_2-pin':[None, self.guiActivity],
+            'active_3-pin':[None, self.guiActivity],
+            'active_4-pin':[None, self.guiActivity],
+            'active_5-pin':[None, self.guiActivity],
 
             'RODOS4_1_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_1_on', 1, True)],
             'RODOS4_2_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_2_on', 2, True)],
@@ -207,12 +207,7 @@ class HandlerClass:
             tmp_pin = self.hal.newpin(key, hal.HAL_BIT, hal.HAL_IN)
             self.VCP_halpins_bit[key][0] = tmp_pin
             tmp_pin.value_changed.connect(self.VCP_halpins_bit[key][1])
-        #self.hal['active_0-pin'].value_changed.connect(self.onActive0Changed)
-        #self.hal['active_1-pin'].value_changed.connect(self.onActive1Changed)
-        #self.hal['active_2-pin'].value_changed.connect(self.onActive2Changed)
-        #self.hal['active_3-pin'].value_changed.connect(self.onActive3Changed)
-        #self.hal['active_4-pin'].value_changed.connect(self.onActive4Changed)
-        #self.hal['active_5-pin'].value_changed.connect(self.onActive5Changed)
+
         return
         
     def onBtnTempShow31(self):
@@ -313,46 +308,73 @@ class HandlerClass:
         linuxcnc.command().mdi(self.w.mdiline33.text())
         pass
 
-    def onActive0Changed(self, data):
+    def guiActivity(self):
         self.w.btnHome33.setEnabled(self.hal['active_0-pin'] and STATUS.machine_is_on())
 
+        controls_on_active1 = [ # список элементов, которые становятся активны
+            self.w.btnJog_Plus33,
+            self.w.btnJog_Minus33,
+            self.w.chkDspModeHH_33,
+            self.w.chkDspModeIZM_33]
+        for control in controls_on_active1:
+            control.setEnabled(self.hal['active_1-pin'] and STATUS.machine_is_on())
+
+        self.w.chkLoad_Active_On33.setEnabled(self.hal['active_2-pin'] and STATUS.machine_is_on())
+        self.w.chkLoad_Active_Off33.setEnabled(self.hal['active_2-pin'] and STATUS.machine_is_on())
+
+        controls_on_active3 = [ # список элементов, которые становятся активны
+            self.w.sldDsp_Idle33,
+            self.w.spnDsp_Idle33,
+
+            self.w.sldVel_Idle33,
+            self.w.spnVel_Idle33,
+
+            self.w.sldAccel_Idle33,
+            self.w.spnAccel_Idle33,
+
+            self.w.sldLoad33,
+            self.w.spnLoad33,
+
+            self.w.sldPos_Measure33,
+            self.w.spnPos_Measure33,
+
+            self.w.sldDsp_Measure33,
+            self.w.spnDsp_Measure33,
+
+            self.w.sldVel_Measure33,
+            self.w.spnVel_Measure33,
+
+            self.w.sldAccel_Measure33,
+            self.w.spnAccel_Measure33,
+
+            self.w.btnSaveGCode33]
+
+        for control in controls_on_active3:
+            control.setEnabled(self.hal['active_3-pin'] and STATUS.machine_is_on())
+
+        controls_on_active4 = [
+            self.w.mdiline33, self.w.btnCommand_Run33]
+        for control in controls_on_active4:
+            control.setEnabled(self.hal['active_4-pin'] and STATUS.machine_is_on())
+
+        controls_on_active5 = [
+            self.w.gcode_editor33, self.w.btnLoadGCode33, self.w.btnProgram_Run33]
+        for control in controls_on_active5:
+            control.setEnabled(self.hal['active_5-pin'] and STATUS.machine_is_on())
+        return
+
+    def onActive0Changed(self, data):
+        pass
+
     def onActive1Changed(self, data):
-        self.w.btnJog_Plus33.setEnabled(self.hal['active_1-pin'] and STATUS.machine_is_on())
-        self.w.btnJog_Minus33.setEnabled(self.hal['active_1-pin'] and STATUS.machine_is_on())
+        pass
+
 
     def onActive2Changed(self, data):
-        self.w.chkDsp_Mode33.setEnabled(self.hal['active_2-pin'] and STATUS.machine_is_on())
-        self.w.chkLoad_Active33.setEnabled(self.hal['active_2-pin'] and STATUS.machine_is_on())
+        pass
 
     def onActive3Changed(self, data):
-        controls = [self.w.sldDsp_Idle33,
-        self.w.spnDsp_Idle33,
-
-        self.w.sldVel_Idle33,
-        self.w.spnVel_Idle33,
-
-        self.w.sldAccel_Idle33,
-        self.w.spnAccel_Idle33,
-
-        self.w.sldLoad33,
-        self.w.spnLoad33,
-
-        self.w.sldPos_Measure33,
-        self.w.spnPos_Measure33,
-
-        self.w.sldDsp_Measure33,
-        self.w.spnDsp_Measure33,
-
-        self.w.sldVel_Measure33,
-        self.w.spnVel_Measure33,
-
-        self.w.sldAccel_Measure33,
-        self.w.spnAccel_Measure33,
-        
-        self.w.btnSaveGCode33]
-
-        for control in controls:
-            control.setEnabled(self.hal['active_3-pin'] and STATUS.machine_is_on())
+        pass
 
 
     def onActive4Changed(self, data):
@@ -394,18 +416,37 @@ class HandlerClass:
         # self.w.gridLayout_29.addWidget(self.w.lblTest, 3, 2)
         self.init_plot()
 
+        STATUS.connect('state-estop',
+                        lambda w: (self.w.btnDevice_On33.setEnabled(False)))
+        STATUS.connect('state-estop-reset',
+                        lambda w: (self.w.btnDevice_On33.setEnabled(not STATUS.machine_is_on())))
+
+        self.w.btnDevice_On33.clicked.connect(lambda x: ACTION.SET_MACHINE_STATE(True))
+        self.w.btnDevice_Off33.clicked.connect(lambda x: ACTION.SET_MACHINE_STATE(False))
+
+        # сделать чекбоксы исключающими
+        #self.w.chkDspModeHH_33..connect(self.w.chkDspModeIZM_33.setChecked(not self.w.chkDspModeHH_33.isChecked()))
+
+        STATUS.connect('state-on', lambda _: (#self.w.btnStart_Ccw32.setEnabled(True),
+                                              #self.w.btnStop33.setEnabled(True),
+                                              #self.w.btnStart_Cw32.setEnabled(True),
+                                              self.w.btnDevice_On33.setEnabled(False),
+                                              self.guiActivity()))
+
+        STATUS.connect('state-off', lambda _:(#self.onbtnStop32_clicked(),
+                                              #self.w.btnStart_Ccw32.setEnabled(False),
+                                              #self.w.btnStop32.setEnabled(False),
+                                              #self.w.btnStart_Cw32.setEnabled(False),
+                                              self.w.btnDevice_On33.setEnabled(STATUS.estop_is_clear()),
+                                              self.guiActivity()))
+
         # экран-заглушка для графика пока не получены данные с устройства
-        self.w.plot_overlay = QLabel(self.w.plt33)
-        self.stub_image = QPixmap("stub_screen.png")
-        self.w.plot_overlay.setPixmap(self.stub_image)
+        # self.w.plot_overlay = QLabel(self.w.plt33)
+        # self.stub_image = QPixmap("stub_screen.png")
+        # self.w.plot_overlay.setPixmap(self.stub_image)
 
         # приведение GUI в соответствие с сигналами HAL
-        self.onActive0Changed(None)
-        self.onActive1Changed(None)
-        self.onActive2Changed(None)
-        self.onActive3Changed(None)
-        self.onActive4Changed(None)
-        self.onActive5Changed(None)
+        self.guiActivity()
 
         self.w.overlay = FocusOverlay(self.w)
         self.w.overlay.setGeometry(0, 0, self.w.width(), self.w.height())
@@ -444,33 +485,69 @@ class HandlerClass:
         self.w.plt33.setBackground('w')
         styles = {'color':'r', 'font-size':'20px'}
         self.w.plt33.setLabel('left', 'T [Н*м]', **styles)
-        self.w.plt33.setLabel('bottom', 'Время', **styles)
+        self.w.plt33.setLabel('bottom', 'S [мм]', **styles)
 
-        font=QtGui.QFont()
-        font.setPixelSize(20)
-        self.hLine = pg.InfiniteLine(angle=0, movable=False,
-            pen=pg.mkPen(color=QColor(Qt.blue),
-            width = 2, style=Qt.DashDotLine),
-            label='{value:0.1f}',
-            labelOpts={'position':0.95, 'color': (255,0,0),
-                       'movable': False, 'fill': (0, 0, 200, 100)})
-        #self.hLine.setPos(pg.Point(0.0, 10.0))
-        self.hLine.setValue(0.5)
-        self.hLine.setZValue(1)
-        self.w.plt33.addItem(self.hLine, ignoreBounds=True)
-
-        self.vLine = pg.InfiniteLine(angle=90, movable=False,
-            pen=pg.mkPen(color=QColor(Qt.blue), width = 2, style=Qt.DashDotLine))
-        #self.vLine.setPos(pg.Point(1.0, 0.0))
-        self.vLine.setValue(0.5)
-        self.vLine.setZValue(1)
-        self.w.plt33.addItem(self.vLine, ignoreBounds=True)
-
+        # размер шрифта числовых значений осей
         font=QtGui.QFont()
         font.setPixelSize(20)
         #plot.getAxis("bottom").tickFont = font
         self.w.plt33.getAxis("bottom").setStyle(tickFont = font)
         self.w.plt33.getAxis("left").setStyle(tickFont = font)
+
+        # горизонтальная штриховая линия текущей точки
+        self.hLineCurrent = pg.InfiniteLine(angle=0, movable=False,
+            pen=pg.mkPen(color=QColor(Qt.blue),
+            width = 2, style=Qt.DashLine),
+            label='{value:0.1f}',
+            labelOpts={'position':0.95, 'color': (255,255,255),
+                       'movable': False, 'fill': (0, 0, 200, 100)})
+
+
+        self.hLineCurrent.setValue(0.5)
+        self.hLineCurrent.setZValue(1)
+        self.w.plt33.addItem(self.hLineCurrent, ignoreBounds=True)
+
+        # вертикальная штриховая линия текущей точки
+        self.vLineCurrent = pg.InfiniteLine(angle=90, movable=False,
+            pen=pg.mkPen(color=QColor(Qt.blue),
+            width = 2, style=Qt.DashLine),
+            label='{value:0.1f}',
+            labelOpts={'position':0.95, 'color': (255,255,255),
+                       'movable': False, 'fill': (0, 0, 200, 100)})
+        #self.vLine.setPos(pg.Point(1.0, 0.0))
+        self.vLineCurrent.setValue(0.5)
+        self.vLineCurrent.setZValue(1)
+        self.w.plt33.addItem(self.vLineCurrent, ignoreBounds=True)
+
+        # горизонтальная штриховая torque_estimated
+        self.hLineCurrent = pg.InfiniteLine(angle=0, movable=False,
+            pen=pg.mkPen(color=QColor(Qt.red),
+            width = 2, style=Qt.DashDotLine))
+            #label='{value:0.1f}',
+            #labelOpts={'position':0.95, 'color': (255,255,255),
+            #           'movable': False, 'fill': (0, 0, 200, 100)})
+
+
+        self.hLineCurrent.setValue(0.5)
+        self.hLineCurrent.setZValue(1)
+        self.w.plt33.addItem(self.hLineCurrent, ignoreBounds=True)
+
+        # тест маркеров
+        pen = pg.mkPen(None) # отсутствие линии между точками
+        #pen = pg.mkPen(color=(255, 0, 0), width=0, style=QtCore.Qt.DashLine)
+        self.w.plt33.plot([0, 1, 2, 3, 4], [1, 0, 3, 5, 4],
+            symbol='x', symbolSize=30, symbolBrush=('b'), text = ["a", "b", "d", "e", "f"])
+        #self.w.plt33.setTexts(["a", "b", "d", "e", "f"])
+        #self.w.plt33.updateGraph()
+
+        # self.txt_items = []
+        # for i in range(5):
+        #     txt_itm = pg.TextItem(str(i))
+        #     txt_itm.setPos(1.0, 1.0)
+        #     self.txt_items.append(txt_itm)
+        # self.w.plt33.addItem(self.txt_items)
+        #self.w.plt33.textItems.append(txt_item)
+
         # self.graphWidget.setXRange(5, 20, padding=0)
         # self.graphWidget.setYRange(30, 40, padding=0)
         # курсор на графике https://stackoverflow.com/questions/50512391/can-i-share-the-crosshair-with-two-graph-in-pyqtgraph-pyqt5
