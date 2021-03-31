@@ -321,7 +321,6 @@ class HandlerClass:
             'NOM_ACCEL' : (self.w.sldAcceleration31, self.w.spnAcceleration31)
         }
 
-
         for key, controls in ini_control_match_dict.items():
             print '***controls[0] = ', controls[0]
             print '***controls[1] = ', controls[1]
@@ -368,6 +367,13 @@ class HandlerClass:
                         and self.w.chkActivation31.isChecked()),
                       self.w.btnJog_Plus31.setEnabled(STATUS.machine_is_on()
                         and self.w.chkActivation31.isChecked())))
+
+        self.w.sldAcceleration31.hal_pin_scale.set(0.01)
+        self.w.sldAcceleration31.hal_pin_f.set(self.w.sldAcceleration31.value()*0.01)
+
+        self.w.sldVelocity31.hal_pin_scale.set(0.01)
+        self.w.sldVelocity31.hal_pin_f.set(self.w.sldVelocity31.value()*0.01)
+
         #self.hal["sldVelocity31-scale"]=0.01
         #self.hal["sldAcceleration31-scale"]=0.01
 
@@ -390,7 +396,8 @@ class HandlerClass:
         #self.w.sldAcceleration31.valueChanged.emit(tempVal)
 
         self.w.ledPos_Alarm31.setOffColor(Qt.yellow)
-        # add overlay to topWidget
+
+        # оверлей для затемнения окна
         self.w.overlay = FocusOverlay(self.w)
         self.w.overlay.setGeometry(0, 0, self.w.width(), self.w.height())
         self.w.overlay.hide()

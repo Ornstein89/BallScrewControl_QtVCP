@@ -12,7 +12,7 @@
 # **** IMPORT SECTION **** #
 ############################
 # стандартные пакеты
-import sys, os, configparser, subprocess
+import sys, os, configparser, subprocess, random
 import codecs
 import re
 
@@ -142,10 +142,7 @@ class HandlerClass:
             'position-pin33':None,
             'position_actual-pin33':None,
             'load-pin33':None,
-            'load_actual-pin33':None
-        }
-
-        self.VCP_halpins_float2 = {
+            'load_actual-pin33':None,
             'load_error_value-pin33':None,
             'load_error_value_max-pin33':None,
             'load_overload_value-pin33':None,
@@ -162,10 +159,17 @@ class HandlerClass:
             'torque_extremal_max-pin33':None,
             'torque_actual-pin33':None,
             'torque_estimated-pin33':None,
-            'torque_estimated-pin33':None,
-            'torque_actual-pin33':None,
-            'position_i-pin33':None,
-            'torque_extremal_i-pin33':None
+
+            'position_0-pin33':None,
+            'torque_extremal_0-pin33':None,
+            'position_1-pin33':None,
+            'torque_extremal_1-pin33':None,
+            'position_2-pin33':None,
+            'torque_extremal_2-pin33':None,
+            'position_3-pin33':None,
+            'torque_extremal_3-pin33':None,
+            'position_4-pin33':None,
+            'torque_extremal_4-pin33':None
         }
 
         self.VCP_halpins_bit = {
@@ -195,19 +199,30 @@ class HandlerClass:
         for key in self.VCP_halpins_float:
             tmp_pin = self.hal.newpin(key, hal.HAL_FLOAT, hal.HAL_IN)
             self.VCP_halpins_float[key] = tmp_pin
-            tmp_pin.value_changed.connect(lambda s: self.pinCnagedCallback(s))
-
-        # создание пинов и связывание событий изменения HAL с обработчиком
-        for key in self.VCP_halpins_float2:
-            tmp_pin = self.hal.newpin(key, hal.HAL_FLOAT, hal.HAL_IN)
-            self.VCP_halpins_float2[key] = tmp_pin
-            tmp_pin.value_changed.connect(lambda s: self.pinCnagedCallback(s))
+            tmp_pin.value_changed.connect(lambda s: self.pinLabelsChanged(s)) # к каждому пину привязывается своя label
 
         for key in self.VCP_halpins_bit:
             tmp_pin = self.hal.newpin(key, hal.HAL_BIT, hal.HAL_IN)
             self.VCP_halpins_bit[key][0] = tmp_pin
             tmp_pin.value_changed.connect(self.VCP_halpins_bit[key][1])
 
+        self.VCP_halpins_plot = [
+            'position-pin33',
+            'position_actual-pin33',
+            'torque_actual-pin33',
+            'torque_estimated-pin33',
+            'position_0-pin33',
+            'torque_extremal_0-pin33',
+            'position_1-pin33',
+            'torque_extremal_1-pin33',
+            'position_2-pin33',
+            'torque_extremal_2-pin33',
+            'position_3-pin33',
+            'torque_extremal_3-pin33',
+            'position_4-pin33',
+            'torque_extremal_4-pin33' ]
+        for pin_name in self.VCP_halpins_plot:
+            self.VCP_halpins_float[pin_name].value_changed.connect(lambda s: self.pinUpdatePlot(s))
         return
         
     def onBtnTempShow31(self):
@@ -300,22 +315,25 @@ class HandlerClass:
             return
 
     def onBtnClearPlot33(self):
+        #TODO
         pass
 
     def onBtnMDI(self):
         # способ 1, через linuxcnc
-        linuxcnc.command().mode(linuxcnc.MODE_MDI)
-        linuxcnc.command().wait_complete() # wait until mode switch executed
-        linuxcnc.command().mdi(self.w.mdiline33.text())
+        # linuxcnc.command().mode(linuxcnc.MODE_MDI)
+        # linuxcnc.command().wait_complete() # wait until mode switch executed
+        # linuxcnc.command().mdi(self.w.mdiline33.text()+'\n')
 
         # способ 2, через QtVCP
-        # try:
-        #     #ACTION.SET_MDI_MODE(self) # не нужно, т.к. ACTION.CALL_MDI() уже проверяет режим
-        #     ACTION.CALL_MDI(self.w.mdiline33.text())
-        # except:
-        #     QMessageBox.critical(self.w, 'Ошибка',
-        #     "Невозможно включить режим MDI или выполнить команду", QMessageBox.Yes)
+        #try:
+        #    #ACTION.SET_MDI_MODE(self) # не нужно, т.к. ACTION.CALL_MDI() уже проверяет режим
+        #    ACTION.CALL_MDI(self.w.mdiline33.text()+'\n')
+        #except:
+        #    QMessageBox.critical(self.w, 'Ошибка',
+        #    "Невозможно включить режим MDI или выполнить команду", QMessageBox.Yes)
 
+        # способ 3
+        self.w.mdiline33.submit()
         #TODO защита от ошибки "Не могу исполнить команду MDI если не найдены начала"
         return
 
@@ -454,6 +472,18 @@ class HandlerClass:
                                               self.w.btnDevice_On33.setEnabled(STATUS.estop_is_clear()),
                                               self.guiActivity()))
 
+        self.w.btnTest.clicked.connect(self.testUpdatePlot)
+
+        # масштабирование с помощью пинов *-scale (setp в hal-файле недостаточно - слайдер не масштабирует, пока не сдвинуть вручную)
+        sliders_to_scale = [
+            self.w.sldDsp_Idle33, self.w.sldVel_Idle33, self.w.sldAccel_Idle33,
+            self.w.sldLoad33, self.w.sldPos_Measure33, self.w.sldDsp_Measure33,
+            self.w.sldVel_Measure33, self.w.sldAccel_Measure33]
+
+        for slider_i in sliders_to_scale:
+            slider_i.hal_pin_scale.set(0.01)
+            slider_i.hal_pin_f.set(slider_i.value()*0.01)
+
         # экран-заглушка для графика пока не получены данные с устройства
         # self.w.plot_overlay = QLabel(self.w.plt33)
         # self.stub_image = QPixmap("stub_screen.png")
@@ -513,7 +543,7 @@ class HandlerClass:
             pen=pg.mkPen(color=QColor(Qt.blue),
             width = 2, style=Qt.DashLine),
             label='{value:0.1f}',
-            labelOpts={'position':0.95, 'color': (255,255,255),
+            labelOpts={'position':0.0, 'color': (255,255,255),
                        'movable': False, 'fill': (0, 0, 200, 100)})
 
 
@@ -525,7 +555,7 @@ class HandlerClass:
         self.vLineCurrent = pg.InfiniteLine(angle=90, movable=False,
             pen=pg.mkPen(color=QColor(Qt.blue),
             width = 2, style=Qt.DashLine),
-            label='{value:0.1f}',
+            label='0.0',
             labelOpts={'position':0.95, 'color': (255,255,255),
                        'movable': False, 'fill': (0, 0, 200, 100)})
         #self.vLine.setPos(pg.Point(1.0, 0.0))
@@ -534,23 +564,22 @@ class HandlerClass:
         self.w.plt33.addItem(self.vLineCurrent, ignoreBounds=True)
 
         # горизонтальная штриховая torque_estimated
-        self.hLineCurrent = pg.InfiniteLine(angle=0, movable=False,
+        self.hTorqueEstimated = pg.InfiniteLine(angle=0, movable=False,
             pen=pg.mkPen(color=QColor(Qt.red),
-            width = 2, style=Qt.DashDotLine))
-            #label='{value:0.1f}',
-            #labelOpts={'position':0.95, 'color': (255,255,255),
-            #           'movable': False, 'fill': (0, 0, 200, 100)})
+            width = 2, style=Qt.DashDotLine),
+            label='{value:0.1f}',
+            labelOpts={'position':0.95, 'color': (255,255,255),
+                       'movable': False, 'fill': (200, 0, 0, 100)})
 
-
-        self.hLineCurrent.setValue(0.5)
-        self.hLineCurrent.setZValue(1)
-        self.w.plt33.addItem(self.hLineCurrent, ignoreBounds=True)
+        self.hTorqueEstimated.setValue(0.5)
+        self.hTorqueEstimated.setZValue(1)
+        self.w.plt33.addItem(self.hTorqueEstimated, ignoreBounds=True)
 
         # тест маркеров
         pen = pg.mkPen(None) # отсутствие линии между точками
         #pen = pg.mkPen(color=(255, 0, 0), width=0, style=QtCore.Qt.DashLine)
-        xpos = [0, 1, 2, 3, 4]
-        ypos = [1, 0, 3, 5, 4]
+        xpos = [0, 0, 0, 0, 0]
+        ypos = [0, 0, 0, 0, 0]
         self.w.plt33.plot(xpos, ypos,
             symbol='x', symbolSize=30, symbolBrush=('b'), text = ["a", "b", "d", "e", "f"])
         #self.w.plt33.setTexts(["a", "b", "d", "e", "f"])
@@ -572,13 +601,13 @@ class HandlerClass:
         # https://stackoverflow.com/questions/52410731/drawing-and-displaying-objects-and-labels-over-the-axis-in-pyqtgraph-how-to-do
         return        
 
-    def pinCnagedCallback(self, data):
+    def pinLabelsChanged(self, data):
         halpin_name = self.w.sender().text()
         # отдельный пин, поставляющий float-параметр для построения графика
-        if(halpin_name == 'position-pin31'):
-            #print "*** update and plot"
-            self.append_data(self.current_plot_n, self.hal['position-pin31']) # добавить точку к буферу графика
-            self.update_plot() # обновить график
+        #if(halpin_name == 'position-pin31'):
+        #    #print "*** update and plot"
+        #    self.append_data(self.current_plot_n, self.hal['position-pin31']) # добавить точку к буферу графика
+        #    self.update_plot() # обновить график
 
         halpins_labels_match_precision1 = { # отображать с точностью 1 знак после запятой
 
@@ -636,22 +665,53 @@ class HandlerClass:
         #     self.current_plot_n = 0 # логика кольцевого буфера
         return
 
-    def update_plot(self):
+    def testUpdatePlot(self):
+        """
+        self.hLineCurrent - 'torque-actual'
+        self.vLineCurrent - 'position-actual'
+        self.hTorqueEstimated - 'torque-estimated'
+        """
+
+        # передвинуть линии
+        torque_est = random.random()*10.0
+        torque_actual = torque_est * random.random()
+        dsp_idle = random.random()*200.0
+        current_position = dsp_idle * random.random()
+        actual_position = current_position * random.random() * 0.01
+        #self.w.plt33.clear()
+        self.hLineCurrent.setValue(torque_actual)
+        #self.hLineCurrent.label.format = '%01d' % (torque_actual)
+
+        self.vLineCurrent.setValue(dsp_idle * random.random())
+        self.vLineCurrent.label.format = '%01d' % (current_position) + '\n' + '%01d' % (actual_position)
+
+        self.hTorqueEstimated.setValue(torque_est)
+        #self.hTorqueEstimated.label.format = '%01d' % (torque_est)
+
+        # масштабирование X:[0 - torque-estimated*1.5], Y:[]
+        self.w.plt33.setYRange(0.0, torque_est*1.5)
+        self.w.plt33.setXRange(0.0, dsp_idle)
+
+    def pinUpdatePlot(self, p):
         '''
         Функция для построения графика в координатах position(X)-torque(Y)
         :return:
         '''
+        halpin_name = self.w.sender().text()
 
-        if(self.current_plot_n < 20):
-            #print "*** plot < 20"
-            self.w.plt33.plot(self.data[0][0:self.current_plot_n],
-                              self.data[1][0:self.current_plot_n],
-                              clear = True)
-        else:
-            #print "*** plot >= 20"
-            self.w.plt33.plot(self.data[0][self.current_plot_n-20:self.current_plot_n],
-                              self.data[1][self.current_plot_n-20:self.current_plot_n],
-                              clear=True)
+        #xdata=[self.hal[]]???
+        #ydata=[self.hal[]]
+        #
+        #if(self.current_plot_n < 20):
+        #    #print "*** plot < 20"
+        #    self.w.plt33.plot(self.data[0][0:self.current_plot_n],
+        #                      self.data[1][0:self.current_plot_n],
+        #                      clear = True)
+        #else:
+        #    #print "*** plot >= 20"
+        #    self.w.plt33.plot(self.data[0][self.current_plot_n-20:self.current_plot_n],
+        #                      self.data[1][self.current_plot_n-20:self.current_plot_n],
+        #                      clear=True)
         return
 
     def flush_to_log(self):

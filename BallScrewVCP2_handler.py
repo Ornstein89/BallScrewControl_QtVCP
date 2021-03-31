@@ -247,7 +247,6 @@ class HandlerClass:
         if (not self.w.btnStart_Cw32.isChecked()) and (not self.w.btnStart_Ccw32.isChecked()):
             return
 
-
         # получить текущее время и отобразить его на label
         #DEBUG print "*** DATETIME_LAST = ", self.DATETIME_LAST
         tmpDateTime = QDateTime.currentDateTime()
