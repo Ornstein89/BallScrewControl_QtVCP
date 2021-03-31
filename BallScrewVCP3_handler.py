@@ -535,17 +535,21 @@ class HandlerClass:
         # тест маркеров
         pen = pg.mkPen(None) # отсутствие линии между точками
         #pen = pg.mkPen(color=(255, 0, 0), width=0, style=QtCore.Qt.DashLine)
-        self.w.plt33.plot([0, 1, 2, 3, 4], [1, 0, 3, 5, 4],
+        xpos = [0, 1, 2, 3, 4]
+        ypos = [1, 0, 3, 5, 4]
+        self.w.plt33.plot(xpos, ypos,
             symbol='x', symbolSize=30, symbolBrush=('b'), text = ["a", "b", "d", "e", "f"])
         #self.w.plt33.setTexts(["a", "b", "d", "e", "f"])
         #self.w.plt33.updateGraph()
 
-        # self.txt_items = []
-        # for i in range(5):
-        #     txt_itm = pg.TextItem(str(i))
-        #     txt_itm.setPos(1.0, 1.0)
-        #     self.txt_items.append(txt_itm)
-        # self.w.plt33.addItem(self.txt_items)
+        # надписи над пятью точками
+        self.txt_items = []
+        for i in range(5):
+            txt_itm = pg.TextItem(str(i), anchor=(0, 1.5))
+            txt_itm.setPos(xpos[i], ypos[i])
+            txt_itm.setFont(font)
+            self.txt_items.append(txt_itm)
+            self.w.plt33.addItem(txt_itm)
         #self.w.plt33.textItems.append(txt_item)
 
         # self.graphWidget.setXRange(5, 20, padding=0)
