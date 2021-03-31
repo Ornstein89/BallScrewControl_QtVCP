@@ -303,10 +303,21 @@ class HandlerClass:
         pass
 
     def onBtnMDI(self):
+        # способ 1, через linuxcnc
         linuxcnc.command().mode(linuxcnc.MODE_MDI)
         linuxcnc.command().wait_complete() # wait until mode switch executed
         linuxcnc.command().mdi(self.w.mdiline33.text())
-        pass
+
+        # способ 2, через QtVCP
+        # try:
+        #     #ACTION.SET_MDI_MODE(self) # не нужно, т.к. ACTION.CALL_MDI() уже проверяет режим
+        #     ACTION.CALL_MDI(self.w.mdiline33.text())
+        # except:
+        #     QMessageBox.critical(self.w, 'Ошибка',
+        #     "Невозможно включить режим MDI или выполнить команду", QMessageBox.Yes)
+
+        #TODO защита от ошибки "Не могу исполнить команду MDI если не найдены начала"
+        return
 
     def guiActivity(self):
         self.w.btnHome33.setEnabled(self.hal['active_0-pin'] and STATUS.machine_is_on())
@@ -423,6 +434,9 @@ class HandlerClass:
 
         self.w.btnDevice_On33.clicked.connect(lambda x: ACTION.SET_MACHINE_STATE(True))
         self.w.btnDevice_Off33.clicked.connect(lambda x: ACTION.SET_MACHINE_STATE(False))
+
+        #self.w.btnCommand_Run33.clicked.connect(labmda x: ACTION.CALL_MDI())
+
 
         # сделать чекбоксы исключающими
         #self.w.chkDspModeHH_33..connect(self.w.chkDspModeIZM_33.setChecked(not self.w.chkDspModeHH_33.isChecked()))
@@ -556,7 +570,7 @@ class HandlerClass:
         # self.graphWidget.setYRange(30, 40, padding=0)
         # курсор на графике https://stackoverflow.com/questions/50512391/can-i-share-the-crosshair-with-two-graph-in-pyqtgraph-pyqt5
         # https://stackoverflow.com/questions/52410731/drawing-and-displaying-objects-and-labels-over-the-axis-in-pyqtgraph-how-to-do
-        return
+        return        
 
     def pinCnagedCallback(self, data):
         halpin_name = self.w.sender().text()
