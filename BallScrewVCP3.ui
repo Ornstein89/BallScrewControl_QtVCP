@@ -874,7 +874,7 @@ font: 15pt bold;</string>
            <enum>QFrame::Plain</enum>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="page">
            <property name="geometry">
@@ -1243,7 +1243,20 @@ font: 15pt bold;</string>
                 </property>
                </widget>
               </item>
-              <item row="3" column="0" colspan="3">
+              <item row="2" column="3">
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="3" column="0" colspan="4">
                <widget class="GcodeEditor" name="gcode_editor33">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
