@@ -12,7 +12,7 @@
 # **** IMPORT SECTION **** #
 ############################
 # стандартные пакеты
-import sys, os, configparser, subprocess, random
+import sys, os, configparser, subprocess, random, io, copy
 import codecs
 import re
 
@@ -207,24 +207,6 @@ class HandlerClass:
             self.VCP_halpins_bit[key][0] = tmp_pin
             tmp_pin.value_changed.connect(self.VCP_halpins_bit[key][1])
 
-        self.VCP_halpins_plot = [
-            'position-pin33',
-            'position_actual-pin33',
-            'torque_actual-pin33',
-            'torque_estimated-pin33',
-            'dsp_idle-pin33',
-            'position_0-pin33',
-            'torque_extremal_0-pin33',
-            'position_1-pin33',
-            'torque_extremal_1-pin33',
-            'position_2-pin33',
-            'torque_extremal_2-pin33',
-            'position_3-pin33',
-            'torque_extremal_3-pin33',
-            'position_4-pin33',
-            'torque_extremal_4-pin33' ]
-        for pin_name in self.VCP_halpins_plot:
-            self.VCP_halpins_float[pin_name].value_changed.connect(lambda s: self.pinUpdatePlot(s))
         return
         
     def onBtnTempShow31(self):
@@ -533,7 +515,7 @@ class HandlerClass:
         self.w.plt33.setLabel('left', 'T [Н*м]', **styles)
         self.w.plt33.setLabel('bottom', 'S [мм]', **styles)
 
-        self.w.plt33.setYRange(0.0, 100)
+        self.w.plt33.setYRange(0.0, 10)
         self.w.plt33.setXRange(0.0, 200)
 
         # размер шрифта числовых значений осей
@@ -603,7 +585,26 @@ class HandlerClass:
         # self.graphWidget.setYRange(30, 40, padding=0)
         # курсор на графике https://stackoverflow.com/questions/50512391/can-i-share-the-crosshair-with-two-graph-in-pyqtgraph-pyqt5
         # https://stackoverflow.com/questions/52410731/drawing-and-displaying-objects-and-labels-over-the-axis-in-pyqtgraph-how-to-do
-        return        
+        self.VCP_halpins_plot = [
+            'position-pin33',
+            'position_actual-pin33',
+            'torque_actual-pin33',
+            'torque_estimated-pin33',
+            'dsp_idle-pin33',
+            'position_0-pin33',
+            'torque_extremal_0-pin33',
+            'position_1-pin33',
+            'torque_extremal_1-pin33',
+            'position_2-pin33',
+            'torque_extremal_2-pin33',
+            'position_3-pin33',
+            'torque_extremal_3-pin33',
+            'position_4-pin33',
+            'torque_extremal_4-pin33' ]
+        for pin_name in self.VCP_halpins_plot:
+            self.VCP_halpins_float[pin_name].value_changed.connect(self.pinUpdatePlot)
+
+        return
 
     def pinLabelsChanged(self, data):
         halpin_name = self.w.sender().text()
@@ -697,6 +698,9 @@ class HandlerClass:
         self.w.plt33.setXRange(0.0, dsp_idle)
         self.txt_items[2].setPos(dsp_idle*0.3, torque_est*0.3)
 
+    def saveIni(self):
+        pass
+
     def pinUpdatePlot(self, p):
         '''
         Функция для построения графика в координатах position(X)-torque(Y)
@@ -723,35 +727,39 @@ class HandlerClass:
             self.vLineCurrent.label.format = '%01d' % (current_position) + '\n' + '(%01d)' % (actual_position)
         elif halpin_name == 'dsp_idle-pin33':
             self.w.plt33.setXRange(0.0, float(self.hal['dsp_idle-pin33']))
-        elif (halpin_name[:9] == 'position_') and halpin_name[9].isdigit():
-            #DEBUG print halpin_name
-            i=int(halpin_name[9])
-            xpos=float(self.hal['position_'+str(i)+'-pin33'])
-            ypos=float(self.hal['torque_extremal_'+str(i)+'-pin33'])
-            self.txt_items[i].setPos(xpos, ypos)
-            self.txt_items[i].setText('%01d' % ypos)
-            #self.w.plt33.clear()
-            temp_data=self.plot_points.getData()
-            temp_data[0][i]=xpos
-            temp_data[1][i]=ypos
-            self.plot_points.setData(pos=temp_data)
-            #self.plot_points.update()
-            #self.w.plt33.update()
-        elif (halpin_name[:16] == 'torque_extremal_') and halpin_name[16].isdigit():
-            #DEBUG print halpin_name
-            i=int(halpin_name[16])
-            xpos=float(self.hal['position_'+str(i)+'-pin33'])
-            ypos=float(self.hal['torque_extremal_'+str(i)+'-pin33'])
-            self.txt_items[i].setPos(xpos, ypos)
-            self.txt_items[i].setText('%01d' % ypos)
-            #self.w.plt33.clear()
-            temp_data=self.plot_points.getData()
-            temp_data[0][i]=xpos
-            temp_data[1][i]=ypos
-            self.plot_points.setData(pos=temp_data)
-            #self.plot_points.update()
-            #self.w.plt33.update()
-            #self.txt_items[i].setPos(xpos, ypos)???
+        elif len(halpin_name)==16:
+            if (halpin_name[:9] == 'position_') and halpin_name[9].isdigit():
+                #DEBUG print halpin_name
+                i=int(halpin_name[9])
+                xpos=float(self.hal['position_'+str(i)+'-pin33'])
+                ypos=float(self.hal['torque_extremal_'+str(i)+'-pin33'])
+                self.txt_items[i].setPos(xpos, ypos)
+                self.txt_items[i].setText('%01d' % ypos)
+                #self.w.plt33.clear()
+                temp_data=self.plot_points.getData()
+                temp_data[0][i]=xpos
+                temp_data[1][i]=ypos
+                self.plot_points.setData(pos=temp_data)
+                #self.plot_points.update()
+                #self.w.plt33.update()
+        elif len(halpin_name)==23:
+            if (halpin_name[:16] == 'torque_extremal_') and halpin_name[16].isdigit():
+                #DEBUG print halpin_name
+                i=int(halpin_name[16])
+                xpos=float(self.hal['position_'+str(i)+'-pin33'])
+                ypos=float(self.hal['torque_extremal_'+str(i)+'-pin33'])
+                self.txt_items[i].setPos(xpos, ypos)
+                self.txt_items[i].setText('%01d' % ypos)
+                #self.w.plt33.clear()
+                temp_data=self.plot_points.getData()
+                temp_data[0][i]=xpos
+                temp_data[1][i]=ypos
+                self.plot_points.setData(pos=temp_data)
+                #self.plot_points.update()
+                #self.w.plt33.update()
+                #self.txt_items[i].setPos(xpos, ypos)???
+        else:
+            return
 
         return
 
@@ -843,33 +851,55 @@ class HandlerClass:
 
     def update_ini(self):
         # список на замену
-        replacelist = [[r'^123'.encode(), r'123'.encode()]]
-        #replacelist = [[rb"^(NOM_DSP_IDLE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnDsp_Idle33.value()).encode()]]
-        #               [rb"^(NOM_VEL_IDLE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnVel_Idle33.value()).encode()],
-        #               [rb'^(NOM_ACCEL_IDLE\s*\=\s*)\S*$', r"\1 {:.1f}".format(self.w.spnAccel_Idle33.value()).encode()],
-        #               [rb"^(NOM_LOdAD\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnLoad33.value()).encode()],
-        #               [rb"^(NOM_POS_MEASURE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnPos_Measure33.value()).encode()],
-        #               [rb"^(NOM_DSP_MEASURE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnDsp_Measure33.value()).encode()],
-        #               [rb"^(NOM_VEL_MEASURE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnVel_Measure33.value()).encode()],
-        #               [rb"^(NOM_ACCEL_MEASURE\s*\=\s*)\S*$", r"\1 {:.1f}".format(self.w.spnAccel_Measure33.value()).encode()]]
+        # replacelist = [[ur'^123'.encode(), ur'123'.encode()]]
+        replacelist = [[ur"(NOM_DSP_IDLE\s*\=)\s*(\d+(.\d*){0,1})",
+                        ur"\1 {:.1f}".format(self.w.spnDsp_Idle33.value())],
+                       [ur"(NOM_VEL_IDLE\s*\=)\s*(\d+(.\d*){0,1})",
+                        ur"\1 {:.1f}".format(self.w.spnVel_Idle33.value())],
+                       [ur'(NOM_ACCEL_IDLE\s*\=)\s*(\d+(.\d*){0,1})',
+                        ur"\1 {:.1f}".format(self.w.spnAccel_Idle33.value())],
+                       [ur"(NOM_LOdAD\s*\=)\s*(\d+(.\d*){0,1})",
+                        ur"\1 {:.1f}".format(self.w.spnLoad33.value())],
+                       [ur"(NOM_POS_MEASURE\s*\=)\s*(\d+(.\d*){0,1})",
+                        ur"\1 {:.1f}".format(self.w.spnPos_Measure33.value())],
+                       [ur"(NOM_DSP\s*_MEASURE\s*\=)\s*(\d+(.\d*){0,1})",
+                        ur"\1 {:.1f}".format(self.w.spnDsp_Measure33.value())],
+                       [ur"(NOM_VEL_MEASURE\s*\=)\s*(\d+(.\d*){0,1})",
+                        ur"\1 {:.1f}".format(self.w.spnVel_Measure33.value())],
+                       [ur"(NOM_ACCEL_MEASURE\s*\=)\s*(\d+(.\d*){0,1})",
+                        ur"\1 {:.1f}".format(self.w.spnAccel_Measure33.value())]]
 
         # путь к текущему INI-файлу
         inifilename = INFO.INIPATH# имя ini-файла
         print "*** inifilename = ", inifilename
 
         # открыть и считать
-        inifile = open(inifilename, "rb")
+        inifile = io.open(inifilename, "r", encoding='utf8')
+        #TODO обработка открыт/не открыт
         inilines = inifile.readlines()
         inifile.close()
 
-        # список поле - GUI-элемент
-        for ini_line in inilines: # перечислить все строки INI-файла
-            for replace_item in replacelist: # в каждой строке поиск
-                ini_line = re.sub(replace_item[0], replace_item[1], ini_line)
+        print "***inilines=", inilines
 
-        #inifile = open(inifilename, "wb")
-        #inilines = inifile.writelines(inilines)
-        #inifile.close()
+        # список поле - GUI-элемент
+        for line_n in range(len(inilines)): # перечислить все строки INI-файла
+            for replace_item in replacelist: # в каждой строке поиск
+                tmp_line = re.sub(replace_item[0], replace_item[1], inilines[line_n])
+                if not tmp_line == inilines[line_n]:
+                    inilines[line_n] = tmp_line
+                    print "***выполнена замена ", inilines[line_n]
+
+        inifile2 = io.open(inifilename, "w", encoding='utf8')
+        #TODO обработка открыт/не открыт
+        inilines = inifile2.writelines(inilines)
+        inifile2.close()
+
+    def convert_case(match_obj):
+        if match_obj.group(1) is not None:
+            return match_obj.group(1).lower()
+        if match_obj.group(2) is not None:
+            return match_obj.group(2).upper()
+
 
     def closeEvent(self, event):
         self.w.overlay.text='Выключить?'

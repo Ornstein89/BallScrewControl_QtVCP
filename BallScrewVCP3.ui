@@ -222,48 +222,6 @@ background-image: url(./resources/stripes.png);
 }</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
-           <item row="5" column="0">
-            <widget class="PushButton" name="btnTestActive4">
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(252, 233, 79);</string>
-             </property>
-             <property name="text">
-              <string>active_4</string>
-             </property>
-             <property name="checkable">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="PushButton" name="btnTestActive3">
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(252, 233, 79);</string>
-             </property>
-             <property name="text">
-              <string>active_3</string>
-             </property>
-             <property name="checkable">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="PushButton" name="btnTestActive0">
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(252, 233, 79);</string>
-             </property>
-             <property name="text">
-              <string>active_0</string>
-             </property>
-             <property name="checkable">
-              <bool>true</bool>
-             </property>
-             <property name="checked_state_text_option" stdset="0">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label">
              <property name="styleSheet">
@@ -279,26 +237,13 @@ font: bold</string>
              </property>
             </widget>
            </item>
-           <item row="9" column="0">
-            <widget class="PushButton" name="btnAppend_File33">
+           <item row="5" column="0">
+            <widget class="PushButton" name="btnTestActive4">
              <property name="styleSheet">
               <string notr="true">background-color: rgb(252, 233, 79);</string>
              </property>
              <property name="text">
-              <string>append_file</string>
-             </property>
-             <property name="checkable">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="PushButton" name="btnTestActive1">
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(252, 233, 79);</string>
-             </property>
-             <property name="text">
-              <string>active_1</string>
+              <string>active_4</string>
              </property>
              <property name="checkable">
               <bool>true</bool>
@@ -318,23 +263,7 @@ font: bold</string>
              </property>
             </widget>
            </item>
-           <item row="7" column="0">
-            <widget class="QWidget" name="widget_2" native="true"/>
-           </item>
-           <item row="6" column="0">
-            <widget class="PushButton" name="btnTestActive5">
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(252, 233, 79);</string>
-             </property>
-             <property name="text">
-              <string>active_5</string>
-             </property>
-             <property name="checkable">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="11" column="0">
+           <item row="12" column="0">
             <spacer name="verticalSpacer_3">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -360,10 +289,88 @@ font: bold</string>
              </property>
             </widget>
            </item>
+           <item row="6" column="0">
+            <widget class="PushButton" name="btnTestActive5">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(252, 233, 79);</string>
+             </property>
+             <property name="text">
+              <string>active_5</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="PushButton" name="btnTestActive0">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(252, 233, 79);</string>
+             </property>
+             <property name="text">
+              <string>active_0</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="checked_state_text_option" stdset="0">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="PushButton" name="btnTestActive3">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(252, 233, 79);</string>
+             </property>
+             <property name="text">
+              <string>active_3</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="PushButton" name="btnAppend_File33">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(252, 233, 79);</string>
+             </property>
+             <property name="text">
+              <string>append_file</string>
+             </property>
+             <property name="checkable">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QWidget" name="widget_2" native="true"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="PushButton" name="btnTestActive1">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(252, 233, 79);</string>
+             </property>
+             <property name="text">
+              <string>active_1</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
            <item row="10" column="0">
             <widget class="QPushButton" name="btnTest">
              <property name="text">
               <string>testPlot</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0">
+            <widget class="QPushButton" name="btnTestPatchIni">
+             <property name="text">
+              <string>testPatchIni</string>
              </property>
             </widget>
            </item>
@@ -874,7 +881,7 @@ font: 15pt bold;</string>
            <enum>QFrame::Plain</enum>
           </property>
           <property name="currentIndex">
-           <number>2</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="page">
            <property name="geometry">
@@ -1350,8 +1357,8 @@ font: 15pt bold;</string>
    <slot>onBtnLoadGCode33()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>787</x>
-     <y>360</y>
+     <x>711</x>
+     <y>364</y>
     </hint>
     <hint type="destinationlabel">
      <x>7</x>
@@ -1366,7 +1373,7 @@ font: 15pt bold;</string>
    <slot>onBtnClearPlot33()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>965</x>
+     <x>922</x>
      <y>830</y>
     </hint>
     <hint type="destinationlabel">
@@ -1382,8 +1389,8 @@ font: 15pt bold;</string>
    <slot>onBtnSaveGCode33()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>429</x>
-     <y>662</y>
+     <x>426</x>
+     <y>675</y>
     </hint>
     <hint type="destinationlabel">
      <x>8</x>
@@ -1398,12 +1405,28 @@ font: 15pt bold;</string>
    <slot>onBtnMDI()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>663</x>
-     <y>866</y>
+     <x>577</x>
+     <y>870</y>
     </hint>
     <hint type="destinationlabel">
      <x>4</x>
      <y>661</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnTestPatchIni</sender>
+   <signal>clicked()</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>update_ini()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>92</x>
+     <y>585</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>4</x>
+     <y>556</y>
     </hint>
    </hints>
   </connection>
@@ -1418,5 +1441,6 @@ font: 15pt bold;</string>
   <slot>onBtnSaveGCode33()</slot>
   <slot>onBtnClearPlot33()</slot>
   <slot>onBtnMDI()</slot>
+  <slot>update_ini()</slot>
  </slots>
 </ui>
