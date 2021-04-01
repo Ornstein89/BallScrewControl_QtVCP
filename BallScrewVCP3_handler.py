@@ -48,7 +48,7 @@ LOG = logger.getLogger(__name__)
 #LOG.setLevel(logger.INFO) # One of DEBUG, INFO, WARNING, ERROR, CRITICAL
 
 ###########################################
-# **** INSTANTIATE LIBRARIES SECTION **** #
+# **** INSTANTIATE LIBRARIES SECTIO **** #
 ###########################################
 
 KEYBIND = Keylookup()
@@ -142,6 +142,7 @@ class HandlerClass:
             'position-pin33':None,
             'position_actual-pin33':None,
             'load-pin33':None,
+            'dsp_idle-pin33':None,
             'load_actual-pin33':None,
             'load_error_value-pin33':None,
             'load_error_value_max-pin33':None,
@@ -211,6 +212,7 @@ class HandlerClass:
             'position_actual-pin33',
             'torque_actual-pin33',
             'torque_estimated-pin33',
+            'dsp_idle-pin33',
             'position_0-pin33',
             'torque_extremal_0-pin33',
             'position_1-pin33',
@@ -298,7 +300,7 @@ class HandlerClass:
             #self.add_status("Loaded program file : {}".format(fname))
             #self.w.main_tab_widget.setCurrentIndex(TAB_MAIN)
             #STATUS.emit('update-machine-log', "Loaded program file : {}".format(fname), 'TIME')
-            QMessageBox.Warning(self.w, 'Внимание',
+            QMessageBox.warning(self.w, 'Внимание',
             "Не выбрано название файла *.ngc для сохранения программы GCode", QMessageBox.Yes)
             return
             #self.add_status("Unknown or invalid filename")
@@ -531,6 +533,9 @@ class HandlerClass:
         self.w.plt33.setLabel('left', 'T [Н*м]', **styles)
         self.w.plt33.setLabel('bottom', 'S [мм]', **styles)
 
+        self.w.plt33.setYRange(0.0, 100)
+        self.w.plt33.setXRange(0.0, 200)
+
         # размер шрифта числовых значений осей
         font=QtGui.QFont()
         font.setPixelSize(20)
@@ -543,9 +548,8 @@ class HandlerClass:
             pen=pg.mkPen(color=QColor(Qt.blue),
             width = 2, style=Qt.DashLine),
             label='{value:0.1f}',
-            labelOpts={'position':0.0, 'color': (255,255,255),
+            labelOpts={'position':0.05, 'color': (255,255,255),
                        'movable': False, 'fill': (0, 0, 200, 100)})
-
 
         self.hLineCurrent.setValue(0.5)
         self.hLineCurrent.setZValue(1)
@@ -578,10 +582,10 @@ class HandlerClass:
         # тест маркеров
         pen = pg.mkPen(None) # отсутствие линии между точками
         #pen = pg.mkPen(color=(255, 0, 0), width=0, style=QtCore.Qt.DashLine)
-        xpos = [0, 0, 0, 0, 0]
-        ypos = [0, 0, 0, 0, 0]
-        self.w.plt33.plot(xpos, ypos,
-            symbol='x', symbolSize=30, symbolBrush=('b'), text = ["a", "b", "d", "e", "f"])
+        self.xdata = [0, 0, 0, 0, 0]
+        self.ydata = [0, 0, 0, 0, 0]
+        self.plot_points = self.w.plt33.plot(self.xdata, self.ydata,
+            symbol='x', symbolSize=30, symbolBrush=('b'))
         #self.w.plt33.setTexts(["a", "b", "d", "e", "f"])
         #self.w.plt33.updateGraph()
 
@@ -589,7 +593,7 @@ class HandlerClass:
         self.txt_items = []
         for i in range(5):
             txt_itm = pg.TextItem(str(i), anchor=(0, 1.5))
-            txt_itm.setPos(xpos[i], ypos[i])
+            txt_itm.setPos(self.xdata[i], self.ydata[i])
             txt_itm.setFont(font)
             self.txt_items.append(txt_itm)
             self.w.plt33.addItem(txt_itm)
@@ -678,12 +682,12 @@ class HandlerClass:
         dsp_idle = random.random()*200.0
         current_position = dsp_idle * random.random()
         actual_position = current_position * random.random() * 0.01
-        #self.w.plt33.clear()
+        self.w.plt33.clear()
         self.hLineCurrent.setValue(torque_actual)
         #self.hLineCurrent.label.format = '%01d' % (torque_actual)
 
         self.vLineCurrent.setValue(dsp_idle * random.random())
-        self.vLineCurrent.label.format = '%01d' % (current_position) + '\n' + '%01d' % (actual_position)
+        self.vLineCurrent.label.format = '%01d' % (current_position) + '\n' + '(%01d)' % (actual_position)
 
         self.hTorqueEstimated.setValue(torque_est)
         #self.hTorqueEstimated.label.format = '%01d' % (torque_est)
@@ -691,6 +695,7 @@ class HandlerClass:
         # масштабирование X:[0 - torque-estimated*1.5], Y:[]
         self.w.plt33.setYRange(0.0, torque_est*1.5)
         self.w.plt33.setXRange(0.0, dsp_idle)
+        self.txt_items[2].setPos(dsp_idle*0.3, torque_est*0.3)
 
     def pinUpdatePlot(self, p):
         '''
@@ -698,20 +703,56 @@ class HandlerClass:
         :return:
         '''
         halpin_name = self.w.sender().text()
+        #print halpin_name[18] if len(halpin_name)>18 else halpin_name[9]
 
-        #xdata=[self.hal[]]???
-        #ydata=[self.hal[]]
-        #
-        #if(self.current_plot_n < 20):
-        #    #print "*** plot < 20"
-        #    self.w.plt33.plot(self.data[0][0:self.current_plot_n],
-        #                      self.data[1][0:self.current_plot_n],
-        #                      clear = True)
-        #else:
-        #    #print "*** plot >= 20"
-        #    self.w.plt33.plot(self.data[0][self.current_plot_n-20:self.current_plot_n],
-        #                      self.data[1][self.current_plot_n-20:self.current_plot_n],
-        #                      clear=True)
+        if halpin_name == 'torque_actual-pin33':
+            self.hLineCurrent.setValue(float(self.hal['torque_actual-pin33']))
+        elif halpin_name == 'torque_estimated-pin33':
+            torque_est = float(self.hal['torque_estimated-pin33'])
+            self.w.plt33.setYRange(0.0, torque_est*1.5)
+            self.hTorqueEstimated.setValue(torque_est)
+        elif halpin_name == 'position_actual-pin33':
+            actual_position = float(self.hal['position_actual-pin33'])
+            self.vLineCurrent.setValue(actual_position)
+            current_position = float(self.hal['position-pin33'])
+            self.vLineCurrent.label.format = '%01d' % (current_position) + '\n' + '(%01d)' % (actual_position)
+        elif halpin_name == 'position-pin33':
+            actual_position = float(self.hal['position_actual-pin33'])
+            self.vLineCurrent.setValue(actual_position)
+            current_position = float(self.hal['position-pin33'])
+            self.vLineCurrent.label.format = '%01d' % (current_position) + '\n' + '(%01d)' % (actual_position)
+        elif halpin_name == 'dsp_idle-pin33':
+            self.w.plt33.setXRange(0.0, float(self.hal['dsp_idle-pin33']))
+        elif (halpin_name[:9] == 'position_') and halpin_name[9].isdigit():
+            #DEBUG print halpin_name
+            i=int(halpin_name[9])
+            xpos=float(self.hal['position_'+str(i)+'-pin33'])
+            ypos=float(self.hal['torque_extremal_'+str(i)+'-pin33'])
+            self.txt_items[i].setPos(xpos, ypos)
+            self.txt_items[i].setText('%01d' % ypos)
+            #self.w.plt33.clear()
+            temp_data=self.plot_points.getData()
+            temp_data[0][i]=xpos
+            temp_data[1][i]=ypos
+            self.plot_points.setData(pos=temp_data)
+            #self.plot_points.update()
+            #self.w.plt33.update()
+        elif (halpin_name[:16] == 'torque_extremal_') and halpin_name[16].isdigit():
+            #DEBUG print halpin_name
+            i=int(halpin_name[16])
+            xpos=float(self.hal['position_'+str(i)+'-pin33'])
+            ypos=float(self.hal['torque_extremal_'+str(i)+'-pin33'])
+            self.txt_items[i].setPos(xpos, ypos)
+            self.txt_items[i].setText('%01d' % ypos)
+            #self.w.plt33.clear()
+            temp_data=self.plot_points.getData()
+            temp_data[0][i]=xpos
+            temp_data[1][i]=ypos
+            self.plot_points.setData(pos=temp_data)
+            #self.plot_points.update()
+            #self.w.plt33.update()
+            #self.txt_items[i].setPos(xpos, ypos)???
+
         return
 
     def flush_to_log(self):

@@ -44,7 +44,7 @@ qproperty-diameter: 20;
        <number>0</number>
       </property>
       <widget class="QWidget" name="page33">
-       <layout class="QGridLayout" name="gridLayout_20">
+       <layout class="QGridLayout" name="gridLayout_20" rowstretch="0,0,0,0,0,0" columnstretch="0,1,3">
         <item row="1" column="2">
          <layout class="QGridLayout" name="gridLayout_19">
           <item row="1" column="7">
@@ -94,6 +94,12 @@ qproperty-diameter: 20;
           </item>
           <item row="0" column="7">
            <widget class="ActionButton" name="actionbutton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>Machine
 on</string>
@@ -855,6 +861,12 @@ font: 15pt bold;</string>
         </item>
         <item row="3" column="2">
          <widget class="QToolBox" name="toolBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
           </property>
@@ -869,7 +881,7 @@ font: 15pt bold;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>503</width>
+             <width>589</width>
              <height>566</height>
             </rect>
            </property>
@@ -1115,9 +1127,15 @@ font: 15pt bold;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>503</width>
+             <width>589</width>
              <height>566</height>
             </rect>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
            <attribute name="label">
             <string>График</string>
@@ -1159,7 +1177,7 @@ font: 15pt bold;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>503</width>
+             <width>589</width>
              <height>566</height>
             </rect>
            </property>

@@ -180,7 +180,12 @@ class BallScrew(QMainWindow):
                 button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
                 location = control.parentWidget().layout().getItemPosition(index) #TODO здесь возникает ошибка!!
                 control.parentWidget().layout().addWidget(button, location[0], location[1]+1)
-                button.clicked.connect(lambda state, p_control=control, v=float(val_string): p_control.setValue(v))
+                if (control.__class__.__name__ == 'QTimeEdit'):
+                    button.clicked.connect(
+                        lambda state, p_control=control, v=QTime(0,0,0).addSecs(int(val_string)): p_control.setTime(v))
+                else:
+                    button.clicked.connect(
+                        lambda state, p_control=control, v=float(val_string): p_control.setValue(v))
 
     def set_default_values(self, n_form):
         assert 0 < n_form < 5, "Номер формы (типа испытания) не входит в пределы 1..4 и равен " + str(n_form)
