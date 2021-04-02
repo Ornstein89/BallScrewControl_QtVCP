@@ -20,6 +20,7 @@ import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
 # пакеты GUI
 from PyQt5 import QtCore, QtWidgets, QtGui, Qt
 from PyQt5.QtWidgets import QFileDialog, QLabel
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor, QPixmap, QIcon
 
 #from qtvcp.widgets import FocusOverlay
@@ -156,30 +157,67 @@ class HandlerClass:
     def init_pins(self):
         # создание HAL-пинов приложения
         self.VCP_halpins_float = {
+            'position-pin34':None,
+            'position_actual-pin34':None,
+            'load-pin34':None,
+            'load_actual-pin34':None,
+
+            'torque_error_value-pin34':None,
+            'torque_error_value_max-pin34':None,
+            'torque1_error_value-pin34':None,
+            'torque1_error_value_max-pin34':None,
+            'load_error_value-pin34':None,
+            'load_error_value_max-pin34':None,
+            'load_overload_value-pin34':None,
+            'load_overload_value_max-pin34':None,
+            'load_temperature-pin34':None,
+            'load_temperature_max-pin34':None,
+            'pos_error_value-pin34':None,
+            'pos_error_value_max-pin34':None,
+            'pos_overload_value-pin34':None,
+            'pos_overload_value_max-pin34':None,
+            'pos_temperature-pin34':None,
+            'pos_temperature_max-pin34':None,
+
+            'torque_max-pin34':None,
+            'f1-pin34':None,
+            'f2-pin34':None
 
         }
 
+        self.VCP_halpins_int = {
+            'i-pin34':None,
+            'N-pin34':None
+        }
+
+        for key in self.VCP_halpins_int:
+            tmp_newpin = self.hal.newpin(key, hal.HAL_U32, hal.HAL_IN)
+            self.VCP_halpins_int[key] = tmp_newpin
+
         self.VCP_halpins_bit = {
-        'active_0-pin':[None,self.pinCnagedCallback],
-        'active_1-pin':[None,self.pinCnagedCallback],
-        'active_2-pin':[None,self.pinCnagedCallback],
-        'active_3-pin':[None,self.pinCnagedCallback],
-        'active_4-pin':[None,self.pinCnagedCallback],
-        'active_5-pin':[None,self.pinCnagedCallback],
+            'append_title-pin34':[None,None],
+            'append_buffer-pin34':[None,None],
+            'append_file-pin34':[None,None],
 
-        'RODOS4_1_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_1_on', 1, True)],
-        'RODOS4_2_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_2_on', 2, True)],
-        'RODOS4_3_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_3_on', 3, True)],
-        'RODOS4_4_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_4_on', 4, True)],
-        'RODOS4_5_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_5_on', 5, True)],
-        'RODOS4_6_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_6_on', 6, True)],
+            'active_0-pin34':[None,self.guiStatesSitch],
+            'active_1-pin34':[None,self.guiStatesSitch],
+            'active_2-pin34':[None,self.guiStatesSitch],
+            'active_3-pin34':[None,self.guiStatesSitch],
+            'active_4-pin34':[None,self.guiStatesSitch],
 
-        'RODOS4_1_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_1_off', 1, False)],
-        'RODOS4_2_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_2_off', 2, False)],
-        'RODOS4_3_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_3_off', 3, False)],
-        'RODOS4_4_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_4_off', 4, False)],
-        'RODOS4_5_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_5_off', 5, False)],
-        'RODOS4_6_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_6_off', 6, False)]
+            'RODOS4_1_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_1_on', 1, True)],
+            'RODOS4_2_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_2_on', 2, True)],
+            'RODOS4_3_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_3_on', 3, True)],
+            'RODOS4_4_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_4_on', 4, True)],
+            'RODOS4_5_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_5_on', 5, True)],
+            'RODOS4_6_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_6_on', 6, True)],
+
+            'RODOS4_1_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_1_off', 1, False)],
+            'RODOS4_2_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_2_off', 2, False)],
+            'RODOS4_3_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_3_off', 3, False)],
+            'RODOS4_4_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_4_off', 4, False)],
+            'RODOS4_5_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_5_off', 5, False)],
+            'RODOS4_6_off': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_6_off', 6, False)]
         }
 
         # создание пинов и связывание событий изменения HAL с обработчиком
@@ -284,17 +322,88 @@ class HandlerClass:
     #####################
     # GENERAL FUNCTIONS #
     #####################
+    def guiStatesSitch(self):
+        self.w.btnHome34.setEnabled(self.hal['active_0-pin34'] and STATUS.machine_is_on())
+
+        controls_on_active1 = [ # список элементов, которые становятся активны
+            self.w.btnJog_Plus34,
+            self.w.btnJog_Minus34]
+        for control in controls_on_active1:
+            control.setEnabled(self.hal['active_1-pin34'] and STATUS.machine_is_on())
+
+        self.w.chkDsp_ModeOn34.setEnabled(self.hal['active_2-pin34'] and STATUS.machine_is_on())
+        self.w.chkDsp_ModeOff34.setEnabled(self.hal['active_2-pin34'] and STATUS.machine_is_on())
+        #????????
+        controls_on_active3 = [ # список элементов, которые становятся активны
+            self.w.sldDsp34,
+            self.w.spnDsp34,
+
+            self.w.sldOmg34,
+            self.w.spnOmg34,
+
+            self.w.spnAccel_Coeff34,
+            self.w.spnAccel_Coeff34,
+
+            self.w.sldF1_34,
+            self.w.spnF1_34,
+
+            self.w.sldF2_34,
+            self.w.spnF2_34,
+
+            self.w.btnSaveGCode34]
+
+        for control in controls_on_active3:
+            control.setEnabled(self.hal['active_3-pin34'] and STATUS.machine_is_on())
+
+        controls_on_active4 = [
+            self.w.gcode_editor34, self.w.btnLoadGCode34,
+            self.w.btnProgram_Run34, self.w.btnProgram_Pause34,
+            self.w.btnProgram_Stop34]
+        for control in controls_on_active4:
+            control.setEnabled(self.hal['active_4-pin34'] and STATUS.machine_is_on())
+
+        return
+
     def init_gui(self):
         self.w.setWindowIcon(QIcon("BallScrewControlIcon.png"))
-        self.init_led_colors()
-        #TODO настройка осей графика
         self.load_ini()
+        self.init_led_colors()
         self.init_plot()
 
+        STATUS.connect('state-estop',
+                        lambda w: (self.w.btnDevice_On34.setEnabled(False),
+                                   self.guiStatesSitch()))
+        STATUS.connect('state-estop-reset',
+                        lambda w: (self.w.btnDevice_On34.setEnabled(not STATUS.machine_is_on()),
+                                    self.guiStatesSitch()))
+
+        STATUS.connect('state-on', lambda _: (self.w.btnDevice_On34.setEnabled(False),
+                                              self.guiStatesSitch()))
+
+        STATUS.connect('state-off', lambda _:(self.w.btnDevice_On34.setEnabled(STATUS.estop_is_clear()),
+                                              self.guiStatesSitch()))
+
+        self.w.btnDevice_On34.clicked.connect(lambda x: ACTION.SET_MACHINE_STATE(True))
+        self.w.btnDevice_Off34.clicked.connect(lambda x: ACTION.SET_MACHINE_STATE(False))
+
+        # масштабирование с помощью пинов *-scale
+        # (команды setp в hal-файле недостаточно - слайдер не масштабирует,
+        # пока не сдвинуть вручную)
+        sliders_to_scale = [
+            self.w.sldDsp34, self.w.sldOmg34, self.w.sldAccel_Coeff34,
+            self.w.sldF1_34, self.w.sldF2_34]
+
+        for slider_i in sliders_to_scale:
+            slider_i.hal_pin_scale.set(0.01)
+            slider_i.hal_pin_f.set(slider_i.value()*0.01)
+
         # экран-заглушка для графика пока не получены данные с устройства
-        self.w.plot_overlay = QLabel(self.w.plt34)
-        self.stub_image = QPixmap("stub_screen.png")
-        self.w.plot_overlay.setPixmap(self.stub_image)
+        # self.w.plot_overlay = QLabel(self.w.plt34)
+        # self.stub_image = QPixmap("stub_screen.png")
+        # self.w.plot_overlay.setPixmap(self.stub_image)
+
+        # приведение GUI в соответствие с сигналами HAL
+        self.guiStatesSitch()
 
         self.w.overlay = FocusOverlay(self.w)
         self.w.overlay.setGeometry(0, 0, self.w.width(), self.w.height())
@@ -324,7 +433,7 @@ class HandlerClass:
         self.w.ledLimits_Excess34)
 
         for led in diodes_redgreen:
-            led.setColor(Qt.green)
+            led.setColor(Qt.red)
             led.setOffColor(Qt.green)
 
     def init_plot(self):

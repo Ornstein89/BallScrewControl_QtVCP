@@ -20,7 +20,7 @@ import re
 import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
 
 # пакеты GUI
-from PyQt5 import QtCore, QtWidgets, QtGui
+from PyQt5 import QtCore, QtWidgets, QtGui, Qt
 from PyQt5.QtWidgets import QFileDialog, QMessageBox, QLabel
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor, QPixmap, QIcon
@@ -142,8 +142,8 @@ class HandlerClass:
             'position-pin33':None,
             'position_actual-pin33':None,
             'load-pin33':None,
-            'dsp_idle-pin33':None,
             'load_actual-pin33':None,
+            'dsp_idle-pin33':None,
             'load_error_value-pin33':None,
             'load_error_value_max-pin33':None,
             'load_overload_value-pin33':None,
@@ -174,12 +174,12 @@ class HandlerClass:
         }
 
         self.VCP_halpins_bit = {
-            'active_0-pin':[None, self.guiActivity],
-            'active_1-pin':[None, self.guiActivity],
-            'active_2-pin':[None, self.guiActivity],
-            'active_3-pin':[None, self.guiActivity],
-            'active_4-pin':[None, self.guiActivity],
-            'active_5-pin':[None, self.guiActivity],
+            'active_0-pin':[None, self.guiStatesSitch],
+            'active_1-pin':[None, self.guiStatesSitch],
+            'active_2-pin':[None, self.guiStatesSitch],
+            'active_3-pin':[None, self.guiStatesSitch],
+            'active_4-pin':[None, self.guiStatesSitch],
+            'active_5-pin':[None, self.guiStatesSitch],
 
             'RODOS4_1_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_1_on', 1, True)],
             'RODOS4_2_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_2_on', 2, True)],
@@ -321,7 +321,7 @@ class HandlerClass:
         #TODO защита от ошибки "Не могу исполнить команду MDI если не найдены начала"
         return
 
-    def guiActivity(self):
+    def guiStatesSitch(self):
         self.w.btnHome33.setEnabled(self.hal['active_0-pin'] and STATUS.machine_is_on())
 
         controls_on_active1 = [ # список элементов, которые становятся активны
@@ -447,18 +447,20 @@ class HandlerClass:
                                               #self.w.btnStop33.setEnabled(True),
                                               #self.w.btnStart_Cw32.setEnabled(True),
                                               self.w.btnDevice_On33.setEnabled(False),
-                                              self.guiActivity()))
+                                              self.guiStatesSitch()))
 
         STATUS.connect('state-off', lambda _:(#self.onbtnStop32_clicked(),
                                               #self.w.btnStart_Ccw32.setEnabled(False),
                                               #self.w.btnStop32.setEnabled(False),
                                               #self.w.btnStart_Cw32.setEnabled(False),
                                               self.w.btnDevice_On33.setEnabled(STATUS.estop_is_clear()),
-                                              self.guiActivity()))
+                                              self.guiStatesSitch()))
 
         self.w.btnTest.clicked.connect(self.testUpdatePlot)
 
-        # масштабирование с помощью пинов *-scale (setp в hal-файле недостаточно - слайдер не масштабирует, пока не сдвинуть вручную)
+        # масштабирование с помощью пинов *-scale
+        # (команды setp в hal-файле недостаточно - слайдер не масштабирует,
+        # пока не сдвинуть вручную)
         sliders_to_scale = [
             self.w.sldDsp_Idle33, self.w.sldVel_Idle33, self.w.sldAccel_Idle33,
             self.w.sldLoad33, self.w.sldPos_Measure33, self.w.sldDsp_Measure33,
@@ -474,7 +476,7 @@ class HandlerClass:
         # self.w.plot_overlay.setPixmap(self.stub_image)
 
         # приведение GUI в соответствие с сигналами HAL
-        self.guiActivity()
+        self.guiStatesSitch()
 
         self.w.overlay = FocusOverlay(self.w)
         self.w.overlay.setGeometry(0, 0, self.w.width(), self.w.height())
