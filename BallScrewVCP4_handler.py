@@ -416,18 +416,18 @@ class HandlerClass:
         self.w.ledIs_Homed34,
         self.w.ledOn_Position34,
         self.w.ledAt_Load34,
-        self.w.ledTorque_Error34,
-        self.w.ledTorque1_Error34,
+        # убрали из ТЗ 2 апреля self.w.ledTorque_Error34,
+        # убрали из ТЗ 2 апреля self.w.ledTorque1_Error34,
         self.w.ledEstop_Ext34,
-        self.w.ledLoad_Is_On_2_34,
+        # убрали из ТЗ 2 апреля self.w.ledLoad_Is_On_2_34,
         self.w.ledLoad_Alarm34,
         self.w.ledLoad_Error34,
-        self.w.ledLoad_Overload34,
+        # убрали из ТЗ 2 апреля self.w.ledLoad_Overload34,
         self.w.ledLoad_Overheat34,
-        self.w.ledPos_Is_On_2_34,
-        self.w.ledPoa_Alarm34,
+        # убрали из ТЗ 2 апреля self.w.ledPos_Is_On_2_34,
+        self.w.ledPos_Alarm34,
         self.w.ledPos_Error34,
-        self.w.ledPos_Overload34,
+        # убрали из ТЗ 2 апреля self.w.ledPos_Overload34,
         self.w.ledPos_Overheat34,
         self.w.ledSlip34,
         self.w.ledLimits_Excess34)
@@ -439,18 +439,26 @@ class HandlerClass:
     def init_plot(self):
         self.w.plt34.showGrid(x = True, y = True)
         self.w.plt34.setBackground('w')
-        #pen = pg.mkPen(color=(255, 0, 0), width=2)
-        #self.w.plt34.setPen(pen)
         styles = {'color':'r', 'font-size':'20px'}
 
         self.w.plt34.setLabel('left', 'F [кгс]', **styles)
         self.w.plt34.setLabel('bottom', 'Положение, мм', **styles)
 
+        # дефолтное положение
+        self.w.plt34.setYRange(0.0, 10)
+        self.w.plt34.setXRange(0.0, 200)
+
+        # размер шрифта числовых значений осей
         font=QtGui.QFont()
         font.setPixelSize(20)
+        #plot.getAxis("bottom").tickFont = font
+        self.w.plt34.getAxis("bottom").setStyle(tickFont = font)
+        self.w.plt34.getAxis("left").setStyle(tickFont = font)
+
+        # горизонтальная штриховая линия load/load_actual
         self.hLine = pg.InfiniteLine(angle=0, movable=False,
             pen=pg.mkPen(color=QColor(Qt.blue),
-            width = 2, style=Qt.DashDotLine),
+            width = 2, style=Qt.DashLine),
             label='{value:0.1f}',
             labelOpts={'position':0.95, 'color': (255,0,0),
                        'movable': False, 'fill': (0, 0, 200, 100)})
@@ -538,20 +546,20 @@ class HandlerClass:
             'load_actual':self.w.lblLoad_Actual34,
 
             # "таблица" с диодами и надписями на Форме 3.4
-            'torque_error_value':self.w.lblTorque_Error_Value34,
-            'torque_error_value_max':self.w.lblTorque_Error_Value_Max34,
-            'torque1_error_value':self.w.lblTorque1_Error_Value34,
-            'torque1_error_value_max':self.w.lblTorque1_Error_Value_Max34,
+            # убрали из ТЗ 2 апреля 'torque_error_value':self.w.lblTorque_Error_Value34,
+            # убрали из ТЗ 2 апреля 'torque_error_value_max':self.w.lblTorque_Error_Value_Max34,
+            # убрали из ТЗ 2 апреля 'torque1_error_value':self.w.lblTorque1_Error_Value34,
+            # убрали из ТЗ 2 апреля 'torque1_error_value_max':self.w.lblTorque1_Error_Value_Max34,
             'load_error_value':self.w.lblLoad_Error_Value34,
             'load_error_value_max':self.w.lblLoad_Error_Value_Max34,
-            'load_overload_value':self.w.lblLoad_Overload_Value34,
-            'load_overload_value_max':self.w.lblLoad_Overload_Value_Max34,
+            # убрали из ТЗ 2 апреля 'load_overload_value':self.w.lblLoad_Overload_Value34,
+            # убрали из ТЗ 2 апреля 'load_overload_value_max':self.w.lblLoad_Overload_Value_Max34,
             'load_temperature':self.w.lblLoad_Temperature34,
             'load_temperature_max':self.w.lblLoad_Temperature_Max34,
             'pos_error_value':self.w.lblPos_Error_Value34,
             'pos_error_value_max':self.w.lblPos_Error_Value_Max34,
-            'pos_overload_value':self.w.lblPos_Overload_Value34,
-            'pos_overload_value_max':self.w.lblPos_Overload_Value_Max34,
+            # убрали из ТЗ 2 апреля 'pos_overload_value':self.w.lblPos_Overload_Value34,
+            # убрали из ТЗ 2 апреля 'pos_overload_value_max':self.w.lblPos_Overload_Value_Max34,
             'pos_temperature':self.w.lblPos_Temperature34,
             'pos_temperature_max':self.w.lblPos_Temperature_Max34,
             'torque_max':self.w.lblTorque_Max34,

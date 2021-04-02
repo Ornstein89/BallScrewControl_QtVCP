@@ -517,6 +517,7 @@ class HandlerClass:
         self.w.plt33.setLabel('left', 'T [Н*м]', **styles)
         self.w.plt33.setLabel('bottom', 'S [мм]', **styles)
 
+        # дефолтное положение
         self.w.plt33.setYRange(0.0, 10)
         self.w.plt33.setXRange(0.0, 200)
 

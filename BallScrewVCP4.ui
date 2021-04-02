@@ -213,10 +213,7 @@ font: 15pt bold;</string>
           <item row="3" column="0">
            <layout class="QHBoxLayout" name="horizontalLayout_16">
             <item>
-             <widget class="QCheckBox" name="checkBox">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
+             <widget class="CheckBox" name="chkLogPermit34">
               <property name="text">
                <string>Записывать в файл</string>
               </property>
@@ -224,9 +221,6 @@ font: 15pt bold;</string>
             </item>
             <item>
              <widget class="QPushButton" name="btnShowResult34">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
               <property name="text">
                <string>Просмотр результатов</string>
               </property>
@@ -505,20 +499,6 @@ font: 15pt bold;</string>
              <item row="1" column="0" colspan="2">
               <widget class="LED" name="ledAt_Load34"/>
              </item>
-             <item row="0" column="0">
-              <widget class="QCheckBox" name="chkDsp_ModeOn34">
-               <property name="text">
-                <string>On</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QCheckBox" name="chkDsp_ModeOff34">
-               <property name="text">
-                <string>Off</string>
-               </property>
-              </widget>
-             </item>
              <item row="0" column="3">
               <widget class="QLabel" name="lblLoad34">
                <property name="text">
@@ -526,10 +506,10 @@ font: 15pt bold;</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="2">
-              <widget class="QLabel" name="label_81">
+             <item row="0" column="0">
+              <widget class="QCheckBox" name="chkDsp_ModeOn34">
                <property name="text">
-                <string>Нагрузка фактическая, кгс</string>
+                <string>On</string>
                </property>
               </widget>
              </item>
@@ -543,6 +523,20 @@ font: 15pt bold;</string>
                </property>
                <property name="text">
                 <string>---</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QLabel" name="label_81">
+               <property name="text">
+                <string>Нагрузка фактическая, кгс</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QCheckBox" name="chkDsp_ModeOff34">
+               <property name="text">
+                <string>Off</string>
                </property>
               </widget>
              </item>
@@ -809,7 +803,7 @@ qproperty-diameter: 70;</string>
            <enum>QFrame::NoFrame</enum>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="page_3">
            <property name="geometry">
@@ -826,200 +820,14 @@ qproperty-diameter: 70;</string>
            <layout class="QGridLayout" name="gridLayout_3">
             <item row="0" column="0">
              <layout class="QGridLayout" name="gridLayout_21">
-              <item row="8" column="0">
-               <widget class="LED" name="ledLoad_Overheat34"/>
-              </item>
-              <item row="12" column="1">
-               <widget class="QLabel" name="label_69">
-                <property name="text">
-                 <string>П_перегрузка</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0">
-               <widget class="LED" name="ledLoad_Is_On_2_34"/>
-              </item>
-              <item row="6" column="0">
-               <widget class="LED" name="ledLoad_Error34"/>
-              </item>
-              <item row="13" column="1">
-               <widget class="QLabel" name="label_70">
-                <property name="text">
-                 <string>П_температура</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="LED" name="ledTorque1_Error34"/>
-              </item>
-              <item row="13" column="0">
-               <widget class="LED" name="ledPos_Overheat34"/>
-              </item>
-              <item row="11" column="0">
-               <widget class="LED" name="ledPos_Error34"/>
-              </item>
-              <item row="1" column="2">
-               <widget class="QLabel" name="lblTorque_Error_Value34">
-                <property name="text">
-                 <string>---</string>
-                </property>
-               </widget>
-              </item>
-              <item row="8" column="3">
-               <widget class="QLabel" name="lblLoad_Temperature_Max34">
-                <property name="text">
-                 <string>---</string>
-                </property>
-               </widget>
-              </item>
-              <item row="7" column="2">
-               <widget class="QLabel" name="lblLoad_Overload_Value34">
-                <property name="text">
-                 <string>---</string>
-                </property>
-               </widget>
-              </item>
-              <item row="11" column="2">
-               <widget class="QLabel" name="lblPos_Error_Value34">
-                <property name="text">
-                 <string>---</string>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="2">
-               <widget class="QLabel" name="lblLoad_Error_Value34">
-                <property name="text">
-                 <string>---</string>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="1">
-               <widget class="QLabel" name="label_64">
-                <property name="text">
-                 <string>Н_значение</string>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="1">
-               <widget class="QLabel" name="label_62">
-                <property name="text">
-                 <string>Н_состояние</string>
-                </property>
-               </widget>
-              </item>
-              <item row="15" column="0">
-               <widget class="LED" name="ledLimits_Excess34"/>
-              </item>
-              <item row="1" column="3">
-               <widget class="QLabel" name="lblTorque_Error_Value_Max34">
-                <property name="text">
-                 <string>---</string>
-                </property>
-               </widget>
-              </item>
-              <item row="11" column="1">
-               <widget class="QLabel" name="label_68">
-                <property name="text">
-                 <string>П_значение</string>
-                </property>
-               </widget>
-              </item>
-              <item row="7" column="0">
-               <widget class="LED" name="ledLoad_Overload34"/>
-              </item>
-              <item row="9" column="1">
-               <widget class="QLabel" name="label_66">
-                <property name="text">
-                 <string>П_питание</string>
-                </property>
-               </widget>
-              </item>
-              <item row="12" column="3">
-               <widget class="QLabel" name="lblPos_Overload_Value_Max34">
-                <property name="text">
-                 <string>---</string>
-                </property>
-               </widget>
-              </item>
-              <item row="7" column="1">
-               <widget class="QLabel" name="label_63">
-                <property name="text">
-                 <string>Н_перегрузка</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
+              <item row="1" column="1">
                <widget class="QLabel" name="label_60">
                 <property name="text">
                  <string>АВОСТ</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="LED" name="ledTorque_Error34"/>
-              </item>
-              <item row="14" column="1">
-               <widget class="QLabel" name="label_71">
-                <property name="text">
-                 <string>Проскальзывание</string>
-                </property>
-               </widget>
-              </item>
-              <item row="11" column="3">
-               <widget class="QLabel" name="lblPos_Error_Value_Max34">
-                <property name="text">
-                 <string>---</string>
-                </property>
-               </widget>
-              </item>
-              <item row="13" column="2">
-               <widget class="QLabel" name="lblPos_Temperature34">
-                <property name="text">
-                 <string>---</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="2">
-               <widget class="QLabel" name="lblTorque1_Error_Value34">
-                <property name="text">
-                 <string>---</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="LED" name="ledEstop_Ext34"/>
-              </item>
-              <item row="2" column="3">
-               <widget class="QLabel" name="lblTorque1_Error_Value_Max34">
-                <property name="text">
-                 <string>---</string>
-                </property>
-               </widget>
-              </item>
-              <item row="10" column="0">
-               <widget class="LED" name="ledPoa_Alarm34"/>
-              </item>
-              <item row="13" column="3">
-               <widget class="QLabel" name="lblPos_Temperature_Max34">
-                <property name="text">
-                 <string>---</string>
-                </property>
-               </widget>
-              </item>
-              <item row="9" column="0">
-               <widget class="LED" name="ledPos_Is_On_2_34"/>
-              </item>
-              <item row="12" column="0">
-               <widget class="LED" name="ledPos_Overload34"/>
-              </item>
-              <item row="2" column="1">
-               <widget class="QLabel" name="label_59">
-                <property name="text">
-                 <string>Состояние РВМ</string>
-                </property>
-               </widget>
-              </item>
-              <item row="10" column="1">
+              <item row="5" column="1">
                <widget class="QLabel" name="label_67">
                 <property name="text">
                  <string>П_состояние</string>
@@ -1027,66 +835,149 @@ qproperty-diameter: 70;</string>
                </widget>
               </item>
               <item row="7" column="3">
-               <widget class="QLabel" name="lblLoad_Overload_Value_Max34">
+               <widget class="QLabel" name="lblPos_Temperature_Max34">
                 <property name="text">
                  <string>---</string>
                 </property>
                </widget>
               </item>
-              <item row="15" column="1">
-               <widget class="QLabel" name="label_72">
-                <property name="text">
-                 <string>Рабочая зона</string>
+              <item row="1" column="0">
+               <widget class="LED" name="ledEstop_Ext34"/>
+              </item>
+              <item row="10" column="0" colspan="4">
+               <spacer name="verticalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
                 </property>
-               </widget>
-              </item>
-              <item row="4" column="1">
-               <widget class="QLabel" name="label_61">
-                <property name="text">
-                 <string>Н_питание</string>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
                 </property>
-               </widget>
+               </spacer>
               </item>
-              <item row="5" column="0">
-               <widget class="LED" name="ledLoad_Alarm34"/>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLabel" name="label_58">
-                <property name="text">
-                 <string>Состояние ШВМ</string>
-                </property>
-               </widget>
-              </item>
-              <item row="12" column="2">
-               <widget class="QLabel" name="lblPos_Overload_Value34">
+              <item row="4" column="3">
+               <widget class="QLabel" name="lblLoad_Temperature_Max34">
                 <property name="text">
                  <string>---</string>
                 </property>
                </widget>
               </item>
-              <item row="8" column="2">
+              <item row="8" column="1">
+               <widget class="QLabel" name="label_71">
+                <property name="text">
+                 <string>Проскальзывание</string>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="2">
+               <widget class="QLabel" name="lblPos_Temperature34">
+                <property name="text">
+                 <string>---</string>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="0">
+               <widget class="LED" name="ledPos_Overheat34"/>
+              </item>
+              <item row="7" column="1">
+               <widget class="QLabel" name="label_70">
+                <property name="text">
+                 <string>П_температура</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="2">
                <widget class="QLabel" name="lblLoad_Temperature34">
                 <property name="text">
                  <string>---</string>
                 </property>
                </widget>
               </item>
-              <item row="6" column="3">
+              <item row="6" column="0">
+               <widget class="LED" name="ledPos_Error34"/>
+              </item>
+              <item row="9" column="1">
+               <widget class="QLabel" name="label_72">
+                <property name="text">
+                 <string>Рабочая зона</string>
+                </property>
+               </widget>
+              </item>
+              <item row="9" column="0">
+               <widget class="LED" name="ledLimits_Excess34"/>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLabel" name="label_62">
+                <property name="text">
+                 <string>Н_состояние</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QLabel" name="label_65">
+                <property name="text">
+                 <string>Н_температура</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="2">
+               <widget class="QLabel" name="lblPos_Error_Value34">
+                <property name="text">
+                 <string>---</string>
+                </property>
+               </widget>
+              </item>
+              <item row="8" column="0">
+               <widget class="LED" name="ledSlip34"/>
+              </item>
+              <item row="3" column="3">
                <widget class="QLabel" name="lblLoad_Error_Value_Max34">
                 <property name="text">
                  <string>---</string>
                 </property>
                </widget>
               </item>
-              <item row="14" column="0">
-               <widget class="LED" name="ledSlip34"/>
+              <item row="5" column="0">
+               <widget class="LED" name="ledPos_Alarm34"/>
               </item>
-              <item row="8" column="1">
-               <widget class="QLabel" name="label_65">
+              <item row="3" column="1">
+               <widget class="QLabel" name="label_64">
                 <property name="text">
-                 <string>Н_температура</string>
+                 <string>Н_значение</string>
                 </property>
                </widget>
+              </item>
+              <item row="6" column="3">
+               <widget class="QLabel" name="lblPos_Error_Value_Max34">
+                <property name="text">
+                 <string>---</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="2">
+               <widget class="QLabel" name="lblLoad_Error_Value34">
+                <property name="text">
+                 <string>---</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="LED" name="ledLoad_Error34"/>
+              </item>
+              <item row="4" column="0">
+               <widget class="LED" name="ledLoad_Overheat34"/>
+              </item>
+              <item row="6" column="1">
+               <widget class="QLabel" name="label_68">
+                <property name="text">
+                 <string>П_значение</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="LED" name="ledLoad_Alarm34"/>
               </item>
              </layout>
             </item>
@@ -1176,6 +1067,11 @@ qproperty-diameter: 70;</string>
   <customwidget>
    <class>PushButton</class>
    <extends>QPushButton</extends>
+   <header>qtvcp.widgets.simple_widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>CheckBox</class>
+   <extends>QCheckBox</extends>
    <header>qtvcp.widgets.simple_widgets</header>
   </customwidget>
   <customwidget>
