@@ -193,6 +193,7 @@ class HandlerClass:
         for key in self.VCP_halpins_int:
             tmp_newpin = self.hal.newpin(key, hal.HAL_U32, hal.HAL_IN)
             self.VCP_halpins_int[key] = tmp_newpin
+            self.VCP_halpins_int[key].value_changed.connect(lambda s: self.pinCnagedCallback(s))
 
         self.VCP_halpins_bit = {
             'append_title-pin34':[None,None],
@@ -413,28 +414,31 @@ class HandlerClass:
     def init_led_colors(self):
         # настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
         diodes_redgreen = (
-        self.w.ledIs_Homed34,
-        self.w.ledOn_Position34,
-        self.w.ledAt_Load34,
-        # убрали из ТЗ 2 апреля self.w.ledTorque_Error34,
-        # убрали из ТЗ 2 апреля self.w.ledTorque1_Error34,
-        self.w.ledEstop_Ext34,
-        # убрали из ТЗ 2 апреля self.w.ledLoad_Is_On_2_34,
-        self.w.ledLoad_Alarm34,
-        self.w.ledLoad_Error34,
-        # убрали из ТЗ 2 апреля self.w.ledLoad_Overload34,
-        self.w.ledLoad_Overheat34,
-        # убрали из ТЗ 2 апреля self.w.ledPos_Is_On_2_34,
-        self.w.ledPos_Alarm34,
-        self.w.ledPos_Error34,
-        # убрали из ТЗ 2 апреля self.w.ledPos_Overload34,
-        self.w.ledPos_Overheat34,
-        self.w.ledSlip34,
-        self.w.ledLimits_Excess34)
+            self.w.ledEnable34,
+            self.w.ledIs_Homed34,
+            self.w.ledOn_Position34,
+            self.w.ledAt_Load34,
+            # убрали из ТЗ 2 апреля self.w.ledTorque_Error34,
+            # убрали из ТЗ 2 апреля self.w.ledTorque1_Error34,
+            self.w.ledEstop_Ext34,
+            # убрали из ТЗ 2 апреля self.w.ledLoad_Is_On_2_34,
+            self.w.ledLoad_Alarm34,
+            self.w.ledLoad_Error34,
+            # убрали из ТЗ 2 апреля self.w.ledLoad_Overload34,
+            self.w.ledLoad_Overheat34,
+            # убрали из ТЗ 2 апреля self.w.ledPos_Is_On_2_34,
+            self.w.ledPos_Alarm34,
+            self.w.ledPos_Error34,
+            # убрали из ТЗ 2 апреля self.w.ledPos_Overload34,
+            self.w.ledPos_Overheat34,
+            self.w.ledSlip34,
+            self.w.ledLimits_Excess34)
 
         for led in diodes_redgreen:
             led.setColor(Qt.red)
             led.setOffColor(Qt.green)
+
+        return
 
     def init_plot(self):
         self.w.plt34.showGrid(x = True, y = True)
@@ -493,49 +497,8 @@ class HandlerClass:
     def pinCnagedCallback(self, data):
         halpin_name = self.w.sender().text()
 
-        # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_0-pin'):
-            return
-
-        # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_1-pin'):
-            self.w.btnJog_Plus34.setEnabled(self.hal['active_1-pin'])
-            self.w.btnJog_Minus34.setEnabled(self.hal['active_1-pin'])
-            return
-
-        # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_2-pin'):
-            self.w.chkDsp_Mode34.setEnabled(self.hal['active_2-pin'])
-            return
-
-        # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_3-pin'):
-            self.w.sldDsp34.setEnabled(self.hal['active_3-pin'])
-            self.w.sldOmg34.setEnabled(self.hal['active_3-pin'])
-            self.w.sldAccel_Coeff34.setEnabled(self.hal['active_3-pin'])
-            self.w.sldF1_34.setEnabled(self.hal['active_3-pin'])
-            self.w.sldF2_34.setEnabled(self.hal['active_3-pin'])
-            self.w.btnSaveGCode34.setEnabled(self.hal['active_3-pin'])
-
-            return
-
-        # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_4-pin'):
-            self.w.btnLoadGCode34.setEnabled(self.hal['active_4-pin'])
-            self.w.btnProgram_Run34.setEnabled(self.hal['active_4-pin'])
-            self.w.btnProgram_Pause34.setEnabled(self.hal['active_4-pin'])
-            self.w.btnProgram_Stop34.setEnabled(self.hal['active_4-pin'])
-            return
-
-        # отдельные пины, отвечающий за активность графических компонентов
-        if(halpin_name == 'active_5-pin'):
-            pass
-
-            return
-
         # соответствие пинов float и табличек, на которых нужно отображать значение
         halpins_labels_match_precision2 = { # отображать с точностью 2 знака после запятой
-
             }
 
         if(halpin_name in halpins_labels_match_precision2):
@@ -545,34 +508,42 @@ class HandlerClass:
         halpins_labels_match_precision1 = { # отображать с точностью 1 знак после запятой
 
             #TODO для формы 3.4
-            'position':self.w.lblPosition34,
-            'position_actual':self.w.lblPosition_Actual34,
-            'load':self.w.lblLoad34,
-            'load_actual':self.w.lblLoad_Actual34,
+            'position-pin34':self.w.lblPosition34,
+            'position_actual-pin34':self.w.lblPosition_Actual34,
+            'load-pin34':self.w.lblLoad34,
+            'load_actual-pin34':self.w.lblLoad_Actual34,
 
             # "таблица" с диодами и надписями на Форме 3.4
             # убрали из ТЗ 2 апреля 'torque_error_value':self.w.lblTorque_Error_Value34,
             # убрали из ТЗ 2 апреля 'torque_error_value_max':self.w.lblTorque_Error_Value_Max34,
             # убрали из ТЗ 2 апреля 'torque1_error_value':self.w.lblTorque1_Error_Value34,
             # убрали из ТЗ 2 апреля 'torque1_error_value_max':self.w.lblTorque1_Error_Value_Max34,
-            'load_error_value':self.w.lblLoad_Error_Value34,
-            'load_error_value_max':self.w.lblLoad_Error_Value_Max34,
+            'load_error_value-pin34':self.w.lblLoad_Error_Value34,
+            'load_error_value_max-pin34':self.w.lblLoad_Error_Value_Max34,
             # убрали из ТЗ 2 апреля 'load_overload_value':self.w.lblLoad_Overload_Value34,
             # убрали из ТЗ 2 апреля 'load_overload_value_max':self.w.lblLoad_Overload_Value_Max34,
-            'load_temperature':self.w.lblLoad_Temperature34,
-            'load_temperature_max':self.w.lblLoad_Temperature_Max34,
-            'pos_error_value':self.w.lblPos_Error_Value34,
-            'pos_error_value_max':self.w.lblPos_Error_Value_Max34,
+            'load_temperature-pin34':self.w.lblLoad_Temperature34,
+            'load_temperature_max-pin34':self.w.lblLoad_Temperature_Max34,
+            'pos_error_value-pin34':self.w.lblPos_Error_Value34,
+            'pos_error_value_max-pin34':self.w.lblPos_Error_Value_Max34,
             # убрали из ТЗ 2 апреля 'pos_overload_value':self.w.lblPos_Overload_Value34,
             # убрали из ТЗ 2 апреля 'pos_overload_value_max':self.w.lblPos_Overload_Value_Max34,
-            'pos_temperature':self.w.lblPos_Temperature34,
-            'pos_temperature_max':self.w.lblPos_Temperature_Max34,
-            'torque_max':self.w.lblTorque_Max34,
+            'pos_temperature-pin34':self.w.lblPos_Temperature34,
+            'pos_temperature_max-pin34':self.w.lblPos_Temperature_Max34,
+            'torque_max-pin34':self.w.lblTorque_Max34,
         }
 
         if(halpin_name in halpins_labels_match_precision1):
             halpin_value = self.hal[halpin_name]
             halpins_labels_match_precision1[halpin_name].setText("{:10.1f}".format(halpin_value))
+
+        halpins_labels_int = {
+            'i-pin34':self.w.lblI34,
+            'N-pin34':self.w.lblN34}
+
+        if(halpin_name in halpins_labels_int):
+            halpin_value = self.hal[halpin_name]
+            halpins_labels_int[halpin_name].setText(str(halpin_value))
 
         return
         #print "Test pin value changed to:" % (data) # ВЫВОДИТ ВСЕГДА 0 - ВИДИМО ОШИБКА В ДОКУМЕНТАЦИИ
