@@ -220,13 +220,15 @@ class BallScrew(QMainWindow):
             'PITCH' : self.spnPitch21,
             'TRAVEL' : self.spnTravel21,
             'NOM_VEL' : self.spnNom_Vel21,
-            'NOM_ACCEL' : self.spnNom_Accel21},
+            'NOM_ACCEL' : self.spnNom_Accel21,
+            'MICROSTEP' : self.spnMicrostep21},
 
             {'GEAR' : self.spnGear22,
             'NOM_VEL' : self.spnNom_Vel22,
             'BRAKE_TORQUE' : self.spnBrake_Torque22,
             'DURATION' : self.timeEdit, # self.spnDuration22,
-            'EFFICIENCY' : self.spnEfficiency22},
+            'EFFICIENCY' : self.spnEfficiency22,
+            'MICROSTEP' : self.spnMicrostep22},
 
             {'GEAR' : self.spnGear23,
             'PITCH' : self.spnPitch23,
@@ -237,7 +239,8 @@ class BallScrew(QMainWindow):
             'NOM_VEL_MEASURE' : self.spnNom_Vel_Measure23,
             'NOM_ACCEL_MEASURE' : self.spnNom_Accel_Measure23,
             'NOM_LOAD' : self.spnNom_Load23,
-            'NOM_POS_MEASURE' : self.spnNom_Pos_Measure23},
+            'NOM_POS_MEASURE' : self.spnNom_Pos_Measure23,
+            'MICROSTEP' : self.spnMicrostep23},
 
             {'GEAR' : self.spnGear24,
             'PITCH' : self.spnPitch24,
@@ -249,7 +252,8 @@ class BallScrew(QMainWindow):
             'OVERLOAD_COEFF' : self.spnOverload_Coeff24,
             'DWELL' : self.spnDwell24,
             'N' : self.spnN24,
-            'LOG_FREQ' : self.spnLog_Freq24} )
+            'LOG_FREQ' : self.spnLog_Freq24,
+            'MICROSTEP' : self.spnMicrostep24} )
 
     def save_ini(self, n_form):
         assert 0 < n_form < 5, "Номер формы (типа испытания) не входит в пределы 1..4 и равен " + str(n_form)
@@ -261,7 +265,7 @@ class BallScrew(QMainWindow):
         # добавить значения из интерфейса в объект config
         config['BALLSCREWPARAMS'] = {}
         for key, control in self.params_and_controls_dict[n_form-1].items():
-            print "*** class name = ", control.__class__.__name__
+            #DEBUG print "*** class name = ", control.__class__.__name__
             if (control.__class__.__name__ == 'QTimeEdit'):
                 config['BALLSCREWPARAMS'][key] = str(QTime(0, 0, 0).secsTo(control.time()))
                 config['BALLSCREWPARAMS'][key+'_MIN'] = str(QTime(0, 0, 0).secsTo(control.minimumTime()))
@@ -270,6 +274,15 @@ class BallScrew(QMainWindow):
                 config['BALLSCREWPARAMS'][key] = str(control.value())
                 config['BALLSCREWPARAMS'][key+'_MIN'] = str(control.minimum())
                 config['BALLSCREWPARAMS'][key+'_MAX'] = str(control.maximum())
+
+        tmp_gear = self.params_and_controls_dict[n_form-1]['GEAR'].value();
+        tmp_microstep = self.params_and_controls_dict[n_form-1]['MICROSTEP'].value();
+        if n_form==2:
+            config['BALLSCREWPARAMS']['SCALE'] = str(tmp_gear*tmp_microstep);
+        else:
+            tmp_pitch = self.params_and_controls_dict[n_form-1]['PITCH'].value();
+            config['BALLSCREWPARAMS']['SCALE'] = str(tmp_gear*tmp_microstep/tmp_pitch);
+
         config['BALLSCREWPARAMS']['TYPE'] = str(n_form) #TODO
         config['BALLSCREWPARAMS']['DATE'] = self.DATE
         config['BALLSCREWPARAMS']['MODEL'] = "TODO_need_for_Excel_file" #self.MODEL
