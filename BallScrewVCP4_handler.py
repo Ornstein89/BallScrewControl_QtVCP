@@ -12,7 +12,7 @@
 # **** IMPORT SECTION **** #
 ############################
 # стандартные пакеты
-import sys, os, configparser, subprocess
+import sys, os, io, re, configparser, subprocess
 
 # пакеты linuxcnc
 import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
@@ -341,7 +341,7 @@ class HandlerClass:
             self.w.sldOmg34,
             self.w.spnOmg34,
 
-            self.w.spnAccel_Coeff34,
+            self.w.sldAccel_Coeff34,
             self.w.spnAccel_Coeff34,
 
             self.w.sldF1_34,
@@ -460,27 +460,32 @@ class HandlerClass:
             pen=pg.mkPen(color=QColor(Qt.blue),
             width = 2, style=Qt.DashLine),
             label='{value:0.1f}',
-            labelOpts={'position':0.95, 'color': (255,0,0),
+            labelOpts={'position':0.05, 'color': (255,255,255),
                        'movable': False, 'fill': (0, 0, 200, 100)})
         #self.hLine.setPos(pg.Point(0.0, 10.0))
-        self.hLine.setValue(0.5)
-        self.hLine.setZValue(1)
+        self.hLine.setValue(5)
+        self.hLine.setZValue(20)
         self.w.plt34.addItem(self.hLine, ignoreBounds=True)
 
+        # вертикальная штриховая линия текущей точки position/position_actual
         self.vLine = pg.InfiniteLine(angle=90, movable=False,
-            pen=pg.mkPen(color=QColor(Qt.blue), width = 2, style=Qt.DashDotLine))
-        #self.vLine.setPos(pg.Point(1.0, 0.0))
-        self.vLine.setValue(0.5)
+            pen=pg.mkPen(color=QColor(Qt.blue),
+            width = 2, style=Qt.DashLine),
+            label='0.0',
+            labelOpts={'position':0.95, 'color': (255,255,255),
+                       'movable': False, 'fill': (0, 0, 200, 100)})
+
+        self.vLine.setValue(20)
         self.vLine.setZValue(1)
         self.w.plt34.addItem(self.vLine, ignoreBounds=True)
 
         font=QtGui.QFont()
         font.setPixelSize(20)
-        #plot.getAxis("bottom").tickFont = font
-        self.w.plt34.getAxis("bottom").setStyle(tickFont = font)
-        self.w.plt34.getAxis("left").setStyle(tickFont = font)
-        # self.graphWidget.setXRange(5, 20, padding=0)
-        # self.graphWidget.setYRange(30, 40, padding=0)
+
+        # тест маркеров
+        pen = pg.mkPen()
+        self.plot_f1f2 = self.w.plt34.plot([0, 200], [7, 3], pen = pen)
+
         # курсор на графике https://stackoverflow.com/questions/50512391/can-i-share-the-crosshair-with-two-graph-in-pyqtgraph-pyqt5
         # https://stackoverflow.com/questions/52410731/drawing-and-displaying-objects-and-labels-over-the-axis-in-pyqtgraph-how-to-do
         return
@@ -685,8 +690,45 @@ class HandlerClass:
 
         #TODO обработка ошибок и исключений: 1) нет файла - сообщение и заполнение по умолчанию, создание конфига
         #TODO обработка ошибок и исключений: 2) нет ключей в конфиге - сообщение и заполнение по умолчанию
+
     def update_ini(self):
-        pass
+        # список на замену
+        # replacelist = [[ur'^123'.encode(), ur'123'.encode()]]
+        replacelist = [[ur"(NOM_TRAVEL\s*\=)\s*(\d+(.\d*){0,1})",
+                        ur"\1 {:.1f}".format(self.w.spnDsp34.value())],
+                       [ur"(NOM_OMEGA\s*\=)\s*(\d+(.\d*){0,1})",
+                        ur"\1 {:.1f}".format(self.w.spnOmg34.value())],
+                       [ur'(NOM_ACCEL_COEFF\s*\=)\s*(\d+(.\d*){0,1})',
+                        ur"\1 {:.1f}".format(self.w.spnAccel_Coeff34.value())],
+                       [ur"(NOM_F1\s*\=)\s*(\d+(.\d*){0,1})",
+                        ur"\1 {:.1f}".format(self.w.spnF1_34.value())],
+                       [ur"(NOM_F2\s*\=)\s*(\d+(.\d*){0,1})",
+                        ur"\1 {:.1f}".format(self.w.spnF2_34.value())]]
+
+        # путь к текущему INI-файлу
+        inifilename = INFO.INIPATH# имя ini-файла
+        print "*** inifilename = ", inifilename
+
+        # открыть и считать
+        inifile = io.open(inifilename, "r", encoding='utf8')
+        #TODO обработка открыт/не открыт
+        inilines = inifile.readlines()
+        inifile.close()
+
+        print "***inilines=", inilines
+
+        # список поле - GUI-элемент
+        for line_n in range(len(inilines)): # перечислить все строки INI-файла
+            for replace_item in replacelist: # в каждой строке поиск
+                tmp_line = re.sub(replace_item[0], replace_item[1], inilines[line_n])
+                if not tmp_line == inilines[line_n]:
+                    inilines[line_n] = tmp_line
+                    print "***выполнена замена ", inilines[line_n]
+
+        inifile2 = io.open(inifilename, "w", encoding='utf8')
+        #TODO обработка открыт/не открыт
+        inilines = inifile2.writelines(inilines)
+        inifile2.close()
     
 ################################
 # required handler boiler code #

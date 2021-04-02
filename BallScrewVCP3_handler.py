@@ -536,7 +536,7 @@ class HandlerClass:
             labelOpts={'position':0.05, 'color': (255,255,255),
                        'movable': False, 'fill': (0, 0, 200, 100)})
 
-        self.hLineCurrent.setValue(0.5)
+        self.hLineCurrent.setValue(5)
         self.hLineCurrent.setZValue(1)
         self.w.plt33.addItem(self.hLineCurrent, ignoreBounds=True)
 
@@ -547,8 +547,7 @@ class HandlerClass:
             label='0.0',
             labelOpts={'position':0.95, 'color': (255,255,255),
                        'movable': False, 'fill': (0, 0, 200, 100)})
-        #self.vLine.setPos(pg.Point(1.0, 0.0))
-        self.vLineCurrent.setValue(0.5)
+        self.vLineCurrent.setValue(20)
         self.vLineCurrent.setZValue(1)
         self.w.plt33.addItem(self.vLineCurrent, ignoreBounds=True)
 
@@ -861,7 +860,7 @@ class HandlerClass:
                         ur"\1 {:.1f}".format(self.w.spnVel_Idle33.value())],
                        [ur'(NOM_ACCEL_IDLE\s*\=)\s*(\d+(.\d*){0,1})',
                         ur"\1 {:.1f}".format(self.w.spnAccel_Idle33.value())],
-                       [ur"(NOM_LOdAD\s*\=)\s*(\d+(.\d*){0,1})",
+                       [ur"(NOM_LOAD\s*\=)\s*(\d+(.\d*){0,1})",
                         ur"\1 {:.1f}".format(self.w.spnLoad33.value())],
                        [ur"(NOM_POS_MEASURE\s*\=)\s*(\d+(.\d*){0,1})",
                         ur"\1 {:.1f}".format(self.w.spnPos_Measure33.value())],
