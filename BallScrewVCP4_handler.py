@@ -181,7 +181,8 @@ class HandlerClass:
 
             'torque_max-pin34':None,
             'f1-pin34':None,
-            'f2-pin34':None
+            'f2-pin34':None,
+            'dsp-pin34':None
 
         }
 
@@ -404,6 +405,7 @@ class HandlerClass:
         # self.w.plot_overlay.setPixmap(self.stub_image)
 
         # приведение GUI в соответствие с сигналами HAL
+
         self.guiStatesSitch()
 
         self.w.overlay = FocusOverlay(self.w)
@@ -487,9 +489,51 @@ class HandlerClass:
         font.setPixelSize(20)
 
         # тест маркеров
-        pen = pg.mkPen()
+        pen = pg.mkPen(color=QColor(Qt.blue),
+        width = 2, style=Qt.SolidLine)
         self.plot_f1f2 = self.w.plt34.plot([0, 200], [7, 3], pen = pen)
 
+        self.plot_current = self.w.plt34.plot([0, 200], [6.5, 3.2], pen = pen)
+
+        # после готовности графика - связать его с потоком данных от пинов
+        self.VCP_halpins_float['position_actual-pin34'].value_changed.connect(lambda:(
+            self.vLine.setValue(self.hal['position_actual-pin34']),
+            self.vLine.label.setFormat('%01d' % (self.hal['position_actual-pin34']) + '\n'
+                                            + '(%01d)' % (self.hal['position-pin34']))
+            ))
+        self.VCP_halpins_float['position-pin34'].value_changed.connect(lambda:(
+            self.vLine.label.setFormat('%01d' % (self.hal['position_actual-pin34']) + '\n'
+                                            + '(%01d)' % (self.hal['position-pin34']))
+            ))
+
+        self.VCP_halpins_float['load_actual-pin34'].value_changed.connect(lambda:(
+            self.hLine.setValue(self.hal['position-pin34']),
+            self.hLine.label.setFormat('%01d' % (self.hal['position_actual-pin34']) + '\n'
+                                            + '(%01d)' % (self.hal['position-pin34']))
+            ))
+        self.VCP_halpins_float['load-pin34'].value_changed.connect(lambda:(
+            self.hLine.label.setFormat('%01d' % (self.hal['load_actual-pin34']) + '\n'
+                                            + '(%01d)' % (self.hal['load-pin34']))
+            ))
+
+        self.VCP_halpins_float['dsp-pin34'].value_changed.connect(lambda:(
+            self.w.plt34.setXRange(0.0, self.hal['dsp-pin34']),
+            self.plot_f1f2.setData([0.0, self.hal['dsp-pin34']],[self.hal['f1-pin34'], self.hal['f2-pin34']])
+            ))
+
+        self.VCP_halpins_float['f1-pin34'].value_changed.connect(lambda:(
+            self.w.plt34.setYRange(0.0, max(self.hal['f2-pin34'], self.hal['f1-pin34'])*1.2),
+            self.plot_f1f2.setData([0.0, self.hal['dsp-pin34']],[self.hal['f1-pin34'], self.hal['f2-pin34']])
+            ))
+
+        self.VCP_halpins_float['f2-pin34'].value_changed.connect(lambda:(
+            self.w.plt34.setYRange(0.0, max(self.hal['f2-pin34'], self.hal['f1-pin34'])*1.2),
+            self.plot_f1f2.setData([0.0, self.hal['dsp-pin34']],[self.hal['f1-pin34'], self.hal['f2-pin34']])
+            ))
+
+
+        self.w.btnTestPlot.clicked.connect(self.update_plot)
+        #self.w.btnTestPlot.clicked.connect(self.update_position)
         # курсор на графике https://stackoverflow.com/questions/50512391/can-i-share-the-crosshair-with-two-graph-in-pyqtgraph-pyqt5
         # https://stackoverflow.com/questions/52410731/drawing-and-displaying-objects-and-labels-over-the-axis-in-pyqtgraph-how-to-do
         return
@@ -530,8 +574,7 @@ class HandlerClass:
             # убрали из ТЗ 2 апреля 'pos_overload_value_max':self.w.lblPos_Overload_Value_Max34,
             'pos_temperature-pin34':self.w.lblPos_Temperature34,
             'pos_temperature_max-pin34':self.w.lblPos_Temperature_Max34,
-            'torque_max-pin34':self.w.lblTorque_Max34,
-        }
+            'torque_max-pin34':self.w.lblTorque_Max34 }
 
         if(halpin_name in halpins_labels_match_precision1):
             halpin_value = self.hal[halpin_name]
@@ -539,7 +582,7 @@ class HandlerClass:
 
         halpins_labels_int = {
             'i-pin34':self.w.lblI34,
-            'N-pin34':self.w.lblN34}
+            'N-pin34':self.w.lblN34 }
 
         if(halpin_name in halpins_labels_int):
             halpin_value = self.hal[halpin_name]
@@ -577,16 +620,20 @@ class HandlerClass:
         return
 
     def update_plot(self):
-        if(self.current_plot_n < 20):
-            #print "*** plot < 20"
-            self.w.plt34.plot(self.data[0][0:self.current_plot_n],
-                              self.data[1][0:self.current_plot_n],
-                              clear = True)
-        else:
-            #print "*** plot >= 20"
-            self.w.plt34.plot(self.data[0][self.current_plot_n-20:self.current_plot_n],
-                              self.data[1][self.current_plot_n-20:self.current_plot_n],
-                              clear=True)
+        # self.vLine.setValue(???)
+        # self.hLine.setValue(???)
+        # self.plot_f1f2.setData(???)
+        # self.plot_current.setData(???)
+        # if(self.current_plot_n < 20):
+        #     #print "*** plot < 20"
+        #     self.w.plt34.plot(self.data[0][0:self.current_plot_n],
+        #                       self.data[1][0:self.current_plot_n],
+        #                       clear = True)
+        # else:
+        #     #print "*** plot >= 20"
+        #     self.w.plt34.plot(self.data[0][self.current_plot_n-20:self.current_plot_n],
+        #                       self.data[1][self.current_plot_n-20:self.current_plot_n],
+        #                       clear=True)
         return
 
     def flush_to_log(self):
@@ -624,7 +671,6 @@ class HandlerClass:
             'NOM_F2': [self.w.sldF2_34, self.w.spnF2_34]
         }
 
-
         #self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
         #print "*** self.TYPE = ", self.TYPE
         self.TYPE = INFO.INI.findall("BALLSCREWPARAMS", "TYPE")[0]
@@ -644,8 +690,12 @@ class HandlerClass:
             controls[1].setMaximum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MAX')[0]))
             controls[1].setValue(float(INFO.INI.findall("BALLSCREWPARAMS", key)[0]))
 
-        self.w.sldDsp34.valueChanged.connect(lambda val: self.w.spnDsp34.setValue(float(val)/100.0))
-        self.w.spnDsp34.valueChanged.connect(lambda val: self.w.sldDsp34.setValue(int(val*100)))
+        self.w.sldDsp34.valueChanged.connect(lambda val: (self.w.spnDsp34.setValue(float(val)/100.0),
+                                                          #self.w.plt34.setXRange(0, float(val)/100.0)
+                                                          ))
+        self.w.spnDsp34.valueChanged.connect(lambda val: (self.w.sldDsp34.setValue(int(val*100)),
+                                                          #self.w.plt34.setXRange(0, val*100)
+                                                          ))
 
         self.w.sldOmg34.valueChanged.connect(lambda val: self.w.spnOmg34.setValue(float(val)/100.0))
         self.w.spnOmg34.valueChanged.connect(lambda val: self.w.sldOmg34.setValue(int(val*100)))
@@ -653,11 +703,23 @@ class HandlerClass:
         self.w.sldAccel_Coeff34.valueChanged.connect(lambda val: self.w.spnAccel_Coeff34.setValue(float(val)/100.0))
         self.w.spnAccel_Coeff34.valueChanged.connect(lambda val: self.w.sldAccel_Coeff34.setValue(int(val*100)))
 
-        self.w.sldF1_34.valueChanged.connect(lambda val: self.w.spnF1_34.setValue(float(val)/100.0))
-        self.w.spnF1_34.valueChanged.connect(lambda val: self.w.sldF1_34.setValue(int(val*100)))
+        self.w.sldF1_34.valueChanged.connect(lambda val: (
+                                        self.w.spnF1_34.setValue(float(val)/100.0),
+                                        #self.w.plt34.setYRange(0.0, max(float(val)/100.0, self.w.spnF2_34.value())*1.2)
+                                        ))
+        self.w.spnF1_34.valueChanged.connect(lambda val: (
+                                        self.w.sldF1_34.setValue(int(val*100)),
+                                        #self.w.plt34.setYRange(0.0, max(val*100, self.w.spnF2_34.value())*1.2)
+                                        ))
 
-        self.w.sldF2_34.valueChanged.connect(lambda val: self.w.spnF2_34.setValue(float(val)/100.0))
-        self.w.spnF2_34.valueChanged.connect(lambda val: self.w.sldF2_34.setValue(int(val*100)))
+        self.w.sldF2_34.valueChanged.connect(lambda val: (
+                                        self.w.spnF2_34.setValue(float(val)/100.0),
+                                        #self.w.plt34.setYRange(0.0, max(float(val)/100.0, self.w.spnF1_34.value())*1.2)
+                                        ))
+        self.w.spnF2_34.valueChanged.connect(lambda val: (
+                                        self.w.sldF2_34.setValue(int(val*100)),
+                                        #self.w.plt34.setYRange(0.0, max(val*100, self.w.spnF1_34.value())*1.2)
+                                        ))
 
         #TODO обработка ошибок и исключений: 1) нет файла - сообщение и заполнение по умолчанию, создание конфига
         #TODO обработка ошибок и исключений: 2) нет ключей в конфиге - сообщение и заполнение по умолчанию
@@ -697,7 +759,7 @@ class HandlerClass:
                     print "***выполнена замена ", inilines[line_n]
 
         inifile2 = io.open(inifilename, "w", encoding='utf8')
-        #TODO обработка открыт/не открыт
+        #TODO обработка ошибки открыт/не открыт
         inilines = inifile2.writelines(inilines)
         inifile2.close()
     
