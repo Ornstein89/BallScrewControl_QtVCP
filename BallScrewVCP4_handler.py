@@ -493,42 +493,62 @@ class HandlerClass:
         width = 2, style=Qt.SolidLine)
         self.plot_f1f2 = self.w.plt34.plot([0, 200], [7, 3], pen = pen)
 
-        self.plot_current = self.w.plt34.plot([0, 200], [6.5, 3.2], pen = pen)
+        self.plot_load_data=[[0, 200], [6.5, 3.2]]
+        self.plot_current_load = self.w.plt34.plot(pos=self.plot_load_data, pen = pen)
+        self.plot_torque_data=[[0, 200], [6.5, 3.2]]
+
+        # выделить пины в отдельные объекты, чтобы каждый раз не тратить время
+        # на выборку из словаря
+        self.position_actual_pin34 = self.VCP_halpins_float['position_actual-pin34']
+        self.position_pin34 = self.VCP_halpins_float['position-pin34']
+        self.load_actual_pin34 = self.VCP_halpins_float['load_actual-pin34']
+        self.load_pin34 = self.VCP_halpins_float['load-pin34']
+        self.dsp_pin34 = self.VCP_halpins_float['dsp-pin34']
+        self.f1_pin34 = self.VCP_halpins_float['f1-pin34']
+        self.f2_pin34 = self.VCP_halpins_float['f2-pin34']
 
         # после готовности графика - связать его с потоком данных от пинов
-        self.VCP_halpins_float['position_actual-pin34'].value_changed.connect(lambda:(
-            self.vLine.setValue(self.hal['position_actual-pin34']),
-            self.vLine.label.setFormat('%01d' % (self.hal['position_actual-pin34']) + '\n'
-                                            + '(%01d)' % (self.hal['position-pin34']))
+        self.position_actual_pin34.value_changed.connect(lambda:(
+            self.vLine.setValue(self.position_actual_pin34.get()),
+            self.vLine.label.setFormat('%01d' % (self.position_actual_pin34.get()) + '\n'
+                                            + '(%01d)' % (self.position_pin34.get()))
             ))
-        self.VCP_halpins_float['position-pin34'].value_changed.connect(lambda:(
-            self.vLine.label.setFormat('%01d' % (self.hal['position_actual-pin34']) + '\n'
-                                            + '(%01d)' % (self.hal['position-pin34']))
-            ))
-
-        self.VCP_halpins_float['load_actual-pin34'].value_changed.connect(lambda:(
-            self.hLine.setValue(self.hal['position-pin34']),
-            self.hLine.label.setFormat('%01d' % (self.hal['position_actual-pin34']) + '\n'
-                                            + '(%01d)' % (self.hal['position-pin34']))
-            ))
-        self.VCP_halpins_float['load-pin34'].value_changed.connect(lambda:(
-            self.hLine.label.setFormat('%01d' % (self.hal['load_actual-pin34']) + '\n'
-                                            + '(%01d)' % (self.hal['load-pin34']))
+        self.position_pin34.value_changed.connect(lambda:(
+            self.vLine.label.setFormat('%01d' % (self.position_actual_pin34.get()) + '\n'
+                                            + '(%01d)' % (self.position_pin34.get()))
             ))
 
-        self.VCP_halpins_float['dsp-pin34'].value_changed.connect(lambda:(
-            self.w.plt34.setXRange(0.0, self.hal['dsp-pin34']),
-            self.plot_f1f2.setData([0.0, self.hal['dsp-pin34']],[self.hal['f1-pin34'], self.hal['f2-pin34']])
+        self.load_actual_pin34.value_changed.connect(lambda:(
+            self.hLine.setValue(self.load_actual_pin34.get()),
+            self.hLine.label.setFormat('%01d' % (self.load_actual_pin34.get()) + '\n'
+                                            + '(%01d)' % (self.load_pin34.get())),
+            self.plot_load_data[0].append(self.position_actual_pin34.get())
+            self.plot_load_data[1].append(self.load_actual_pin34.get())
+            self.self.plot_f1f2.setData(pos=self.plot_load_data)
+            ))
+        self.load_pin34.value_changed.connect(lambda:(
+            self.hLine.label.setFormat('%01d' % (self.load_actual_pin34.get()) + '\n'
+                                       + '(%01d)' % (self.load_pin34.get()))
             ))
 
-        self.VCP_halpins_float['f1-pin34'].value_changed.connect(lambda:(
-            self.w.plt34.setYRange(0.0, max(self.hal['f2-pin34'], self.hal['f1-pin34'])*1.2),
-            self.plot_f1f2.setData([0.0, self.hal['dsp-pin34']],[self.hal['f1-pin34'], self.hal['f2-pin34']])
+        self.dsp_pin34.value_changed.connect(lambda:(
+            self.w.plt34.setXRange(0.0, self.dsp_pin34.get()),
+            self.plot_f1f2.setData([0.0, self.dsp_pin34.get()],
+                                   [self.f1_pin34.get(), self.f2_pin34.get()])
             ))
 
-        self.VCP_halpins_float['f2-pin34'].value_changed.connect(lambda:(
-            self.w.plt34.setYRange(0.0, max(self.hal['f2-pin34'], self.hal['f1-pin34'])*1.2),
-            self.plot_f1f2.setData([0.0, self.hal['dsp-pin34']],[self.hal['f1-pin34'], self.hal['f2-pin34']])
+        self.f1_pin34.value_changed.connect(lambda:(
+            self.w.plt34.setYRange(min(0.0, self.f2_pin34.get(), self.f1_pin34.get())*1.2,
+                                   max(0.0, self.f2_pin34.get(), self.f1_pin34.get())*1.2),
+            self.plot_f1f2.setData([0.0, self.dsp_pin34.get()],
+                                   [self.f1_pin34.get(), self.f2_pin34.get()])
+            ))
+
+        self.f2_pin34.value_changed.connect(lambda:(
+            self.w.plt34.setYRange(min(0.0, self.f2_pin34.get(), self.f1_pin34.get())*1.2,
+                                   max(self.f2_pin34.get(), self.f1_pin34.get())*1.2),
+            self.plot_f1f2.setData([0.0, self.dsp_pin34.get()],
+                                   [self.f1_pin34.get(), self.f2_pin34.get()])
             ))
 
 
