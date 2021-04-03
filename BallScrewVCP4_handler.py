@@ -161,6 +161,8 @@ class HandlerClass:
             'position_actual-pin34':None,
             'load-pin34':None,
             'load_actual-pin34':None,
+            'torque_actual-pin34':None,
+            'torque-pin34':None,
 
             'torque_error_value-pin34':None,
             'torque_error_value_max-pin34':None,
@@ -489,13 +491,15 @@ class HandlerClass:
         font.setPixelSize(20)
 
         # тест маркеров
-        pen = pg.mkPen(color=QColor(Qt.blue),
+        pen1 = pg.mkPen(color=QColor(Qt.blue),
         width = 2, style=Qt.SolidLine)
-        self.plot_f1f2 = self.w.plt34.plot([0, 200], [7, 3], pen = pen)
+        self.plot_f1f2 = self.w.plt34.plot([0, 200], [7, 3], pen = pen1)
 
-        self.plot_load_data=[[0, 200], [6.5, 3.2]]
-        self.plot_current_load = self.w.plt34.plot(pos=self.plot_load_data, pen = pen)
-        self.plot_torque_data=[[0, 200], [6.5, 3.2]]
+        self.plot_load_data=[[], []]
+        pen2 = pg.mkPen(color=QColor(Qt.darkCyan),
+        width = 2, style=Qt.SolidLine)
+        self.plot_current_load = self.w.plt34.plot(pos=self.plot_load_data, pen = pen2)
+        self.plot_torque_data=[[], []]
 
         # выделить пины в отдельные объекты, чтобы каждый раз не тратить время
         # на выборку из словаря
@@ -503,33 +507,24 @@ class HandlerClass:
         self.position_pin34 = self.VCP_halpins_float['position-pin34']
         self.load_actual_pin34 = self.VCP_halpins_float['load_actual-pin34']
         self.load_pin34 = self.VCP_halpins_float['load-pin34']
+        self.torque_actual_pin34 = self.VCP_halpins_float['torque_actual-pin34']
+        self.torque_pin34 = self.VCP_halpins_float['torque-pin34']
         self.dsp_pin34 = self.VCP_halpins_float['dsp-pin34']
         self.f1_pin34 = self.VCP_halpins_float['f1-pin34']
         self.f2_pin34 = self.VCP_halpins_float['f2-pin34']
 
         # после готовности графика - связать его с потоком данных от пинов
-        self.position_actual_pin34.value_changed.connect(lambda:(
-            self.vLine.setValue(self.position_actual_pin34.get()),
-            self.vLine.label.setFormat('%01d' % (self.position_actual_pin34.get()) + '\n'
-                                            + '(%01d)' % (self.position_pin34.get()))
-            ))
+        self.position_actual_pin34.value_changed.connect(self.position_actual_changed)
         self.position_pin34.value_changed.connect(lambda:(
             self.vLine.label.setFormat('%01d' % (self.position_actual_pin34.get()) + '\n'
                                             + '(%01d)' % (self.position_pin34.get()))
             ))
 
-        self.load_actual_pin34.value_changed.connect(lambda:(
-            self.hLine.setValue(self.load_actual_pin34.get()),
-            self.hLine.label.setFormat('%01d' % (self.load_actual_pin34.get()) + '\n'
-                                            + '(%01d)' % (self.load_pin34.get())),
-            self.plot_load_data[0].append(self.position_actual_pin34.get())
-            self.plot_load_data[1].append(self.load_actual_pin34.get())
-            self.self.plot_f1f2.setData(pos=self.plot_load_data)
-            ))
-        self.load_pin34.value_changed.connect(lambda:(
-            self.hLine.label.setFormat('%01d' % (self.load_actual_pin34.get()) + '\n'
-                                       + '(%01d)' % (self.load_pin34.get()))
-            ))
+        self.load_actual_pin34.value_changed.connect(self.load_actual_changed)
+        self.load_pin34.value_changed.connect(self.load_changed)
+
+        self.torque_actual_pin34.value_changed.connect(self.torque_actual_changed)
+        self.torque_pin34.value_changed.connect(self.torque_changed)
 
         self.dsp_pin34.value_changed.connect(lambda:(
             self.w.plt34.setXRange(0.0, self.dsp_pin34.get()),
@@ -551,11 +546,67 @@ class HandlerClass:
                                    [self.f1_pin34.get(), self.f2_pin34.get()])
             ))
 
+        self.w.btnClearPlot34.clicked.connect(self.onBtnClearPlot_clicked)
 
-        self.w.btnTestPlot.clicked.connect(self.update_plot)
         #self.w.btnTestPlot.clicked.connect(self.update_position)
         # курсор на графике https://stackoverflow.com/questions/50512391/can-i-share-the-crosshair-with-two-graph-in-pyqtgraph-pyqt5
         # https://stackoverflow.com/questions/52410731/drawing-and-displaying-objects-and-labels-over-the-axis-in-pyqtgraph-how-to-do
+        return
+
+    def load_actual_changed(self):
+        self.plot_load_data[0].append(self.position_actual_pin34.get())
+        self.plot_load_data[1].append(self.load_actual_pin34.get())
+
+        if self.w.btnShowForse34.isChecked():
+            self.hLine.setValue(self.load_actual_pin34.get())
+            self.hLine.label.setFormat('%01d' % (self.load_actual_pin34.get()) + '\n'
+                                       + '(%01d)' % (self.load_pin34.get()))
+            self.plot_current_load.setData(x=self.plot_load_data[0],y=self.plot_load_data[1])
+        return
+
+    def load_changed(self):
+        if self.w.btnShowForse34.isChecked():
+            self.hLine.label.setFormat('%01d' % (self.load_actual_pin34.get()) + '\n'
+                                       + '(%01d)' % (self.load_pin34.get()))
+
+        return
+
+    def torque_actual_changed(self):
+        self.plot_torque_data[0].append(self.position_actual_pin34.get())
+        self.plot_torque_data[1].append(self.torque_actual_pin34.get())
+        if self.w.btnShowTorque34.isChecked():
+            self.hLine.setValue(self.torque_actual_pin34.get()),
+            self.hLine.label.setFormat('%01d' % (self.torque_actual_pin34.get()) + '\n'
+                                            + '(%01d)' % (self.torque_pin34.get())),
+            self.plot_current_load.setData(x=self.plot_torque_data[0],y=self.plot_torque_data[1])
+        return
+
+    def torque_changed(self):
+        if self.w.btnShowTorque34.isChecked():
+            self.hLine.label.setFormat('%01d' % (self.torque_actual_pin34.get()) + '\n'
+                                       + '(%01d)' % (self.torque_pin34.get()))
+        return
+
+    def position_actual_changed(self):
+        self.vLine.setValue(self.position_actual_pin34.get()),
+        self.vLine.label.setFormat('%01d' % (self.position_actual_pin34.get()) + '\n'
+                                        + '(%01d)' % (self.position_pin34.get()))
+
+        self.plot_load_data[0].append(self.position_actual_pin34.get())
+        self.plot_load_data[1].append(self.load_actual_pin34.get())
+
+        self.plot_torque_data[0].append(self.position_actual_pin34.get())
+        self.plot_torque_data[1].append(self.torque_actual_pin34.get())
+
+        if self.w.btnShowForse34.isChecked():
+            self.plot_current_load.setData(x=self.plot_load_data[0], y=self.plot_load_data[1])
+        elif self.w.btnShowTorque34.isChecked():
+            self.plot_current_load.setData(x=self.plot_torque_data[0], y=self.plot_torque_data[1])
+        return
+
+    def onBtnClearPlot_clicked(self):
+        self.plot_load_data = [[],[]]
+        self.plot_torque_data = [[],[]]
         return
 
     def pinCnagedCallback(self, data):
@@ -630,6 +681,8 @@ class HandlerClass:
         except Exception as exc:
             print "***Ошибка при запуске RODOS4. ", exc
         pass
+
+        return
 
     def append_data(self, x, y):
         self.data[0][self.current_plot_n] = x
