@@ -13,6 +13,7 @@
 ############################
 # стандартные пакеты
 import sys, os, io, re, configparser, subprocess
+from datetime import datetime
 
 # пакеты linuxcnc
 import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
@@ -86,7 +87,7 @@ class HandlerClass:
     # This is where you make HAL pins or initialize state of widgets etc
     def initialized__(self):
         self.init_gui()
-        self.start_log(self.DATALOGFILENAME)
+        self.init_datalog(self.DATALOGFILENAME)
         # self.gcodes.setup_list() инструкция нужна только для отображения справочного списка команд
 
         #fov = FocusOverlay(self)
@@ -143,9 +144,15 @@ class HandlerClass:
             self.w.overlay.hide()
             event.ignore()
             return
-        #TODO дождаться записи файла и закрыть
+
+        self.update_ini()
+        if self.datalogfile is not None:
+            if not self.datalogfile.closed:
+                self.datalogfile.flush()
+                self.datalogfile.close()
         event.accept()
         print '*** closeEvent'
+        return
 
     ########################
     # CALLBACKS FROM STATUS#
@@ -184,7 +191,8 @@ class HandlerClass:
             'torque_max-pin34':None,
             'f1-pin34':None,
             'f2-pin34':None,
-            'dsp-pin34':None
+            'dsp-pin34':None,
+            'omega_actual-pin34':None
 
         }
 
@@ -199,9 +207,10 @@ class HandlerClass:
             self.VCP_halpins_int[key].value_changed.connect(lambda s: self.pinCnagedCallback(s))
 
         self.VCP_halpins_bit = {
-            'append_title-pin34':[None,None],
-            'append_buffer-pin34':[None,None],
-            'append_file-pin34':[None,None],
+            'append_title-pin34':[None,None], # соединение со слотом после открытия файла
+            'append_buffer-pin34':[None,None], # соединение со слотом после открытия файла
+            'append_file-pin34':[None,None], # соединение со слотом после открытия файла
+            'log_permit-pin34':[None,None],
 
             'active_0-pin34':[None,self.guiStatesSitch],
             'active_1-pin34':[None,self.guiStatesSitch],
@@ -291,7 +300,7 @@ class HandlerClass:
             #self.add_status("Loaded program file : {}".format(fname))
             #self.w.main_tab_widget.setCurrentIndex(TAB_MAIN)
             #STATUS.emit('update-machine-log', "Loaded program file : {}".format(fname), 'TIME')
-            QMessageBox.Warning(self.w, 'Внимание',
+            QMessageBox.warning(self.w, 'Внимание',
             "Не выбрано название файла *.ngc для сохранения программы GCode", QMessageBox.Yes)
             return
             #self.add_status("Unknown or invalid filename")
@@ -309,18 +318,9 @@ class HandlerClass:
         pass
 
 
-    def pnBtnShowResult34(self):
-        #TODO открыть блокнот
-        pass
-
-    def onBtnClearPlot34(self):
-        pass
-
-    def onBtnShowForse34(self):
-        pass
-
-    def onBtnShowTorque34(self):
-        pass
+    def onBtnShowResult34(self):
+        subprocess.Popen(['geany', self.DATALOGFILENAME])
+        return
 
 
     #####################
@@ -337,7 +337,7 @@ class HandlerClass:
 
         self.w.chkDsp_ModeOn34.setEnabled(self.hal['active_2-pin34'] and STATUS.machine_is_on())
         self.w.chkDsp_ModeOff34.setEnabled(self.hal['active_2-pin34'] and STATUS.machine_is_on())
-        #????????
+
         controls_on_active3 = [ # список элементов, которые становятся активны
             self.w.sldDsp34,
             self.w.spnDsp34,
@@ -390,7 +390,7 @@ class HandlerClass:
         self.w.btnDevice_On34.clicked.connect(lambda x: ACTION.SET_MACHINE_STATE(True))
         self.w.btnDevice_Off34.clicked.connect(lambda x: ACTION.SET_MACHINE_STATE(False))
 
-        # масштабирование с помощью пинов *-scale
+        # масштабирование выходных пинов слайдеров с помощью пинов *-scale
         # (команды setp в hal-файле недостаточно - слайдер не масштабирует,
         # пока не сдвинуть вручную)
         sliders_to_scale = [
@@ -401,6 +401,42 @@ class HandlerClass:
             slider_i.hal_pin_scale.set(0.01)
             slider_i.hal_pin_f.set(slider_i.value()*0.01)
 
+        self.w.sldTestLoad.setValue(0.0)
+        self.w.sldTestLoad.hal_pin_scale.set(0.1)
+        self.w.sldTestLoad.hal_pin_f.set(0.0*0.01)
+
+        # соединение слайдеров с переключателями
+        self.w.sldDsp34.valueChanged.connect(lambda val: (self.w.spnDsp34.setValue(float(val)/100.0),
+                                                          #self.w.plt34.setXRange(0, float(val)/100.0)
+                                                          ))
+        self.w.spnDsp34.valueChanged.connect(lambda val: (self.w.sldDsp34.setValue(int(val*100)),
+                                                          #self.w.plt34.setXRange(0, val*100)
+                                                          ))
+
+        self.w.sldOmg34.valueChanged.connect(lambda val: self.w.spnOmg34.setValue(float(val)/100.0))
+        self.w.spnOmg34.valueChanged.connect(lambda val: self.w.sldOmg34.setValue(int(val*100)))
+
+        self.w.sldAccel_Coeff34.valueChanged.connect(lambda val: self.w.spnAccel_Coeff34.setValue(float(val)/100.0))
+        self.w.spnAccel_Coeff34.valueChanged.connect(lambda val: self.w.sldAccel_Coeff34.setValue(int(val*100)))
+
+        self.w.sldF1_34.valueChanged.connect(lambda val: (
+                                        self.w.spnF1_34.setValue(float(val)/100.0),
+                                        #self.w.plt34.setYRange(0.0, max(float(val)/100.0, self.w.spnF2_34.value())*1.2)
+                                        ))
+        self.w.spnF1_34.valueChanged.connect(lambda val: (
+                                        self.w.sldF1_34.setValue(int(val*100)),
+                                        #self.w.plt34.setYRange(0.0, max(val*100, self.w.spnF2_34.value())*1.2)
+                                        ))
+
+        self.w.sldF2_34.valueChanged.connect(lambda val: (
+                                        self.w.spnF2_34.setValue(float(val)/100.0),
+                                        #self.w.plt34.setYRange(0.0, max(float(val)/100.0, self.w.spnF1_34.value())*1.2)
+                                        ))
+        self.w.spnF2_34.valueChanged.connect(lambda val: (
+                                        self.w.sldF2_34.setValue(int(val*100)),
+                                        #self.w.plt34.setYRange(0.0, max(val*100, self.w.spnF1_34.value())*1.2)
+                                        ))
+
         # экран-заглушка для графика пока не получены данные с устройства
         # self.w.plot_overlay = QLabel(self.w.plt34)
         # self.stub_image = QPixmap("stub_screen.png")
@@ -410,6 +446,7 @@ class HandlerClass:
 
         self.guiStatesSitch()
 
+        # оверлей для затенения окна
         self.w.overlay = FocusOverlay(self.w)
         self.w.overlay.setGeometry(0, 0, self.w.width(), self.w.height())
         self.w.overlay.hide()
@@ -512,6 +549,7 @@ class HandlerClass:
         self.dsp_pin34 = self.VCP_halpins_float['dsp-pin34']
         self.f1_pin34 = self.VCP_halpins_float['f1-pin34']
         self.f2_pin34 = self.VCP_halpins_float['f2-pin34']
+        self.omega_actual_pin34 = self.VCP_halpins_float['omega_actual-pin34']
 
         # после готовности графика - связать его с потоком данных от пинов
         self.position_actual_pin34.value_changed.connect(self.position_actual_changed)
@@ -547,7 +585,8 @@ class HandlerClass:
             ))
 
         self.w.btnClearPlot34.clicked.connect(self.onBtnClearPlot_clicked)
-
+        self.w.btnShowForce34.clicked.connect(self.onBtnShowForce_clicked)
+        self.w.btnShowTorque34.clicked.connect(self.onBtnShowTorque_clicked)
         #self.w.btnTestPlot.clicked.connect(self.update_position)
         # курсор на графике https://stackoverflow.com/questions/50512391/can-i-share-the-crosshair-with-two-graph-in-pyqtgraph-pyqt5
         # https://stackoverflow.com/questions/52410731/drawing-and-displaying-objects-and-labels-over-the-axis-in-pyqtgraph-how-to-do
@@ -557,7 +596,7 @@ class HandlerClass:
         self.plot_load_data[0].append(self.position_actual_pin34.get())
         self.plot_load_data[1].append(self.load_actual_pin34.get())
 
-        if self.w.btnShowForse34.isChecked():
+        if self.w.btnShowForce34.isChecked():
             self.hLine.setValue(self.load_actual_pin34.get())
             self.hLine.label.setFormat('%01d' % (self.load_actual_pin34.get()) + '\n'
                                        + '(%01d)' % (self.load_pin34.get()))
@@ -565,7 +604,7 @@ class HandlerClass:
         return
 
     def load_changed(self):
-        if self.w.btnShowForse34.isChecked():
+        if self.w.btnShowForce34.isChecked():
             self.hLine.label.setFormat('%01d' % (self.load_actual_pin34.get()) + '\n'
                                        + '(%01d)' % (self.load_pin34.get()))
 
@@ -598,7 +637,7 @@ class HandlerClass:
         self.plot_torque_data[0].append(self.position_actual_pin34.get())
         self.plot_torque_data[1].append(self.torque_actual_pin34.get())
 
-        if self.w.btnShowForse34.isChecked():
+        if self.w.btnShowForce34.isChecked():
             self.plot_current_load.setData(x=self.plot_load_data[0], y=self.plot_load_data[1])
         elif self.w.btnShowTorque34.isChecked():
             self.plot_current_load.setData(x=self.plot_torque_data[0], y=self.plot_torque_data[1])
@@ -607,6 +646,46 @@ class HandlerClass:
     def onBtnClearPlot_clicked(self):
         self.plot_load_data = [[],[]]
         self.plot_torque_data = [[],[]]
+        if self.w.btnShowForce34.isChecked():
+            self.hLine.setValue(self.load_actual_pin34.get()),
+            self.hLine.label.setFormat('%01d' % (self.load_actual_pin34.get()) + '\n'
+                                            + '(%01d)' % (self.load_pin34.get()))
+            self.plot_current_load.setData(x=self.plot_load_data[0], y=self.plot_load_data[1])
+        elif self.w.btnShowTorque34isChecked():
+            self.hLine.setValue(self.torque_actual_pin34.get()),
+            self.hLine.label.setFormat('%01d' % (self.torque_actual_pin34.get()) + '\n'
+                                            + '(%01d)' % (self.torque_pin34.get()))
+            self.plot_current_load.setData(x=self.plot_torque_data[0], y=self.plot_torque_data[1])
+        return
+
+    def onBtnShowForce_clicked(self, ischecked):
+        if ischecked:
+            self.w.plt34.setLabel('left', 'F [кгс]')
+            self.hLine.setValue(self.load_actual_pin34.get()),
+            self.hLine.label.setFormat('%01d' % (self.load_actual_pin34.get()) + '\n'
+                                            + '(%01d)' % (self.load_pin34.get()))
+            self.plot_current_load.setData(x=self.plot_load_data[0], y=self.plot_load_data[1])
+        else:
+            self.w.plt34.setLabel('left', 'T [Н*м]')
+            self.hLine.setValue(self.torque_actual_pin34.get()),
+            self.hLine.label.setFormat('%01d' % (self.torque_actual_pin34.get()) + '\n'
+                                            + '(%01d)' % (self.torque_pin34.get()))
+            self.plot_current_load.setData(x=self.plot_torque_data[0], y=self.plot_torque_data[1])
+        return
+
+    def onBtnShowTorque_clicked(self, ischecked):
+        if ischecked:
+            self.w.plt34.setLabel('left', 'T [Н*м]')
+            self.hLine.setValue(self.torque_actual_pin34.get()),
+            self.hLine.label.setFormat('%01d' % (self.torque_actual_pin34.get()) + '\n'
+                                            + '(%01d)' % (self.torque_pin34.get()))
+            self.plot_current_load.setData(x=self.plot_torque_data[0], y=self.plot_torque_data[1])
+        else:
+            self.w.plt34.setLabel('left', 'F [кгс]')
+            self.hLine.setValue(self.load_actual_pin34.get()),
+            self.hLine.label.setFormat('%01d' % (self.load_actual_pin34.get()) + '\n'
+                                            + '(%01d)' % (self.load_pin34.get()))
+            self.plot_current_load.setData(x=self.plot_load_data[0], y=self.plot_load_data[1])
         return
 
     def pinCnagedCallback(self, data):
@@ -709,30 +788,123 @@ class HandlerClass:
         #                       clear=True)
         return
 
-    def flush_to_log(self):
-        logfile = open('temp_log.log', 'w')
-        #Заголовок лога
-        logfile.write('Модель: ', self.MODEL, '\n')
-        logfile.write('Номер изделия: ', self.PART, '\n')
-        logfile.write('Дата: ', self.DATE, '\n')
-        logfile.write('\n')
-        for i in range(self.current_plot_n):
-            logfile.write(self.data[0][i], self.data[1][i])
-        logfile.close()
+    def append_file(self):
+        if self.datalogfile is None:
+            return
+        if self.datalogfile.closed:
+            return
+        if not self.log_permit_pin34.get():
+            return
+        if not self.append_file_pin34.get(): # запись только по восходящему фронту
+            return
+
+        for itm in self.datalogbuffer:
+            self.datalogfile.write(
+                itm[0].strftime("%d.%m.%Y %H:%M:%S") + '\t' # time_current;
+                + '%01d' % itm[1] + '\t' # position_actual
+                + '%01d' % itm[2] + '\t' #omega_actual
+                + '%01d' % itm[3] + '\t' #load_actual
+                + '%01d' % itm[4] + '\n') #torque_actual
+
+        self.datalogfile.flush()
+        self.datalogbuffer = []
+        self.onBtnClearPlot_clicked()
         return
 
-    def on_siggen_test_read_pin_value_changed(self, data):
-        return
-        #print("*** siggen pin data: ", data)
-        #print("*** siggen pin: ", self.siggen_test_read_pin.get())
-        #print("*** siggen.0.sine directly", hal.get_value("siggen.0.sine"))
+    def append_buffer(self):
+        if self.datalogfile is None:
+            return
+        if self.datalogfile.closed:
+            return
+        if not self.log_permit_pin34.get():
+            return
+        if not self.append_buffer_pin34.get(): # запись только по восходящему фронту
+            return
 
-    def start_log(self, logfilename):
-        self.datalog = None
-        self.datalog = open(logfilename,"w")
-        self.datalog.write("Модель: " + self.MODEL + "\n")
-        self.datalog.write("Номер изделия: " + self.PART + "\n")
-        self.datalog.write("Дата: " + self.DATE + "\n")
+        #Вектор параметров состояния: (time_current; position_actual; omega_actual;
+        #load_actual; torque_actual)
+        self.datalogbuffer.append([
+            datetime.now(),
+            self.position_actual_pin34.get(),
+            self.omega_actual_pin34.get(),
+            self.load_actual_pin34.get(),
+            self.torque_actual_pin34.get()])
+
+        return
+
+    def append_title(self):
+        if self.datalogfile is None:
+            return
+        if self.datalogfile.closed:
+            return
+        if not self.log_permit_pin34.get():
+            return
+        if not self.append_title_pin34.get():  # запись только по восходящему фронту
+            return
+
+        # промежуточный заголовок в виде:
+        # Время запуска: time
+        # Нагрузка в начальном положении: f1
+        # Нагрузка в конечном положении: f1
+
+        self.datalogfile.flush()
+        self.datalogfile.write("\n")
+        self.datalogfile.write("Время запуска: "
+                                + datetime.now().strftime("%d/%m/%Y %H:%M:%S") + "\n")
+        self.datalogfile.write("Нагрузка в начальном положении: " + '%01d' % (self.f1_pin34.get()) + "\n")
+        self.datalogfile.write("Нагрузка в конечном положении: " + '%01d' % (self.f2_pin34.get()) + "\n")
+        self.datalogfile.write("\n")
+        self.datalogfile.flush()
+        return
+
+    #def flush_to_log(self):
+    #    logfile = open('temp_log_form4.log', 'w')
+    #    #Заголовок лога
+    #    logfile.write('Модель: ', self.MODEL, '\n')
+    #    logfile.write('Номер изделия: ', self.PART, '\n')
+    #    logfile.write('Дата: ', self.DATE, '\n')
+    #    logfile.write('\n')
+    #    for i in range(self.current_plot_n):
+    #        logfile.write(self.data[0][i], self.data[1][i])
+    #    logfile.close()
+    #    return
+
+    #def on_siggen_test_read_pin_value_changed(self, data):
+    #    return
+    #    #print("*** siggen pin data: ", data)
+    #    #print("*** siggen pin: ", self.siggen_test_read_pin.get())
+    #    #print("*** siggen.0.sine directly", hal.get_value("siggen.0.sine"))
+
+    def init_datalog(self, datalogfilename):
+        self.datalogfile = None
+        self.datalogbuffer = []
+        try:
+            self.datalogfile = open(datalogfilename,"w")
+            self.w.btnShowResult34.setEnabled(True)
+        except Exception as exc:
+            self.datalogfile = None
+            QMessageBox.critical(self.w, 'Ошибка',
+            ("Невозможно открыть файл лога " + datalogfilename
+             + " для вывода данных. Код ошибки " + exc
+             + ". Запись не будет производиться."),
+            QMessageBox.Yes)
+            self.w.btnShowResult34.setEnabled(False)
+            return
+
+        self.datalogfile.write("Модель: " + self.MODEL + "\n")
+        self.datalogfile.write("Номер изделия: " + self.PART + "\n")
+        self.datalogfile.write("Дата: " + self.DATE + "\n")
+        self.datalogfile.flush()
+
+        self.log_permit_pin34 = self.VCP_halpins_bit['log_permit-pin34'][0]
+        self.append_buffer_pin34 = self.VCP_halpins_bit['append_buffer-pin34'][0]
+        self.append_title_pin34 = self.VCP_halpins_bit['append_title-pin34'][0]
+        self.append_file_pin34 = self.VCP_halpins_bit['append_file-pin34'][0]
+
+        self.VCP_halpins_bit['append_buffer-pin34'][0].value_changed.connect(self.append_buffer)
+        self.VCP_halpins_bit['append_title-pin34'][0].value_changed.connect(self.append_title)
+        self.VCP_halpins_bit['append_file-pin34'][0].value_changed.connect(self.append_file)
+        return
 
     #TODO в принципе функция не нужна, т.к. linuxcnc сам поддерживает передачу параметров из ini
     def load_ini(self):
@@ -751,8 +923,7 @@ class HandlerClass:
         self.MODEL = INFO.INI.findall("BALLSCREWPARAMS", "MODEL")[0]
         self.DATE = INFO.INI.findall("BALLSCREWPARAMS", "DATE")[0]
         self.PART = INFO.INI.findall("BALLSCREWPARAMS", "PART")[0]
-        #self.datalog.write("Номер изделия: " + self.PART + "\n")
-        #self.datalog.write("Дата: " + self.DATE + "\n")
+
         for key, controls in ini_control_match_dict.items():
             print '***controls[0] = ', controls[0].objectName()
             print '***controls[1] = ', controls[1].objectName()
@@ -762,37 +933,6 @@ class HandlerClass:
             controls[1].setMinimum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MIN')[0]))
             controls[1].setMaximum(float(INFO.INI.findall("BALLSCREWPARAMS", key+'_MAX')[0]))
             controls[1].setValue(float(INFO.INI.findall("BALLSCREWPARAMS", key)[0]))
-
-        self.w.sldDsp34.valueChanged.connect(lambda val: (self.w.spnDsp34.setValue(float(val)/100.0),
-                                                          #self.w.plt34.setXRange(0, float(val)/100.0)
-                                                          ))
-        self.w.spnDsp34.valueChanged.connect(lambda val: (self.w.sldDsp34.setValue(int(val*100)),
-                                                          #self.w.plt34.setXRange(0, val*100)
-                                                          ))
-
-        self.w.sldOmg34.valueChanged.connect(lambda val: self.w.spnOmg34.setValue(float(val)/100.0))
-        self.w.spnOmg34.valueChanged.connect(lambda val: self.w.sldOmg34.setValue(int(val*100)))
-
-        self.w.sldAccel_Coeff34.valueChanged.connect(lambda val: self.w.spnAccel_Coeff34.setValue(float(val)/100.0))
-        self.w.spnAccel_Coeff34.valueChanged.connect(lambda val: self.w.sldAccel_Coeff34.setValue(int(val*100)))
-
-        self.w.sldF1_34.valueChanged.connect(lambda val: (
-                                        self.w.spnF1_34.setValue(float(val)/100.0),
-                                        #self.w.plt34.setYRange(0.0, max(float(val)/100.0, self.w.spnF2_34.value())*1.2)
-                                        ))
-        self.w.spnF1_34.valueChanged.connect(lambda val: (
-                                        self.w.sldF1_34.setValue(int(val*100)),
-                                        #self.w.plt34.setYRange(0.0, max(val*100, self.w.spnF2_34.value())*1.2)
-                                        ))
-
-        self.w.sldF2_34.valueChanged.connect(lambda val: (
-                                        self.w.spnF2_34.setValue(float(val)/100.0),
-                                        #self.w.plt34.setYRange(0.0, max(float(val)/100.0, self.w.spnF1_34.value())*1.2)
-                                        ))
-        self.w.spnF2_34.valueChanged.connect(lambda val: (
-                                        self.w.sldF2_34.setValue(int(val*100)),
-                                        #self.w.plt34.setYRange(0.0, max(val*100, self.w.spnF1_34.value())*1.2)
-                                        ))
 
         #TODO обработка ошибок и исключений: 1) нет файла - сообщение и заполнение по умолчанию, создание конфига
         #TODO обработка ошибок и исключений: 2) нет ключей в конфиге - сообщение и заполнение по умолчанию
