@@ -116,9 +116,9 @@ class BallScrew(QMainWindow):
 
     def checkGUI1(self):  # проверка состояния формы 1 и разрешение перехода на форму 2
         canNext = ( (self.MODEL != "")
-            and (self.cmbDrive.currentIndex >= 0)
-            and (self.TYPE != "")
-            and (self.PART != ""))
+                    and (self.cmbDrive.currentIndex >= 0)
+                    and (self.TYPE != "")
+                    and (self.PART != ""))
         #TODO перенастроить на переменные self.TYPE и др.
         if canNext:
             self.btnNext1.setEnabled(True)
@@ -276,12 +276,14 @@ class BallScrew(QMainWindow):
                 config['BALLSCREWPARAMS'][key+'_MAX'] = str(control.maximum())
 
         tmp_gear = self.params_and_controls_dict[n_form-1]['GEAR'].value();
-        tmp_microstep = self.params_and_controls_dict[n_form-1]['MICROSTEP'].value();
+        tmp_microstep = self.params_and_controls_dict[n_form-1]['MICROSTEP'].value()
         if n_form==2:
-            config['BALLSCREWPARAMS']['SCALE'] = str(tmp_gear*tmp_microstep);
+            config['BALLSCREWPARAMS']['SCALE'] = str(tmp_gear*tmp_microstep)
+            config['BALLSCREWPARAMS']['SCALE_ENCODER'] = str(tmp_gear*tmp_microstep*20000.0/360.0)
         else:
-            tmp_pitch = self.params_and_controls_dict[n_form-1]['PITCH'].value();
-            config['BALLSCREWPARAMS']['SCALE'] = str(tmp_gear*tmp_microstep/tmp_pitch);
+            tmp_pitch = self.params_and_controls_dict[n_form-1]['PITCH'].value()
+            config['BALLSCREWPARAMS']['SCALE'] = str(tmp_gear*tmp_microstep/tmp_pitch)
+            config['BALLSCREWPARAMS']['SCALE_ENCODER'] = str(tmp_gear*tmp_microstep/tmp_pitch*20000.0/360.0)
 
         config['BALLSCREWPARAMS']['TYPE'] = str(n_form) #TODO
         config['BALLSCREWPARAMS']['DATE'] = self.DATE
@@ -302,11 +304,19 @@ class BallScrew(QMainWindow):
         config['BALLSCREWPARAMS']['RODOS4_NUMBER']= (
             str(rodos4_numbers_for_forms[n_form-1][self.DRIVE]))
 
-        replacements = [['{{MACHINE}}','BallScrewVCP' + str(n_form)],
+        if self.DRIVE==0:
+            halfilename = 'BallScrewVCP_perp.hal'
+        else:
+            halfilename = 'BallScrewVCP_axial.hal'
+
+        replacements = [
+            ['{{MACHINE}}', 'BallScrewVCP' + str(n_form)],
             ['{{VCP}}', 'BallScrewVCP' + str(n_form)],
             ['{{DISPLAY}}', 'BallScrewVCP' + str(n_form)],
-            ['{{POSTGUI_HALFILE}}', 'BallScrewVCP' + str(n_form)+'_postgui.hal']]
-        f = open('BallScrewVCP_template.ini','rb')
+            ['{{POSTGUI_HALFILE}}', 'BallScrewVCP' + str(n_form) + '_postgui.hal'],
+            ['{{BALL_SCREW_VCP_HAL}}', halfilename]]
+
+        f = open('BallScrewVCP_template.ini', 'rb')
         filedata = f.read()
         f.close()
         for replacement in replacements:

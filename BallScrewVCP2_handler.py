@@ -560,6 +560,29 @@ class HandlerClass:
         # self.w.gridLayout_29.addWidget(self.w.lblTest, 3, 2)
         self.init_plot()
 
+        # масштабирование с помощью пинов *-scale
+        # (команды setp в hal-файле недостаточно - слайдер не масштабирует,
+        # пока не сдвинуть вручную)
+        self.w.sldVelocity32.setMinimum(-10000)
+        self.w.sldVelocity32.setMaximum(10000)
+        self.w.spnVelocity32.setMinimum(float(self.w.sldVelocity32.minimum()/100.0))
+        self.w.spnVelocity32.setMaximum(float(self.w.sldVelocity32.maximum()/100.0))
+        self.w.sldVelocity32.valueChanged.connect(lambda val: self.w.spnVelocity32.setValue(float(val)/100.0))
+        self.w.spnVelocity32.valueChanged.connect(lambda val: self.w.sldVelocity32.setValue(int(val*100)))
+
+        self.w.sldTorque32.setMinimum(-10000)
+        self.w.sldTorque32.setMaximum(10000)
+        self.w.spnTorque32.setMinimum(float(self.w.sldTorque32.minimum()/100.0))
+        self.w.spnTorque32.setMaximum(float(self.w.sldTorque32.maximum()/100.0))
+        self.w.sldTorque32.valueChanged.connect(lambda val: self.w.spnTorque32.setValue(float(val)/100.0))
+        self.w.spnTorque32.valueChanged.connect(lambda val: self.w.sldTorque32.setValue(int(val*100)))
+
+        sliders_to_scale = [self.w.sldVelocity32, self.w.sldTorque32]
+
+        for slider_i in sliders_to_scale:
+            slider_i.hal_pin_scale.set(0.01)
+            slider_i.hal_pin_f.set(slider_i.value()*0.01)
+
         # создать оверлей для диалого завершения
         self.w.overlay = FocusOverlay(self.w)
         self.w.overlay.setGeometry(self.w.geometry())

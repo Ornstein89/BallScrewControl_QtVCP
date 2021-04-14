@@ -15,6 +15,7 @@
 import sys, os, configparser, subprocess, random, io, copy
 import codecs
 import re
+from datetime import datetime
 
 # пакеты linuxcnc
 import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
@@ -174,12 +175,15 @@ class HandlerClass:
         }
 
         self.VCP_halpins_bit = {
-            'active_0-pin':[None, self.guiStatesSitch],
-            'active_1-pin':[None, self.guiStatesSitch],
-            'active_2-pin':[None, self.guiStatesSitch],
-            'active_3-pin':[None, self.guiStatesSitch],
-            'active_4-pin':[None, self.guiStatesSitch],
-            'active_5-pin':[None, self.guiStatesSitch],
+            'append_buffer-pin33':[None, None],
+            'append_file-pin33':[None, None],
+
+            'active_0-pin':[None, self.guiStatesSwitch],
+            'active_1-pin':[None, self.guiStatesSwitch],
+            'active_2-pin':[None, self.guiStatesSwitch],
+            'active_3-pin':[None, self.guiStatesSwitch],
+            'active_4-pin':[None, self.guiStatesSwitch],
+            'active_5-pin':[None, self.guiStatesSwitch],
 
             'RODOS4_1_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_1_on', 1, True)],
             'RODOS4_2_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_2_on', 2, True)],
@@ -205,25 +209,26 @@ class HandlerClass:
         for key in self.VCP_halpins_bit:
             tmp_pin = self.hal.newpin(key, hal.HAL_BIT, hal.HAL_IN)
             self.VCP_halpins_bit[key][0] = tmp_pin
-            tmp_pin.value_changed.connect(self.VCP_halpins_bit[key][1])
+            if self.VCP_halpins_bit[key][1] is not None:
+                tmp_pin.value_changed.connect(self.VCP_halpins_bit[key][1])
 
         return
         
-    def onBtnTempShow31(self):
-        self.w.stackedWidget.setCurrentIndex(5)
-        pass
-        
-    def onBtnTempShow32(self):
-        self.w.stackedWidget.setCurrentIndex(6)
-        pass
-        
-    def onBtnTempShow33(self):
-        self.w.stackedWidget.setCurrentIndex(7)
-        pass
-        
-    def onBtnTempShow34(self):
-        self.w.stackedWidget.setCurrentIndex(8)
-        pass
+    # def onBtnTempShow31(self):
+    #     self.w.stackedWidget.setCurrentIndex(5)
+    #     pass
+    #
+    # def onBtnTempShow32(self):
+    #     self.w.stackedWidget.setCurrentIndex(6)
+    #     pass
+    #
+    # def onBtnTempShow33(self):
+    #     self.w.stackedWidget.setCurrentIndex(7)
+    #     pass
+    #s
+    # def onBtnTempShow34(self):
+    #     #     self.w.stackedWidget.setCurrentIndex(8)
+    #     #     pass
 
     def onBtnLoadGCode33(self):
         # код на основе btn_load и load_code из qtdragon
@@ -321,7 +326,7 @@ class HandlerClass:
         #TODO защита от ошибки "Не могу исполнить команду MDI если не найдены начала"
         return
 
-    def guiStatesSitch(self):
+    def guiStatesSwitch(self):
         self.w.btnHome33.setEnabled(self.hal['active_0-pin'] and STATUS.machine_is_on())
 
         controls_on_active1 = [ # список элементов, которые становятся активны
@@ -417,6 +422,81 @@ class HandlerClass:
             print "***Ошибка при запуске RODOS4. ", exc
         pass
 
+    def init_datalog(self, datalogfilename):
+        self.datalogfile = None
+        self.datalogbuffer = []
+        try:
+            self.datalogfile = open(datalogfilename,"w")
+        except Exception as exc:
+            self.datalogfile = None
+            QMessageBox.critical(self.w, 'Ошибка',
+            ("Невозможно открыть файл лога " + datalogfilename
+             + " для вывода данных. Код ошибки " + exc
+             + ". Запись не будет производиться."),
+            QMessageBox.Yes)
+            return
+
+        self.datalogfile.write("Модель: " + self.MODEL + "\n")
+        self.datalogfile.write("Номер изделия: " + self.PART + "\n")
+        self.datalogfile.write("Дата: " + self.DATE + "\n")
+        self.datalogfile.flush()
+
+        self.append_buffer_pin33 = self.VCP_halpins_bit['append_buffer-pin33'][0]
+        self.append_file_pin33 = self.VCP_halpins_bit['append_file-pin33'][0]
+
+        self.append_buffer_pin33.value_changed.connect(self.append_buffer)
+        self.append_file_pin33.value_changed.connect(self.append_file)
+        return
+
+    def append_file(self):
+        # По сигналу append_file вектор параметров состояния записываетcя
+        # в конец лог-файла в виде:
+        # Время измерения: time:
+        # Положение измерения: pos_measure
+        # Нагрузка: load
+        # Приведённый момент от нагрузки: torque_at_load
+        # Момент страгивания: torque_extremal
+
+        if self.datalogfile is None:
+            return
+        if self.datalogfile.closed:
+            return
+        if not self.append_file_pin33.get(): # запись только по восходящему фронту
+            return
+
+        for itm in self.datalogbuffer:
+            self.datalogfile.write("\n")
+            self.datalogfile.write("Время измерения:\t" + itm[0].strftime("%d.%m.%Y %H:%M:%S") + "\n")
+            self.datalogfile.write("Положение измерения:\t" '%0.1d' % itm[1] + "\n")
+            self.datalogfile.write("Нагрузка: "+ '%0.1d' % itm[2] + "\n")
+            self.datalogfile.write("Приведённый момент от нагрузки: "+ '%0.1d' % itm[3] + "\n")
+            self.datalogfile.write("Момент страгивания: "+ '%0.1d' % itm[4] + "\n")
+
+        self.datalogfile.flush()
+        self.datalogbuffer = []
+        #self.onBtnClearPlot_clicked()
+        return
+
+    def append_buffer(self):
+        if self.datalogfile is None:
+            return
+        if self.datalogfile.closed:
+            return
+        if not self.append_buffer_pin33.get(): # запись только по восходящему фронту
+            return
+
+        #Вектор параметров состояния: (time; pos_measure; load; torque_at_load;
+        #torque_extremal)
+
+        self.datalogbuffer.append([
+            datetime.now(),
+            self.pos_measure_pin33.get(),
+            self.load_pin33.get(),
+            self.torque_at_load_pin33.get(),
+            self.torque_extremal_pin33.get()])
+
+        return
+
     #####################
     # GENERAL FUNCTIONS #
     #####################
@@ -430,9 +510,9 @@ class HandlerClass:
         self.init_plot()
 
         STATUS.connect('state-estop',
-                        lambda w: (self.w.btnDevice_On33.setEnabled(False)))
+                       lambda w: (self.w.btnDevice_On33.setEnabled(False)))
         STATUS.connect('state-estop-reset',
-                        lambda w: (self.w.btnDevice_On33.setEnabled(not STATUS.machine_is_on())))
+                       lambda w: (self.w.btnDevice_On33.setEnabled(not STATUS.machine_is_on())))
 
         self.w.btnDevice_On33.clicked.connect(lambda x: ACTION.SET_MACHINE_STATE(True))
         self.w.btnDevice_Off33.clicked.connect(lambda x: ACTION.SET_MACHINE_STATE(False))
@@ -443,18 +523,11 @@ class HandlerClass:
         # сделать чекбоксы исключающими
         #self.w.chkDspModeHH_33..connect(self.w.chkDspModeIZM_33.setChecked(not self.w.chkDspModeHH_33.isChecked()))
 
-        STATUS.connect('state-on', lambda _: (#self.w.btnStart_Ccw32.setEnabled(True),
-                                              #self.w.btnStop33.setEnabled(True),
-                                              #self.w.btnStart_Cw32.setEnabled(True),
-                                              self.w.btnDevice_On33.setEnabled(False),
-                                              self.guiStatesSitch()))
+        STATUS.connect('state-on', lambda _: (self.w.btnDevice_On33.setEnabled(False),
+                                              self.guiStatesSwitch()))
 
-        STATUS.connect('state-off', lambda _:(#self.onbtnStop32_clicked(),
-                                              #self.w.btnStart_Ccw32.setEnabled(False),
-                                              #self.w.btnStop32.setEnabled(False),
-                                              #self.w.btnStart_Cw32.setEnabled(False),
-                                              self.w.btnDevice_On33.setEnabled(STATUS.estop_is_clear()),
-                                              self.guiStatesSitch()))
+        STATUS.connect('state-off', lambda _:(self.w.btnDevice_On33.setEnabled(STATUS.estop_is_clear()),
+                                              self.guiStatesSwitch()))
 
         self.w.btnTest.clicked.connect(self.testUpdatePlot)
 
@@ -476,7 +549,7 @@ class HandlerClass:
         # self.w.plot_overlay.setPixmap(self.stub_image)
 
         # приведение GUI в соответствие с сигналами HAL
-        self.guiStatesSitch()
+        self.guiStatesSwitch()
 
         self.w.overlay = FocusOverlay(self.w)
         self.w.overlay.setGeometry(0, 0, self.w.width(), self.w.height())
@@ -485,24 +558,23 @@ class HandlerClass:
     def init_led_colors(self):
         # настройка цветов диодов (т.к. в дизайнере цвета выставляются с ошибками - одинаковый цвет для color и off_color)
         diodes_redgreen = (
-
-        self.w.ledEstop_Ext33,
-        self.w.ledOn_Position33,
-        self.w.ledAt_Load33,
-        self.w.ledEnable33,
-        self.w.ledEstop_Ext33,
-        self.w.ledLoad_Is_On2_33,
-        self.w.ledLoad_Alarm33,
-        self.w.ledLoad_Error33,
-        self.w.ledLoad_Overload33,
-        self.w.ledLoad_Overheat33,
-        self.w.lepPos_Is_On33,
-        self.w.ledPos_Alarm33,
-        self.w.ledPos_Error33,
-        self.w.ledPos_Overload33,
-        self.w.ledPos_Overheat33,
-        self.w.ledPos_Sip33,
-        self.w.ledLimits_Excess33)
+            self.w.ledEstop_Ext33,
+            self.w.ledOn_Position33,
+            self.w.ledAt_Load33,
+            self.w.ledEnable33,
+            self.w.ledEstop_Ext33,
+            self.w.ledLoad_Is_On2_33,
+            self.w.ledLoad_Alarm33,
+            self.w.ledLoad_Error33,
+            self.w.ledLoad_Overload33,
+            self.w.ledLoad_Overheat33,
+            self.w.lepPos_Is_On33,
+            self.w.ledPos_Alarm33,
+            self.w.ledPos_Error33,
+            self.w.ledPos_Overload33,
+            self.w.ledPos_Overheat33,
+            self.w.ledPos_Sip33,
+            self.w.ledLimits_Excess33)
 
         for led in diodes_redgreen:
             led.setColor(Qt.red)
@@ -651,26 +723,26 @@ class HandlerClass:
         #print 'halpin object =', self.w.sender()
         #print 'Halpin type: ',self.w.sender().get_type()
 
-    def append_data(self, p_time, p_pos_measure, p_load, p_torque_at_load, p_torque_extremal):
-        '''
-        Функция для фиксирования новых показаний в массиве, по которому будет строиться график и записываться файл
-        :param p_time:
-        :param p_pos_measure:
-        :param p_load:
-        :param p_torque_at_load:
-        :param p_torque_extremal:
-        :return:
-        '''
-        # Вектор параметров состояния: (time; pos_measure; load; torque_at_load; torque_extremal)
-        self.data['time'][self.current_plot_n] = p_time
-        self.data['pos_measure'][self.current_plot_n] = p_pos_measure
-        self.data['load'][self.current_plot_n] = p_load
-        self.data['torque_at_load'][self.current_plot_n] = p_torque_at_load
-        self.data['torque_extremal'][self.current_plot_n] = p_torque_extremal
-        self.current_plot_n += 1
-        # if(self.current_plot_n >= 10000):
-        #     self.current_plot_n = 0 # логика кольцевого буфера
-        return
+    # def append_data(self, p_time, p_pos_measure, p_load, p_torque_at_load, p_torque_extremal):
+    #     '''
+    #     Функция для фиксирования новых показаний в массиве, по которому будет строиться график и записываться файл
+    #     :param p_time:
+    #     :param p_pos_measure:
+    #     :param p_load:
+    #     :param p_torque_at_load:
+    #     :param p_torque_extremal:
+    #     :return:
+    #     '''
+    #     # Вектор параметров состояния: (time; pos_measure; load; torque_at_load; torque_extremal)
+    #     self.data['time'][self.current_plot_n] = p_time
+    #     self.data['pos_measure'][self.current_plot_n] = p_pos_measure
+    #     self.data['load'][self.current_plot_n] = p_load
+    #     self.data['torque_at_load'][self.current_plot_n] = p_torque_at_load
+    #     self.data['torque_extremal'][self.current_plot_n] = p_torque_extremal
+    #     self.current_plot_n += 1
+    #     # if(self.current_plot_n >= 10000):
+    #     #     self.current_plot_n = 0 # логика кольцевого буфера
+    #     return
 
     def testUpdatePlot(self):
         """
@@ -700,10 +772,10 @@ class HandlerClass:
         self.w.plt33.setXRange(0.0, dsp_idle)
         self.txt_items[2].setPos(dsp_idle*0.3, torque_est*0.3)
 
-    def saveIni(self):
-        pass
+    # def saveIni(self):
+    #     pass
 
-    def pinUpdatePlot(self, p):
+    def pinUpdatePlot(self):
         '''
         Функция для построения графика в координатах position(X)-torque(Y)
         :return:
@@ -739,9 +811,9 @@ class HandlerClass:
                 self.txt_items[i].setText('%01d' % ypos)
                 #self.w.plt33.clear()
                 temp_data=self.plot_points.getData()
-                temp_data[0][i]=xpos
+                temp_data[0][i]=xpos #FIXME здесь возникает ошибка
                 temp_data[1][i]=ypos
-                self.plot_points.setData(pos=temp_data)
+                self.plot_points.setData(temp_data[0], temp_data[1])
                 #self.plot_points.update()
                 #self.w.plt33.update()
         elif len(halpin_name)==23:
@@ -754,9 +826,9 @@ class HandlerClass:
                 self.txt_items[i].setText('%01d' % ypos)
                 #self.w.plt33.clear()
                 temp_data=self.plot_points.getData()
-                temp_data[0][i]=xpos
+                temp_data[0][i]=xpos #FIXME здесь возникает ошибка
                 temp_data[1][i]=ypos
-                self.plot_points.setData(pos=temp_data)
+                self.plot_points.setData(temp_data[0], temp_data[1])
                 #self.plot_points.update()
                 #self.w.plt33.update()
                 #self.txt_items[i].setPos(xpos, ypos)???

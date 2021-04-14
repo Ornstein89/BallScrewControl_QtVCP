@@ -763,29 +763,60 @@ class HandlerClass:
 
         return
 
-    def append_data(self, x, y):
-        self.data[0][self.current_plot_n] = x
-        self.data[1][self.current_plot_n] = y
-        self.current_plot_n += 1
-        if(self.current_plot_n >= 10000):
-            self.current_plot_n = 0 # логика кольцевого буфера
-        return
+    #def append_data(self, x, y):
+    #    self.data[0][self.current_plot_n] = x
+    #    self.data[1][self.current_plot_n] = y
+    #    self.current_plot_n += 1
+    #    if(self.current_plot_n >= 10000):
+    #        self.current_plot_n = 0 # логика кольцевого буфера
+    #    return
 
-    def update_plot(self):
-        # self.vLine.setValue(???)
-        # self.hLine.setValue(???)
-        # self.plot_f1f2.setData(???)
-        # self.plot_current.setData(???)
-        # if(self.current_plot_n < 20):
-        #     #print "*** plot < 20"
-        #     self.w.plt34.plot(self.data[0][0:self.current_plot_n],
-        #                       self.data[1][0:self.current_plot_n],
-        #                       clear = True)
-        # else:
-        #     #print "*** plot >= 20"
-        #     self.w.plt34.plot(self.data[0][self.current_plot_n-20:self.current_plot_n],
-        #                       self.data[1][self.current_plot_n-20:self.current_plot_n],
-        #                       clear=True)
+    #def update_plot(self):
+    #    # self.vLine.setValue(???)
+    #    # self.hLine.setValue(???)
+    #    # self.plot_f1f2.setData(???)
+    #    # self.plot_current.setData(???)
+    #    # if(self.current_plot_n < 20):
+    #    #     #print "*** plot < 20"
+    #    #     self.w.plt34.plot(self.data[0][0:self.current_plot_n],
+    #    #                       self.data[1][0:self.current_plot_n],
+    #    #                       clear = True)
+    #    # else:
+    #    #     #print "*** plot >= 20"
+    #    #     self.w.plt34.plot(self.data[0][self.current_plot_n-20:self.current_plot_n],
+    #    #                       self.data[1][self.current_plot_n-20:self.current_plot_n],
+    #    #                       clear=True)
+    #    return
+
+    def init_datalog(self, datalogfilename):
+        self.datalogfile = None
+        self.datalogbuffer = []
+        try:
+            self.datalogfile = open(datalogfilename,"w")
+            self.w.btnShowResult34.setEnabled(True)
+        except Exception as exc:
+            self.datalogfile = None
+            QMessageBox.critical(self.w, 'Ошибка',
+            ("Невозможно открыть файл лога " + datalogfilename
+             + " для вывода данных. Код ошибки " + exc
+             + ". Запись не будет производиться."),
+            QMessageBox.Yes)
+            self.w.btnShowResult34.setEnabled(False)
+            return
+
+        self.datalogfile.write("Модель: " + self.MODEL + "\n")
+        self.datalogfile.write("Номер изделия: " + self.PART + "\n")
+        self.datalogfile.write("Дата: " + self.DATE + "\n")
+        self.datalogfile.flush()
+
+        self.log_permit_pin34 = self.VCP_halpins_bit['log_permit-pin34'][0]
+        self.append_buffer_pin34 = self.VCP_halpins_bit['append_buffer-pin34'][0]
+        self.append_title_pin34 = self.VCP_halpins_bit['append_title-pin34'][0]
+        self.append_file_pin34 = self.VCP_halpins_bit['append_file-pin34'][0]
+
+        self.VCP_halpins_bit['append_buffer-pin34'][0].value_changed.connect(self.append_buffer)
+        self.VCP_halpins_bit['append_title-pin34'][0].value_changed.connect(self.append_title)
+        self.VCP_halpins_bit['append_file-pin34'][0].value_changed.connect(self.append_file)
         return
 
     def append_file(self):
@@ -874,37 +905,6 @@ class HandlerClass:
     #    #print("*** siggen pin data: ", data)
     #    #print("*** siggen pin: ", self.siggen_test_read_pin.get())
     #    #print("*** siggen.0.sine directly", hal.get_value("siggen.0.sine"))
-
-    def init_datalog(self, datalogfilename):
-        self.datalogfile = None
-        self.datalogbuffer = []
-        try:
-            self.datalogfile = open(datalogfilename,"w")
-            self.w.btnShowResult34.setEnabled(True)
-        except Exception as exc:
-            self.datalogfile = None
-            QMessageBox.critical(self.w, 'Ошибка',
-            ("Невозможно открыть файл лога " + datalogfilename
-             + " для вывода данных. Код ошибки " + exc
-             + ". Запись не будет производиться."),
-            QMessageBox.Yes)
-            self.w.btnShowResult34.setEnabled(False)
-            return
-
-        self.datalogfile.write("Модель: " + self.MODEL + "\n")
-        self.datalogfile.write("Номер изделия: " + self.PART + "\n")
-        self.datalogfile.write("Дата: " + self.DATE + "\n")
-        self.datalogfile.flush()
-
-        self.log_permit_pin34 = self.VCP_halpins_bit['log_permit-pin34'][0]
-        self.append_buffer_pin34 = self.VCP_halpins_bit['append_buffer-pin34'][0]
-        self.append_title_pin34 = self.VCP_halpins_bit['append_title-pin34'][0]
-        self.append_file_pin34 = self.VCP_halpins_bit['append_file-pin34'][0]
-
-        self.VCP_halpins_bit['append_buffer-pin34'][0].value_changed.connect(self.append_buffer)
-        self.VCP_halpins_bit['append_title-pin34'][0].value_changed.connect(self.append_title)
-        self.VCP_halpins_bit['append_file-pin34'][0].value_changed.connect(self.append_file)
-        return
 
     #TODO в принципе функция не нужна, т.к. linuxcnc сам поддерживает передачу параметров из ini
     def load_ini(self):
