@@ -315,22 +315,23 @@ class HandlerClass:
         halpin_name = self.w.sender().text()
 
         halpins_labels_match_precision1 = { # отображать с точностью 2 знака после запятой
-        'geartorque_error_value-pin32':[self.w.lblGeartorque_Error_Value32, '%'],
-        'geartorque_error_value_max32':[self.w.lblGeartorque_Error_Value_Max32, '%'],
-        # убрали из ТЗ 22.03.2021 'braketorque_error_value-pin32':[self.w.lblBraketorque_Error_Value32, '%'],
-        # убрали из ТЗ 22.03.2021 'braketorque_error_value_max32':[self.w.lblBraketorque_Error_Value_Max32, '%'],
-        'load_error_value-pin32':[self.w.lblLoad_Error_Value32, ''],
-        'load_error_value_max-pin32':[self.w.lblLoad_Error_Value_Max32, ''],
-        'load_temperature-pin32':[self.w.lblLoad_Temperature32, ''],
-        'load_temperature_max-pin32':[self.w.lblLoad_Temperature_Max32, ''],
-        'pos_temperature-pin32':[self.w.lblPos_Temperature32, ''],
-        'pos_temperature_max-pin32':[self.w.lblPos_Temperature_Max32, '']
+            'geartorque_error_value-pin32':[self.w.lblGeartorque_Error_Value32, '%'],
+            'geartorque_error_value_max32':[self.w.lblGeartorque_Error_Value_Max32, '%'],
+            # убрали из ТЗ 22.03.2021 'braketorque_error_value-pin32':[self.w.lblBraketorque_Error_Value32, '%'],
+            # убрали из ТЗ 22.03.2021 'braketorque_error_value_max32':[self.w.lblBraketorque_Error_Value_Max32, '%'],
+            'load_error_value-pin32':[self.w.lblLoad_Error_Value32, ''],
+            'load_error_value_max-pin32':[self.w.lblLoad_Error_Value_Max32, ''],
+            'load_temperature-pin32':[self.w.lblLoad_Temperature32, ''],
+            'load_temperature_max-pin32':[self.w.lblLoad_Temperature_Max32, ''],
+            'pos_temperature-pin32':[self.w.lblPos_Temperature32, ''],
+            'pos_temperature_max-pin32':[self.w.lblPos_Temperature_Max32, ''],
+            'omega_actual-pin32':[self.w.lblOmega_Actual32, '']
         }
 
         if(halpin_name in halpins_labels_match_precision1):
             halpin_value = self.hal[halpin_name]
             halpins_labels_match_precision1[halpin_name][0].setText("{:10.1f}".format(halpin_value)
-                +halpins_labels_match_precision1[halpin_name][1])
+                +halpins_labels_match_precision1[halpin_name][1]) # знак процента или пусто
 
         #if(halpin_name == 'time-pin32'): #TODO заменить на 'time_current-pin32'
         #    timedelta1 = datetime.timedelta(seconds=self.hal['time-pin32']) #TODO заменить на 'time_current-pin32'
@@ -338,9 +339,8 @@ class HandlerClass:
             #TODO перевести на сигнал duration
             # timedelta2 = datetime.timedelta(seconds=self.hal['duration-pin32'])
             # self.w.lblDuration32.setText('%02d'%(timedelta2.seconds // 60) + ':' + '%02d'%(timedelta2.seconds % 60))
-
-
         return
+
 
     def onTimeChanged(self, data):
         #TODO
@@ -673,43 +673,6 @@ class HandlerClass:
         # курсор на графике https://stackoverflow.com/questions/50512391/can-i-share-the-crosshair-with-two-graph-in-pyqtgraph-pyqt5
         # https://stackoverflow.com/questions/52410731/drawing-and-displaying-objects-and-labels-over-the-axis-in-pyqtgraph-how-to-do
         return
-
-    def pinCnagedCallback(self, data):
-        halpin_name = self.w.sender().text()
-        # отдельный пин, поставляющий float-параметр для построения графика
-        if(halpin_name == 'position-pin31'):
-            #print "*** update and plot"
-            self.append_data(self.current_plot_n, self.hal['position-pin31']) # добавить точку к буферу графика
-            self.update_plot() # обновить график
-            return
-
-        halpins_labels_match_precision1 = { # отображать с точностью 1 знак после запятой
-            # На форме 3.2
-            #'torque_set-pin32':self.w.lblTorque_Set32, # сигнал torque_set выведен из исп. 16 марта, вместо него BRAKE_TORQUE
-            'torque_actual-pin32':self.w.lblTorque_Actual32,
-            'omega_actual-pin32':self.w.lblOmega_Actual32,
-
-            # "таблица" с диодами и надписями на Форме 3.2
-            'geartorque_error_value-pin32':self.w.lblGeartorque_Error_Value32,
-            'geartorque_error_value_max32':self.w.lblGeartorque_Error_Value_Max32,
-            'brakeorque_error_value-pin32':self.w.lblBraketorque_Error_Value32,
-            'braketorque_error_value_max32':self.w.lblBraketorque_Error_Value_Max32,
-            'load_error_value-pin32':self.w.lblLoad_Error_Value32,
-            'load_error_value_max-pin32':self.w.lblLoad_Error_Value_Max32,
-            'load_temperature-pin32':self.w.lblLoad_Temperature32,
-            'load_temperature_max-pin32':self.w.lblLoad_Temperature_Max32,
-            'pos_temperature-pin32':self.w.lblPos_Temperature32,
-            'pos_temperature_max-pin32':self.w.lblPos_Temperature_Max32
-        }
-
-        if(halpin_name in halpins_labels_match_precision1):
-            halpin_value = self.hal[halpin_name]
-            halpins_labels_match_precision1[halpin_name].setText("{:10.1f}".format(halpin_value))
-
-        return
-        #print "Test pin value changed to:" % (data) # ВЫВОДИТ ВСЕГДА 0 - ВИДИМО ОШИБКА В ДОКУМЕНТАЦИИ
-        #print 'halpin object =', self.w.sender()
-        #print 'Halpin type: ',self.w.sender().get_type()
 
     def append_plot(self, x, y):
         self.plot_data_buffer[0].append(x)
