@@ -13,6 +13,7 @@
 ############################
 # стандартные пакеты
 import sys, os, configparser, subprocess
+from datetime import datetime
 
 # пакеты linuxcnc
 import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
@@ -158,7 +159,7 @@ class HandlerClass:
         self.VCP_halpins_float = {
             'position-pin31': [None, self.onPositionChanged],
             'position_actual-pin31': [None, self.onPosition_ActualChanged],
-            'time-pin31':[None, self.onTimeChanged]
+            'time-pin31':[None, None]#self.onTimeChanged]
         }
 
         self.VCP_halpins_bit = {
@@ -411,7 +412,7 @@ class HandlerClass:
     def onPositionChanged(self, data):
         halpin_value = self.hal['position-pin31']
         self.w.lblPosition31.setText("{:10.2f}".format(halpin_value))
-        pass
+        return
 
     def onBtnTest(self, data):
         ### Тестирование правильной отрисовки оверлея
@@ -435,9 +436,9 @@ class HandlerClass:
 
     def onPosition_ActualChanged(self, data):
         halpin_value = self.hal['position_actual-pin31']
-        #print '*** onPosition_ActualChanged, data=', data
+        #DEBUG print '*** onPosition_ActualChanged, data=', data
         self.w.lblPosition_Actual31.setText("{:10.2f}".format(halpin_value))
-        self.current_position = self.hal['position_actual-pin31']
+        #self.current_position = self.hal['position_actual-pin31']
         pass
 
     def onActive0Changed(self, data):
@@ -448,10 +449,10 @@ class HandlerClass:
         self.w.spnVelocity31.setEnabled(self.hal['active_0-pin'])
         self.w.spnAcceleration31.setEnabled(self.hal['active_0-pin'])
 
-    def onTimeChanged(self, data):
-        #TODO
-        self.current_time = self.hal['time-pin31']
-        pass
+    #def onTimeChanged(self, data):
+    #    #TODO
+    #    self.current_time = self.hal['time-pin31']
+    #    pass
 
     def onAppend_BufferChanged(self, data):
         # запись показаний производится в буфер для повышения производительности
@@ -459,22 +460,23 @@ class HandlerClass:
         #TODO ограничение на длину???
         if not self.hal['append_buffer-pin31']: # исключить обратный фронт сигнала
             return
-        self.position_buffer.append([self.current_time, self.current_position]) # значения без лишнего обращения к пинам, для улучшения производительности
+        current_date_time = datetime.now()
+        current_position = self.hal['position_actual-pin31']
+        self.position_buffer.append([current_date_time, current_position]) # значения без лишнего обращения к пинам, для улучшения производительности
         # self.position_buffer.append([self.hal['position_actual-pin31'], self.hal['time-pin31']]) # получение значений с hal-пинов, может снижать производительность
 
         # форма 3.3, Вектор параметров состояния: (time; pos_measure; load; torque_at_load; torque_extremal)
         # self.position_buffer.append([time, pos_measure, load, torque_at_load, torque_extremal])
         # форма 3.4
-        pass
+        return
 
     def onAppend_FileChanged(self, data):
         if not self.hal['append_file-pin31']: # исключить обратный фронт сигнала
             return
         #записать показания в файл
         for rec in self.position_buffer:
-            self.logfile.write('Фактический ход:\t' + str(rec[0]))
-            self.logfile.write('Время:\t' + str(rec[1]))
-            self.logfile.write('\n')
+            self.logfile.write('Фактический ход:\t' + str(rec[1])+'\n')
+            self.logfile.write('Время:\t' + rec[0].strftime("%d.%m.%Y %H:%M:%S.%f") + '\n\n')
         # форма 3.2 Вектор параметров состояния: (time_current; torque_actual; omega_actual)
 
         # форма 3.3, Вектор параметров состояния: (time; pos_measure; load; torque_at_load; torque_extremal)
@@ -489,7 +491,7 @@ class HandlerClass:
         # форма 3.4 Вектор параметров состояния: (time_current; position_actual; omega_actual; load_actual; torque_actual)
         #TODO
         self.position_buffer = [] # очистить буфер после записи
-        pass
+        return
 
     def onRODOS_changed(self, state, pinname, number, turn_on):
         #INFO http://linuxcnc.org/docs/2.8/html/gui/qtvcp_code_snippets.html#_add_hal_pins_that_call_functions
