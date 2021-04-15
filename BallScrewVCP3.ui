@@ -912,7 +912,7 @@ font: bold</string>
            <enum>QFrame::Plain</enum>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="page">
            <property name="geometry">
@@ -1225,18 +1225,8 @@ font: bold</string>
            <layout class="QGridLayout" name="gridLayout_8">
             <item row="0" column="0">
              <layout class="QGridLayout" name="gridLayout_15">
-              <item row="2" column="0">
-               <widget class="QPushButton" name="btnLoadGCode33">
-                <property name="layoutDirection">
-                 <enum>Qt::LeftToRight</enum>
-                </property>
-                <property name="text">
-                 <string>Загрузить УП</string>
-                </property>
-               </widget>
-              </item>
               <item row="2" column="1">
-               <widget class="QPushButton" name="btnProgram_Run33">
+               <widget class="ActionButton" name="btnProgram_Run33">
                 <property name="styleSheet">
                  <string notr="true">background-color: rgb(138, 226, 52);</string>
                 </property>
@@ -1253,46 +1243,20 @@ font: bold</string>
                   <height>36</height>
                  </size>
                 </property>
+                <property name="run_action" stdset="0">
+                 <bool>true</bool>
+                </property>
                </widget>
               </item>
-              <item row="2" column="2">
-               <widget class="QPushButton" name="btnProgram_Stop33">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">background-color: rgb(239, 41, 41);</string>
+              <item row="2" column="0">
+               <widget class="QPushButton" name="btnLoadGCode33">
+                <property name="layoutDirection">
+                 <enum>Qt::LeftToRight</enum>
                 </property>
                 <property name="text">
-                 <string>Стоп</string>
-                </property>
-                <property name="icon">
-                 <iconset>
-                  <normaloff>resources/stop.png</normaloff>resources/stop.png</iconset>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>36</width>
-                  <height>36</height>
-                 </size>
+                 <string>Загрузить УП</string>
                 </property>
                </widget>
-              </item>
-              <item row="2" column="3">
-               <spacer name="horizontalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
               </item>
               <item row="3" column="0" colspan="4">
                <widget class="GcodeEditor" name="gcode_editor33">
@@ -1313,6 +1277,42 @@ font: bold</string>
                   <width>500</width>
                   <height>500</height>
                  </size>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="3">
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="2" column="2">
+               <widget class="ActionButton" name="btnProgram_Stop33">
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgb(239, 41, 41);</string>
+                </property>
+                <property name="text">
+                 <string>Стоп</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>resources/stop.png</normaloff>resources/stop.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>36</width>
+                  <height>36</height>
+                 </size>
+                </property>
+                <property name="abort_action" stdset="0">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -1389,7 +1389,7 @@ font: bold</string>
    <hints>
     <hint type="sourcelabel">
      <x>711</x>
-     <y>364</y>
+     <y>324</y>
     </hint>
     <hint type="destinationlabel">
      <x>7</x>
