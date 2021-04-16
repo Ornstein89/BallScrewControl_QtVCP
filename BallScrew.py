@@ -2,7 +2,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import sys, os, codecs
+import sys, os, codecs, io
 import configparser
 from shutil import copyfile
 
@@ -69,14 +69,12 @@ class BallScrew(QMainWindow):
 
     def onBtnNext2(self):
         #запись ini-файла
-        self.LOGFILE = self.edtFileSelect.text().encode('utf-8')
-        print '***self.LOGFILE=', self.LOGFILE
-        self.save_ini(self.stackedWidget.currentIndex())
+        self.onBtnSaveIni()
         #запуск linuxcnc с ini-файлом
         #os.system(u"linuxcnc ./"+self.NAME.decode('utf-8'))
         #os.system(u"linuxcnc ./"+self.NAME.encode('utf-8')) # вариант опробовать
         # вариант опробовать os.system(u"linuxcnc ./"+unicode(self.NAME))
-        os.system(("linuxcnc ./" + self.edtName.text()).encode('utf-8')) # вариант опробовать
+        os.system(("linuxcnc ./" + self.CNCINIFILENAME).encode('utf-8')) # вариант опробовать
         return
 
     def onBtnBack(self):
@@ -90,7 +88,7 @@ class BallScrew(QMainWindow):
         self.TYPE = self.cmbType.currentText().replace(' ', '_')
         self.DATE = self.edtDate.text()
         self.edtName.setText(self.MODEL + '__' + self.PART + '__'
-                        + self.TYPE + '__' + self.DATE + '__.ini')
+                        + self.TYPE + '__' + self.DATE)#### + '__.ini')
         self.checkGUI1()
 
     def onEdtFileChanged(self):
@@ -99,7 +97,7 @@ class BallScrew(QMainWindow):
         self.checkGUI2()
 
     def onBtnDefaultAll(self):
-        self.set_default_values(self.stackedWidget.currentIndex())
+        self.set_default_values(self.TYPE_N)
         pass
 
     def initGUI(self):
@@ -285,6 +283,7 @@ class BallScrew(QMainWindow):
             config['BALLSCREWPARAMS']['SCALE'] = str(tmp_gear*tmp_microstep/tmp_pitch)
             config['BALLSCREWPARAMS']['SCALE_ENCODER'] = str(tmp_gear*tmp_microstep/tmp_pitch*20000.0/360.0)
 
+        config['BALLSCREWPARAMS']['NAME'] = self.NAME
         config['BALLSCREWPARAMS']['TYPE'] = str(n_form) #TODO
         config['BALLSCREWPARAMS']['DATE'] = self.DATE
         config['BALLSCREWPARAMS']['MODEL'] = "TODO_need_for_Excel_file" #self.MODEL
@@ -310,13 +309,15 @@ class BallScrew(QMainWindow):
             halfilename = 'BallScrewVCP_axial.hal'
 
         replacements = [
-            ['{{MACHINE}}', 'BallScrewVCP' + str(n_form)],
-            ['{{VCP}}', 'BallScrewVCP' + str(n_form)],
-            ['{{DISPLAY}}', 'BallScrewVCP' + str(n_form)],
-            ['{{POSTGUI_HALFILE}}', 'BallScrewVCP' + str(n_form) + '_postgui.hal'],
+            #['{{MACHINE}}', 'BallScrewVCP' + str(n_form)],
+            #['{{VCP}}', 'BallScrewVCP' + str(n_form)],
+            #['{{DISPLAY}}', 'BallScrewVCP' + str(n_form)],
+            #['{{POSTGUI_HALFILE}}', 'BallScrewVCP' + str(n_form) + '_postgui.hal'],
             ['{{BALL_SCREW_VCP_HAL}}', halfilename]]
 
-        f = open('BallScrewVCP_template.ini', 'rb')
+        # открыть файл шаблона (свой у для каждой из форм 3.1-3.4)
+        #f = open('BallScrewVCP_template.ini', 'rb')
+        f = open('template_ini' + str(n_form) + '.txt', 'rb')
         filedata = f.read()
         f.close()
         for replacement in replacements:
@@ -334,17 +335,26 @@ class BallScrew(QMainWindow):
         #.encode('utf-8')
         print '***self.NAME=', self.NAME
 
-        configfile = open(self.NAME, 'w')
+        iniFileName = "BallScrewVCP"+str(n_form)+".ini"
+        # сначала записать фрагмент из шаблона с заменой {{ПАРАМЕТРОВ}}
+        configfile = open(iniFileName, 'w')
         configfile.write(filedata)
         configfile.close()
 
+        # добавление в конец файла секции [BALLSCREWVCP]
         # copyfile('BallScrewVCP_template.ini', self.NAME)
-        configfile = codecs.open(self.NAME,'ab+','utf-8')
+        configfile = codecs.open(iniFileName,'ab+','utf-8')
         config.write(configfile)
         configfile.close()
 
         #TODO обработка ошибок и исключений: нельзя открыть шаблон, нельзя открыть новый ini и пр.
         #TODO предупреждение о перезаписи
+        return iniFileName
+
+    def onBtnSaveIni(self):
+        self.LOGFILE = self.edtFileSelect.text().encode('utf-8')
+        print '***self.LOGFILE=', self.LOGFILE
+        self.CNCINIFILENAME = self.save_ini(self.TYPE_N)
         return
 
     # тестовые кнопки для переключения страниц, удаляются/скрываются на релизе

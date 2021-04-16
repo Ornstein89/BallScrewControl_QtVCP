@@ -290,6 +290,13 @@ qproperty-diameter: 20;
            </property>
           </spacer>
          </item>
+         <item>
+          <widget class="QPushButton" name="btnSave">
+           <property name="text">
+            <string>Сохранить INI</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
       </layout>
@@ -1359,7 +1366,7 @@ font: 15pt bold;</string>
    <slot>onBtnNext2()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>729</x>
+     <x>700</x>
      <y>658</y>
     </hint>
     <hint type="destinationlabel">
@@ -1375,8 +1382,8 @@ font: 15pt bold;</string>
    <slot>onBtnFileSelect()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>854</x>
-     <y>602</y>
+     <x>1025</x>
+     <y>603</y>
     </hint>
     <hint type="destinationlabel">
      <x>801</x>
@@ -1391,8 +1398,8 @@ font: 15pt bold;</string>
    <slot>onBtnNext1()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>650</x>
-     <y>504</y>
+     <x>721</x>
+     <y>452</y>
     </hint>
     <hint type="destinationlabel">
      <x>491</x>
@@ -1471,8 +1478,8 @@ font: 15pt bold;</string>
    <slot>onForm1DataChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>543</x>
-     <y>432</y>
+     <x>933</x>
+     <y>397</y>
     </hint>
     <hint type="destinationlabel">
      <x>1097</x>
@@ -1544,6 +1551,22 @@ font: 15pt bold;</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btnSave</sender>
+   <signal>clicked()</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onBtnSaveIni()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1098</x>
+     <y>634</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1160</x>
+     <y>632</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onBtnNext2()</slot>
@@ -1558,5 +1581,6 @@ font: 15pt bold;</string>
   <slot>onEdtFileChanged()</slot>
   <slot>onBtnBack()</slot>
   <slot>onBtnDefaultAll()</slot>
+  <slot>onBtnSaveIni()</slot>
  </slots>
 </ui>
