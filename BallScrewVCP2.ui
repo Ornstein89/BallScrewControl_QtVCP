@@ -324,10 +324,10 @@ font: bold</string>
               <item row="0" column="1">
                <widget class="Slider" name="sldVelocity32">
                 <property name="minimum">
-                 <number>-100</number>
+                 <number>0</number>
                 </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>500</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -363,10 +363,10 @@ font: bold</string>
               <item row="1" column="1">
                <widget class="Slider" name="sldTorque32">
                 <property name="minimum">
-                 <number>-100</number>
+                 <number>0</number>
                 </property>
                 <property name="maximum">
-                 <number>100</number>
+                 <number>1000</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>

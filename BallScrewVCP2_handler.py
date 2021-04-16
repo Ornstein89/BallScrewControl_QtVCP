@@ -568,19 +568,6 @@ class HandlerClass:
         # масштабирование с помощью пинов *-scale
         # (команды setp в hal-файле недостаточно - слайдер не масштабирует,
         # пока не сдвинуть вручную)
-        self.w.sldVelocity32.setMinimum(-10000)
-        self.w.sldVelocity32.setMaximum(10000)
-        self.w.spnVelocity32.setMinimum(float(self.w.sldVelocity32.minimum()/100.0))
-        self.w.spnVelocity32.setMaximum(float(self.w.sldVelocity32.maximum()/100.0))
-        self.w.sldVelocity32.valueChanged.connect(lambda val: self.w.spnVelocity32.setValue(float(val)/100.0))
-        self.w.spnVelocity32.valueChanged.connect(lambda val: self.w.sldVelocity32.setValue(int(val*100)))
-
-        self.w.sldTorque32.setMinimum(-10000)
-        self.w.sldTorque32.setMaximum(10000)
-        self.w.spnTorque32.setMinimum(float(self.w.sldTorque32.minimum()/100.0))
-        self.w.spnTorque32.setMaximum(float(self.w.sldTorque32.maximum()/100.0))
-        self.w.sldTorque32.valueChanged.connect(lambda val: self.w.spnTorque32.setValue(float(val)/100.0))
-        self.w.spnTorque32.valueChanged.connect(lambda val: self.w.sldTorque32.setValue(int(val*100)))
 
         sliders_to_scale = [self.w.sldVelocity32, self.w.sldTorque32]
 
@@ -732,6 +719,27 @@ class HandlerClass:
         self.DURATION = int(INFO.INI.findall("BALLSCREWPARAMS", "DURATION")[0])
         self.DATE = INFO.INI.findall("BALLSCREWPARAMS", "DATE")[0]
         self.PART = INFO.INI.findall("BALLSCREWPARAMS", "PART")[0]
+
+        self.w.spnVelocity32.setMinimum(float(INFO.INI.findall("BALLSCREWPARAMS", "NOM_VEL_MIN")[0]))
+        self.w.spnVelocity32.setMaximum(float(INFO.INI.findall("BALLSCREWPARAMS", "NOM_VEL_MAX")[0]))
+        self.w.spnVelocity32.setValue(float(INFO.INI.findall("BALLSCREWPARAMS", "NOM_VEL")[0]))
+
+        self.w.sldVelocity32.setMinimum(int(self.w.spnVelocity32.minimum())*100)
+        self.w.sldVelocity32.setMaximum(int(self.w.spnVelocity32.maximum())*100)
+        self.w.sldVelocity32.setValue(int(self.w.spnVelocity32.value())*100)
+
+
+        self.w.sldVelocity32.valueChanged.connect(lambda val: self.w.spnVelocity32.setValue(float(val)/100.0))
+        self.w.spnVelocity32.valueChanged.connect(lambda val: self.w.sldVelocity32.setValue(int(val*100)))
+
+        self.w.sldTorque32.setMinimum(0)
+        self.w.sldTorque32.setMaximum(1000)
+        self.w.sldTorque32.setValue(500)
+        self.w.spnTorque32.setMinimum(0.0)
+        self.w.spnTorque32.setMaximum(10.0)
+        self.w.spnTorque32.setValue(5.0)
+        self.w.sldTorque32.valueChanged.connect(lambda val: self.w.spnTorque32.setValue(float(val)/100.0))
+        self.w.spnTorque32.valueChanged.connect(lambda val: self.w.sldTorque32.setValue(int(val*100)))
         #self.datalogfile.write(u"Номе изделия: " + self.PART + "\n")
         #self.datalogfile.write(u"Дата: " + self.DATE + "\n")
         #TODO обработка ошибок и исключений: 1) нет файла - сообщение и заполнение по умолчанию, создание конфига
