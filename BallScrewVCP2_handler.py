@@ -12,7 +12,7 @@
 # **** IMPORT SECTION **** #
 ############################
 # стандартные пакеты
-import sys, os, configparser, datetime, time, subprocess
+import sys, os, configparser, datetime, time, subprocess, io
 
 # пакеты linuxcnc
 import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
@@ -348,7 +348,7 @@ class HandlerClass:
             return
 
         self.current_time = self.hal['time-pin32']
-        pass
+        return
 
     def onAppend_BufferChanged(self, data):
         # запись показаний производится в буфер для повышения производительности
@@ -356,21 +356,24 @@ class HandlerClass:
         # TODO ограничение на длину???
         # Вектор параметров состояния: (time_current; torque_actual; omega_actual)
         # self.log_data_buffer.append([self.current_time, self.current_position]) # значения без лишнего обращения к пинам, для улучшения производительности
-        if not self.initialized:
-            return
+
+        #if not self.initialized:
+        #    return
 
         # только восходящий фронт
         if not self.hal['append_buffer-pin32']:
             return
+        currentDateTime = QDateTime.currentDateTime()
+        delta_seconds = self.DATETIME0.msecsTo(currentDateTime)/1000.0 - self.PAUSE_TIME_MS/1000.0 # время от начала испытания
 
-        self.log_data_buffer.append([self.hal['time-pin32'], #TODO 'time_current-pin32'
+        self.log_data_buffer.append([delta_seconds, # кол-во секунд с начала испытаний
             self.hal['torque_actual-pin32'],
             self.hal['omega_actual-pin32']]) # получение значений с hal-пинов, может снижать производительность
 
         # форма 3.3, Вектор параметров состояния: (time; pos_measure; load; torque_at_load; torque_extremal)
         # self.log_data_buffer.append([time, pos_measure, load, torque_at_load, torque_extremal])
         # форма 3.4
-        pass
+        return
 
     def onAppend_TitleChanged(self, data):
         if not self.hal['append_title-pin32']:
@@ -379,11 +382,13 @@ class HandlerClass:
         if not self.initialized:
             return
 
-        self.datalogfile.write('\n')
-        self.datalogfile.write('Время запуска:\t' + str(datetime.timedelta(seconds=self.hal['time-pin32'])) + '\n')
-        self.datalogfile.write('Направление:\t' + str(self.hal['dir-pin32']) + '\n')
-        self.datalogfile.write('\n')
-        self.datalogfile.write('Время работы\tКрутящий момент\tСкорость вращения\n')
+        self.datalogfile.write(u'\n')
+        timeString = self.DATETIME0.toString("dd.MM.yyyy hh:mm:ss.zzz")
+        dirString = u"По часовой" if self.hal['dir-pin32'] else u"Против часовой"
+        self.datalogfile.write(u'Время запуска:\t' + timeString + u'\n')
+        self.datalogfile.write(u'Направление:\t' + dirString + u'\n')
+        self.datalogfile.write(u'\n')
+        self.datalogfile.write(u'Время работы\tКрутящий момент\tСкорость вращения\n\n')
         self.datalogfile.flush()
         return
 
@@ -395,11 +400,11 @@ class HandlerClass:
             return
         for rec in self.log_data_buffer:
             # время
-            str_to_print = str(datetime.timedelta(seconds=rec[0])) + '\t'
+            str_to_print = u""+str(datetime.timedelta(seconds=rec[0])) + '\t'
             # torque_actual
-            str_to_print += "{:.1f}".format(rec[1]) + '\t'
+            str_to_print += u"{:.1f}".format(rec[1]) + '\t'
             # omega_actual
-            str_to_print += "{:.1f}".format(rec[2]) + '\n'
+            str_to_print += u"{:.1f}".format(rec[2]) + '\n'
             self.datalogfile.write(str_to_print)
         self.datalogfile.flush()
         self.log_data_buffer = []
@@ -706,11 +711,11 @@ class HandlerClass:
 
     def start_log(self, logfilename):
         self.datalogfile = None
-        self.datalogfile = open(logfilename,"w")
-        self.datalogfile.write("Модель: " + self.MODEL + '\n')
-        self.datalogfile.write("Номер изделия: " + self.PART + '\n')
-        self.datalogfile.write("Дата: " + self.DATE + '\n')
-        self.datalogfile.write('\n')
+        self.datalogfile = io.open(logfilename, "w", encoding='utf8') #open(logfilename,"w")
+        self.datalogfile.write(u"Модель: " + self.MODEL + '\n')
+        self.datalogfile.write(u"Номер изделия: " + self.PART + '\n')
+        self.datalogfile.write(u"Дата: " + self.DATE + '\n')
+        self.datalogfile.write(u'\n')
         self.datalogfile.flush()
 
     #TODO в принципе функция не нужна, т.к. linuxcnc сам поддерживает передачу параметров из ini
@@ -727,8 +732,8 @@ class HandlerClass:
         self.DURATION = int(INFO.INI.findall("BALLSCREWPARAMS", "DURATION")[0])
         self.DATE = INFO.INI.findall("BALLSCREWPARAMS", "DATE")[0]
         self.PART = INFO.INI.findall("BALLSCREWPARAMS", "PART")[0]
-        #self.datalogfile.write("Номе изделия: " + self.PART + "\n")
-        #self.datalogfile.write("Дата: " + self.DATE + "\n")
+        #self.datalogfile.write(u"Номе изделия: " + self.PART + "\n")
+        #self.datalogfile.write(u"Дата: " + self.DATE + "\n")
         #TODO обработка ошибок и исключений: 1) нет файла - сообщение и заполнение по умолчанию, создание конфига
         #TODO обработка ошибок и исключений: 2) нет ключей в конфиге - сообщение и заполнение по умолчанию
     

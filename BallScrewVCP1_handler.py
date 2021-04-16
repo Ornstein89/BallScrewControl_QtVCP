@@ -12,7 +12,7 @@
 # **** IMPORT SECTION **** #
 ############################
 # стандартные пакеты
-import sys, os, configparser, subprocess
+import sys, os, configparser, subprocess, io
 from datetime import datetime
 
 # пакеты linuxcnc
@@ -475,8 +475,9 @@ class HandlerClass:
             return
         #записать показания в файл
         for rec in self.position_buffer:
-            self.logfile.write('Фактический ход:\t' + str(rec[1])+'\n')
-            self.logfile.write('Время:\t' + rec[0].strftime("%d.%m.%Y %H:%M:%S.%f") + '\n\n')
+            self.logfile.write(u'Фактический ход:\t' + str(rec[1])+u'\n')
+            self.logfile.write(u'Время:\t' + rec[0].strftime("%d.%m.%Y %H:%M:%S.%f") + u'\n\n')
+        self.logfile.flush()
         # форма 3.2 Вектор параметров состояния: (time_current; torque_actual; omega_actual)
 
         # форма 3.3, Вектор параметров состояния: (time; pos_measure; load; torque_at_load; torque_extremal)
@@ -548,14 +549,14 @@ class HandlerClass:
         return
 
     def start_log(self):
-        self.logfile = open(self.LOGFILE, 'w')
+        self.logfile = io.open(self.LOGFILE, "w", encoding='utf8') # open(self.LOGFILE, 'w')
         #Заголовок лога
-        self.logfile.write('Модель:\t' + self.MODEL + '\n')
-        self.logfile.write('Номер изделия: ' + self.PART + '\n')
-        self.logfile.write('Дата: ' + self.DATE + '\n')
-        self.logfile.write('\n')
+        self.logfile.write(u'Модель:\t' + self.MODEL + u'\n')
+        self.logfile.write(u'Номер изделия: ' + self.PART + u'\n')
+        self.logfile.write(u'Дата: ' + self.DATE + u'\n')
+        self.logfile.write(u'\n')
 
-        self.logfile.write('Проектный ход: ' + self.TRAVEL + '\n')
+        self.logfile.write(u'Проектный ход: ' + self.TRAVEL + u'\n')
 
         #if False: # форма 3.2
         #     self.logfile.write('Нагрузка:\t', self.BRAKE_TORQUE)
@@ -566,7 +567,7 @@ class HandlerClass:
         #if False:  # форма 3.4
         #    self.logfile.write('Количество циклов:\t', self.N)
 
-        self.logfile.write('\n')
+        self.logfile.write(u'\n')
         return
 
     def on_siggen_test_read_pin_value_changed(self, data):
