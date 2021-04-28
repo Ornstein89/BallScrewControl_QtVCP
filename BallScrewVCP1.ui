@@ -116,7 +116,7 @@ qproperty-diameter: 20;
          </layout>
         </item>
         <item row="0" column="0" rowspan="7">
-         <widget class="QWidget" name="widget" native="true">
+         <widget class="QWidget" name="wgtTestPanel" native="true">
           <property name="styleSheet">
            <string notr="true">#widget {
 background-image: url(./resources/stripes.png);

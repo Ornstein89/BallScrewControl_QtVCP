@@ -167,7 +167,7 @@ qproperty-diameter: 40;</string>
          </widget>
         </item>
         <item row="0" column="0" rowspan="7">
-         <widget class="QWidget" name="widget" native="true">
+         <widget class="QWidget" name="wgtTestPanel" native="true">
           <property name="styleSheet">
            <string notr="true">#widget {
 background-image: url(./resources/stripes.png);
@@ -516,23 +516,6 @@ font: bold</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="0">
-              <widget class="PushButton" name="btnJog_Minus33">
-               <property name="icon">
-                <iconset>
-                 <normaloff>resources/caret_left.png</normaloff>resources/caret_left.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>40</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1" colspan="2">
-              <widget class="LED" name="ledOn_Position33"/>
-             </item>
              <item row="0" column="2" colspan="2">
               <widget class="CheckBox" name="chkDspModeIZM_33">
                <property name="text">
@@ -543,20 +526,6 @@ font: bold</string>
                </property>
                <property name="autoExclusive">
                 <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="3">
-              <widget class="PushButton" name="btnJog_Plus33">
-               <property name="icon">
-                <iconset>
-                 <normaloff>resources/caret_right.png</normaloff>resources/caret_right.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>40</width>
-                 <height>40</height>
-                </size>
                </property>
               </widget>
              </item>
@@ -603,6 +572,83 @@ font: bold</string>
                 </widget>
                </item>
               </layout>
+             </item>
+             <item row="1" column="3">
+              <widget class="QPushButton" name="btnJog_Plus33">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>resources/caret_right.png</normaloff>resources/caret_right.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>40</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QPushButton" name="btnJog_Minus33">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>resources/caret_left.png</normaloff>resources/caret_left.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>40</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="LED" name="ledOn_Position33"/>
+             </item>
+             <item row="2" column="0">
+              <widget class="PushButton" name="btnJog_Minus33_old">
+               <property name="toolTip">
+                <string>Старая кнопка с пином</string>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(136, 138, 133);</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>resources/caret_left.png</normaloff>resources/caret_left.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>40</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="3">
+              <widget class="PushButton" name="btnJog_Plus33_old">
+               <property name="toolTip">
+                <string>Старая кнопка с пином</string>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(136, 138, 133);</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>resources/caret_right.png</normaloff>resources/caret_right.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>40</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -919,7 +965,7 @@ font: bold</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>589</width>
+             <width>588</width>
              <height>622</height>
             </rect>
            </property>
@@ -1165,7 +1211,7 @@ font: bold</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>589</width>
+             <width>588</width>
              <height>622</height>
             </rect>
            </property>
@@ -1215,7 +1261,7 @@ font: bold</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>589</width>
+             <width>588</width>
              <height>622</height>
             </rect>
            </property>
@@ -1225,7 +1271,39 @@ font: bold</string>
            <layout class="QGridLayout" name="gridLayout_8">
             <item row="0" column="0">
              <layout class="QGridLayout" name="gridLayout_15">
-              <item row="2" column="1">
+              <item row="3" column="0" colspan="5">
+               <widget class="GcodeEditor" name="gcode_editor33">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>300</width>
+                  <height>100</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>500</width>
+                  <height>500</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QPushButton" name="btnLoadGCode33">
+                <property name="layoutDirection">
+                 <enum>Qt::LeftToRight</enum>
+                </property>
+                <property name="text">
+                 <string>Загрузить УП</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
                <widget class="ActionButton" name="btnProgram_Run33">
                 <property name="styleSheet">
                  <string notr="true">background-color: rgb(138, 226, 52);</string>
@@ -1248,52 +1326,7 @@ font: bold</string>
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
-               <widget class="QPushButton" name="btnLoadGCode33">
-                <property name="layoutDirection">
-                 <enum>Qt::LeftToRight</enum>
-                </property>
-                <property name="text">
-                 <string>Загрузить УП</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0" colspan="4">
-               <widget class="GcodeEditor" name="gcode_editor33">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>300</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>500</width>
-                  <height>500</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="3">
-               <spacer name="horizontalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="2" column="2">
+              <item row="1" column="2">
                <widget class="ActionButton" name="btnProgram_Stop33">
                 <property name="styleSheet">
                  <string notr="true">background-color: rgb(239, 41, 41);</string>
@@ -1315,6 +1348,19 @@ font: bold</string>
                  <bool>true</bool>
                 </property>
                </widget>
+              </item>
+              <item row="1" column="3" colspan="2">
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </item>

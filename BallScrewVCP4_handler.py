@@ -212,11 +212,11 @@ class HandlerClass:
             'append_file-pin34':[None,None], # соединение со слотом после открытия файла
             'log_permit-pin34':[None,None],
 
-            'active_0-pin34':[None,self.guiStatesSitch],
-            'active_1-pin34':[None,self.guiStatesSitch],
-            'active_2-pin34':[None,self.guiStatesSitch],
-            'active_3-pin34':[None,self.guiStatesSitch],
-            'active_4-pin34':[None,self.guiStatesSitch],
+            'active_0-pin34':[None,self.guiStatesSwitch],
+            'active_1-pin34':[None,self.guiStatesSwitch],
+            'active_2-pin34':[None,self.guiStatesSwitch],
+            'active_3-pin34':[None,self.guiStatesSwitch],
+            'active_4-pin34':[None,self.guiStatesSwitch],
 
             'RODOS4_1_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_1_on', 1, True)],
             'RODOS4_2_on': [None, lambda s: self.onRODOS_changed(s, 'RODOS4_2_on', 2, True)],
@@ -326,7 +326,7 @@ class HandlerClass:
     #####################
     # GENERAL FUNCTIONS #
     #####################
-    def guiStatesSitch(self):
+    def guiStatesSwitch(self):
         self.w.btnHome34.setEnabled(self.hal['active_0-pin34'] and STATUS.machine_is_on())
 
         controls_on_active1 = [ # список элементов, которые становятся активны
@@ -376,16 +376,16 @@ class HandlerClass:
 
         STATUS.connect('state-estop',
                         lambda w: (self.w.btnDevice_On34.setEnabled(False),
-                                   self.guiStatesSitch()))
+                                   self.guiStatesSwitch()))
         STATUS.connect('state-estop-reset',
                         lambda w: (self.w.btnDevice_On34.setEnabled(not STATUS.machine_is_on()),
-                                    self.guiStatesSitch()))
+                                    self.guiStatesSwitch()))
 
         STATUS.connect('state-on', lambda _: (self.w.btnDevice_On34.setEnabled(False),
-                                              self.guiStatesSitch()))
+                                              self.guiStatesSwitch()))
 
         STATUS.connect('state-off', lambda _:(self.w.btnDevice_On34.setEnabled(STATUS.estop_is_clear()),
-                                              self.guiStatesSitch()))
+                                              self.guiStatesSwitch()))
 
         self.w.btnDevice_On34.clicked.connect(lambda x: ACTION.SET_MACHINE_STATE(True))
         self.w.btnDevice_Off34.clicked.connect(lambda x: ACTION.SET_MACHINE_STATE(False))
@@ -444,7 +444,9 @@ class HandlerClass:
 
         # приведение GUI в соответствие с сигналами HAL
 
-        self.guiStatesSitch()
+        self.guiStatesSwitch()
+
+        #self.w.wgtTestPanel.hide() # убрать панель с тестовым функционалом
 
         # оверлей для затенения окна
         self.w.overlay = FocusOverlay(self.w)

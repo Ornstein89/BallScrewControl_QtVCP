@@ -212,6 +212,9 @@ class HandlerClass:
             if self.VCP_halpins_bit[key][1] is not None:
                 tmp_pin.value_changed.connect(self.VCP_halpins_bit[key][1])
 
+        self.btnJog_Plus33OutPin = self.hal.newpin('btnJog_Plus33', hal.HAL_BIT, hal.HAL_OUT)
+        self.btnJog_Minus33OutPin = self.hal.newpin('btnJog_Minus33', hal.HAL_BIT, hal.HAL_OUT)
+
         return
         
     # def onBtnTempShow31(self):
@@ -531,6 +534,21 @@ class HandlerClass:
 
         self.w.btnTest.clicked.connect(self.testUpdatePlot)
 
+        # включение MODE_MANUAL перед использованием JOG
+        self.w.btnJog_Plus33.pressed.connect(lambda : (
+            ACTION.ensure_mode(linuxcnc.MODE_MANUAL),
+            self.btnJog_Plus33OutPin.set(1)))
+        self.w.btnJog_Plus33.released.connect(lambda : (
+            ACTION.ensure_mode(linuxcnc.MODE_MANUAL),
+            self.btnJog_Plus33OutPin.set(0)))
+
+        self.w.btnJog_Minus33.pressed.connect(lambda : (
+            ACTION.ensure_mode(linuxcnc.MODE_MANUAL),
+            self.btnJog_Minus33OutPin.set(1)))
+        self.w.btnJog_Minus33.released.connect(lambda : (
+            ACTION.ensure_mode(linuxcnc.MODE_MANUAL),
+            self.btnJog_Minus33OutPin.set(0)))
+
         # масштабирование с помощью пинов *-scale
         # (команды setp в hal-файле недостаточно - слайдер не масштабирует,
         # пока не сдвинуть вручную)
@@ -550,6 +568,8 @@ class HandlerClass:
 
         # приведение GUI в соответствие с сигналами HAL
         self.guiStatesSwitch()
+
+        #self.w.wgtTestPanel.hide() # убрать панель с тестовым функционалом
 
         self.w.overlay = FocusOverlay(self.w)
         self.w.overlay.setGeometry(0, 0, self.w.width(), self.w.height())

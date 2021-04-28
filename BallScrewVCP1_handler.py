@@ -396,6 +396,7 @@ class HandlerClass:
         #self.w.sldAcceleration31.setValue(tempVal+0.01)
         #self.w.sldAcceleration31.valueChanged.emit(tempVal)
 
+        #self.w.wgtTestPanel.hide() # убрать панель с тестовым функционалом
         self.w.ledPos_Alarm31.setOffColor(Qt.yellow)
 
         # оверлей для затемнения окна

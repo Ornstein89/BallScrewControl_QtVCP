@@ -400,7 +400,7 @@ class HandlerClass:
             return
         for rec in self.log_data_buffer:
             # время
-            str_to_print = u""+str(datetime.timedelta(seconds=rec[0])) + '\t'
+            str_to_print = u""+str(round(rec[0])) + '\t'
             # torque_actual
             str_to_print += u"{:.1f}".format(rec[1]) + '\t'
             # omega_actual
@@ -574,6 +574,8 @@ class HandlerClass:
         for slider_i in sliders_to_scale:
             slider_i.hal_pin_scale.set(0.01)
             slider_i.hal_pin_f.set(slider_i.value()*0.01)
+
+        #self.w.wgtTestPanel.hide() # убрать панель с тестовым функционалом
 
         # создать оверлей для диалого завершения
         self.w.overlay = FocusOverlay(self.w)
