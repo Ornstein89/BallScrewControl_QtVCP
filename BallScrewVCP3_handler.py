@@ -76,6 +76,7 @@ class HandlerClass:
         self.data = [[None for _ in range(10000)],[None for _ in range(10000)]]
         self.current_plot_n = 0
         self.w = widgets
+        self.pid_input_value = 0.0
         self.init_pins()
 
     ##########################################
@@ -215,6 +216,20 @@ class HandlerClass:
         self.btnJog_Plus33OutPin = self.hal.newpin('btnJog_Plus33', hal.HAL_BIT, hal.HAL_OUT)
         self.btnJog_Minus33OutPin = self.hal.newpin('btnJog_Minus33', hal.HAL_BIT, hal.HAL_OUT)
 
+        pid_tuner_in_pins = ['control_inpit_pin', # вход СУ (генератор сигнала)
+                             'control_output_pin', # выход из объекта управления (также направляется в ОС)
+                             'control_pid_signal_pin'] # сигнал, подаваемый из ПИД в объект управления
+        pid_tuner_out_pins = ['pid_kp_pin', 'pid_ki_pin','pid_kd_pin',  # коэффициенты ПИД
+                        'pid_level_pin', # уровень, относительно которого колеблется синусоида
+                        'pid_sine_multipler_pin',
+                        'pid_sine_freq_pin',
+                        'pid_reset_pin'] # амплитуда синусоиды
+        for pin_name in pid_tuner_in_pins:
+            self.hal.newpin(pin_name, hal.HAL_FLOAT, hal.HAL_IN)
+
+        for pin_name in pid_tuner_out_pins:
+            self.hal.newpin(pin_name, hal.HAL_FLOAT, hal.HAL_OUT)
+
         return
         
     # def onBtnTempShow31(self):
@@ -232,6 +247,70 @@ class HandlerClass:
     # def onBtnTempShow34(self):
     #     #     self.w.stackedWidget.setCurrentIndex(8)
     #     #     pass
+
+    ### ДЛЯ ПИД
+
+    # pid_tuner_in_pins = ['control_input_pin', # вход СУ (генератор сигнала)
+    #                      'control_output_pin', # выход из объекта управления (также направляется в ОС)
+    #                      'control_pid_signal_pin'] # сигнал, подаваемый из ПИД в объект управления
+    # pid_tuner_out_pins = ['pid_kp_pin', 'pid_ki_pin','pid_kd_pin',  # коэффициенты ПИД
+    #                 'pid_level_pin', # уровень, относительно которого колеблется синусоида
+    #                 'pid_sine_multipler_pin'] # амплитуда синусоиды
+
+    def onBtnBack(self):
+        self.w.stackedWidget.setCurrentIndex(0)
+        return
+
+    def onBtnToPID(self):
+        self.w.stackedWidget.setCurrentIndex(1)
+        return
+
+    def onBtnResetPressed(self):
+        self.hal['pid_reset_pin'] = 0.0
+        return
+
+    def onBtnResetReleased(self):
+        self.hal['pid_reset_pin'] = 1.0
+        return
+
+
+    def onBtnStepUp(self):
+        self.pid_input_value += self.w.spnStep.value()
+        self.hal["pid_level_pin"] = self.pid_input_value
+
+        # self.w.spnMagnitude
+        # self.w.spnFreq
+        # self.w.spnStep
+        return
+
+    def onBtnSavePIDFile(self):
+        return
+
+    def onBtnStepDown(self):
+        self.pid_input_value -= self.w.spnStep.value()
+        self.hal["pid_level_pin"] = self.pid_input_value
+        return
+
+    def onBtnSineOn(self, isChecked):
+        print "*** onBtnSineOn(), isChecked = ", isChecked
+        if self.w.btnSineOn.isChecked():
+            self.hal["pid_sine_multipler_pin"] = 1.0
+        else:
+            self.hal["pid_sine_multipler_pin"] = 0.0
+        return
+
+    def onChkPlotOn(self, checked):
+        return
+
+    def onPidCoefChanged(self):
+        self.hal['pid_kp_pin'] = self.w.spnKp.value()
+        self.hal['pid_ki_pin'] = self.w.spnKi.value()
+        self.hal['pid_kd_pin'] = self.w.spnKd.value()
+        return
+
+    # новые пины pid_kp_pin, pid_ki_pin, pid_kd_pin, pid_level_pin, pid_sine_multipler, control_inpit, control_output
+
+    ### ДЛЯ ПИД
 
     def onBtnLoadGCode33(self):
         # код на основе btn_load и load_code из qtdragon
