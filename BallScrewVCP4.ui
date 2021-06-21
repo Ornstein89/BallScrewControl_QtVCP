@@ -46,13 +46,23 @@ background-image: url(./resources/stripes.png);
 }</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="12" column="0">
-        <widget class="Slider" name="sldTestPos">
-         <property name="maximum">
-          <number>200</number>
-         </property>
+       <item row="15" column="0">
+        <spacer name="verticalSpacer_3">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="11" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Pos</string>
          </property>
         </widget>
        </item>
@@ -66,16 +76,48 @@ background-image: url(./resources/stripes.png);
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
-        <widget class="PushButton" name="btnTestActive2">
+       <item row="12" column="0">
+        <widget class="Slider" name="sldTestPos">
+         <property name="maximum">
+          <number>200</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="PushButton" name="btnTestAppendFile34">
          <property name="styleSheet">
           <string notr="true">background-color: rgb(252, 233, 79);</string>
          </property>
          <property name="text">
-          <string>active_2</string>
+          <string>append_file</string>
          </property>
-         <property name="checkable">
-          <bool>true</bool>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(239, 41, 41);
+font: bold</string>
+         </property>
+         <property name="text">
+          <string>Для тестов</string>
+         </property>
+         <property name="margin">
+          <number>5</number>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="PushButton" name="btnTestAppendBuffer34">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(252, 233, 79);</string>
+         </property>
+         <property name="text">
+          <string>append_buffer</string>
          </property>
         </widget>
        </item>
@@ -95,36 +137,6 @@ background-image: url(./resources/stripes.png);
          </property>
         </widget>
        </item>
-       <item row="8" column="0">
-        <widget class="PushButton" name="btnTestAppendFile34">
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(252, 233, 79);</string>
-         </property>
-         <property name="text">
-          <string>append_file</string>
-         </property>
-        </widget>
-       </item>
-       <item row="15" column="0">
-        <spacer name="verticalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="10" column="0">
-        <widget class="QPushButton" name="btnTestPlot">
-         <property name="text">
-          <string>testPlot</string>
-         </property>
-        </widget>
-       </item>
        <item row="5" column="0">
         <widget class="PushButton" name="btnTestActive4">
          <property name="styleSheet">
@@ -138,25 +150,37 @@ background-image: url(./resources/stripes.png);
          </property>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label">
-         <property name="styleSheet">
-          <string notr="true">color: rgb(255, 255, 255);
-background-color: rgb(239, 41, 41);
-font: bold</string>
-         </property>
-         <property name="text">
-          <string>Для тестов</string>
-         </property>
-         <property name="margin">
-          <number>5</number>
-         </property>
-        </widget>
-       </item>
        <item row="9" column="0">
         <widget class="QPushButton" name="pushButton">
          <property name="text">
           <string>testIniSave</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="0">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Load</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="0">
+        <widget class="QPushButton" name="btnTestPlot">
+         <property name="text">
+          <string>testPlot</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="PushButton" name="btnTestActive2">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(252, 233, 79);</string>
+         </property>
+         <property name="text">
+          <string>active_2</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -173,23 +197,6 @@ font: bold</string>
          </property>
         </widget>
        </item>
-       <item row="7" column="0">
-        <widget class="PushButton" name="btnTestAppendBuffer34">
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(252, 233, 79);</string>
-         </property>
-         <property name="text">
-          <string>append_buffer</string>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="0">
-        <widget class="QLabel" name="label_3">
-         <property name="text">
-          <string>Pos</string>
-         </property>
-        </widget>
-       </item>
        <item row="2" column="0">
         <widget class="PushButton" name="btnTestActive1">
          <property name="styleSheet">
@@ -200,13 +207,6 @@ font: bold</string>
          </property>
          <property name="checkable">
           <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="13" column="0">
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>Load</string>
          </property>
         </widget>
        </item>
@@ -223,13 +223,21 @@ font: bold</string>
          </property>
         </widget>
        </item>
+       <item row="16" column="0">
+        <widget class="QPushButton" name="btnLoadApprox">
+         <property name="text">
+          <string>load
+approximate</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
     <item row="0" column="1">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page34">
        <layout class="QGridLayout" name="gridLayout_13" columnstretch="1,3">
@@ -384,8 +392,8 @@ font: bold</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>604</width>
-             <height>625</height>
+             <width>241</width>
+             <height>254</height>
             </rect>
            </property>
            <attribute name="label">
@@ -562,8 +570,8 @@ font: bold</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>604</width>
-             <height>625</height>
+             <width>108</width>
+             <height>124</height>
             </rect>
            </property>
            <attribute name="label">
@@ -629,8 +637,8 @@ font: bold</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>604</width>
-             <height>625</height>
+             <width>318</width>
+             <height>266</height>
             </rect>
            </property>
            <attribute name="label">
@@ -1212,6 +1220,223 @@ qproperty-diameter: 40;</string>
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="page_5">
+       <layout class="QGridLayout" name="gridLayout_26" rowstretch="0,2,1" columnstretch="1,10" rowminimumheight="0,0,0">
+        <item row="1" column="1">
+         <widget class="PlotWidget" name="pltPID_2" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QWidget" name="wgtHeader_3" native="true">
+          <property name="styleSheet">
+           <string notr="true">QWidget#wgtHeader {
+	background-color: rgb(114, 159, 207);
+}</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_25">
+           <item row="0" column="1">
+            <spacer name="horizontalSpacer_27">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_137">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font: 15pt bold;</string>
+             </property>
+             <property name="text">
+              <string>Подбор кривой усилия ШВП</string>
+             </property>
+             <property name="margin">
+              <number>5</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="ActionButton" name="actionbutton_4">
+             <property name="text">
+              <string>АВ ОСТ</string>
+             </property>
+             <property name="indicator_option" stdset="0">
+              <bool>true</bool>
+             </property>
+             <property name="indicator_status_option" stdset="0">
+              <bool>true</bool>
+             </property>
+             <property name="is_estopped_status" stdset="0">
+              <bool>true</bool>
+             </property>
+             <property name="estop_action" stdset="0">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="ActionButton" name="actionbutton_5">
+             <property name="text">
+              <string>Вкл/
+выкл</string>
+             </property>
+             <property name="indicator_option" stdset="0">
+              <bool>true</bool>
+             </property>
+             <property name="indicator_status_option" stdset="0">
+              <bool>true</bool>
+             </property>
+             <property name="is_estopped_status" stdset="0">
+              <bool>true</bool>
+             </property>
+             <property name="estop_action" stdset="0">
+              <bool>false</bool>
+             </property>
+             <property name="machine_on_action" stdset="0">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QPlainTextEdit" name="plainTextEdit"/>
+        </item>
+        <item row="0" column="0" rowspan="3">
+         <widget class="QWidget" name="wgtTestPanel_3" native="true">
+          <property name="styleSheet">
+           <string notr="true">#widget {
+background-image: url(./resources/stripes.png);
+}</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_18">
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_11">
+             <property name="text">
+              <string>Граница краевых
+эффектов</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_10">
+             <property name="text">
+              <string>Количество точек на ход</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="PushButton" name="btnCalibration">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(138, 226, 52);</string>
+             </property>
+             <property name="text">
+              <string>Старт
+(калибровочный)</string>
+             </property>
+             <property name="checkable">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QSpinBox" name="spnNofPoints">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <number>10</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_8">
+             <property name="styleSheet">
+              <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(239, 41, 41);
+font: bold</string>
+             </property>
+             <property name="text">
+              <string>Настройки</string>
+             </property>
+             <property name="margin">
+              <number>5</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="PushButton" name="btnWriteFile_2">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(252, 233, 79);</string>
+             </property>
+             <property name="text">
+              <string> Записать
+в файл</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QDoubleSpinBox" name="spnNofPoints_2">
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="maximum">
+              <double>0.500000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.150000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="0">
+            <spacer name="verticalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="btnBack">
+             <property name="text">
+              <string>&lt; Назад</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -1265,8 +1490,8 @@ qproperty-diameter: 40;</string>
    <slot>onBtnLoadGCode34()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>695</x>
-     <y>310</y>
+     <x>288</x>
+     <y>80</y>
     </hint>
     <hint type="destinationlabel">
      <x>13</x>
@@ -1281,8 +1506,8 @@ qproperty-diameter: 40;</string>
    <slot>onBtnSaveGCode34()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>414</x>
-     <y>626</y>
+     <x>196</x>
+     <y>76</y>
     </hint>
     <hint type="destinationlabel">
      <x>5</x>
@@ -1313,12 +1538,44 @@ qproperty-diameter: 40;</string>
    <slot>onBtnShowResult34()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>437</x>
-     <y>357</y>
+     <x>217</x>
+     <y>73</y>
     </hint>
     <hint type="destinationlabel">
      <x>-2</x>
      <y>335</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnBack</sender>
+   <signal>clicked()</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onBtnBack()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>217</x>
+     <y>86</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>142</x>
+     <y>3</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnLoadApprox</sender>
+   <signal>clicked()</signal>
+   <receiver>BallScrewControlMainWindow</receiver>
+   <slot>onBtnLoadApprox()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>45</x>
+     <y>842</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>3</x>
+     <y>839</y>
     </hint>
    </hints>
   </connection>
@@ -1334,5 +1591,7 @@ qproperty-diameter: 40;</string>
   <slot>onBtnShowResult34()</slot>
   <slot>onBtnClearPlot34()</slot>
   <slot>update_ini()</slot>
+  <slot>onBtnBack()</slot>
+  <slot>onBtnLoadApprox()</slot>
  </slots>
 </ui>

@@ -1,0 +1,9 @@
+# net BallScrewVCP3.pid_kp_pin => kp
+# net BallScrewVCP3.pid_ki_pin => ki
+# net BallScrewVCP3.pid_kd_pin => kd
+# net BallScrewVCP3.pid_level_pin => level
+# net BallScrewVCP3.pid_sine_multipler_pin => sine_multipler
+# net BallScrewVCP3.pid_sine_freq_pin =>sine_freq
+#
+# net freq <= BallScrewVCP3.pid_sine_freq_pin
+# net siggen_pid.frequency <= freq

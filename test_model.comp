@@ -1,0 +1,78 @@
+component test_model "Test model for linear stroke and load";  // компиляция и установка sudo halcompile --install test_model.comp
+pin out bit dir_pos=0;
+pin out bit dir_neg=0;
+pin out float position=0.0;
+pin out float load=0.0;
+
+pin in bit start=0;
+pin in float timer=0.0; // периодический прямоугольный сигнал -1/+1
+pin in float max_stroke=350.0;
+
+variable float old_timer = 0.0;
+variable float curr_time = 0.0; // накопленная сумма времени
+variable int start_old = 0;
+
+//option extra_setup yes;
+
+function _;
+license "GPL";
+;;
+
+/*EXTRA_SETUP(){
+    old_timer = 0.0;
+    time = 0.0;
+    start_old = 0;
+    dir_neg = 0;
+    dir_pos = 0;
+}*/
+
+FUNCTION(_) {
+
+
+    if((start_old == 0) && (start == 1) && (dir_neg==0) && (dir_pos==0)) // триггер начала работы
+    {
+        dir_pos = 1;
+        dir_neg = 0;
+    }
+
+    if( (dir_pos==1 && dir_neg==0) || (dir_pos==0 && dir_neg==1) ) { // приращение времени
+        if (timer>0.0 &&  old_timer < 0.0) { // время прибавляется, если сигнал таймера поменял знак или по восходящему фронту
+            //curr_time = curr_time + 1.0;
+            if(dir_pos==1 && dir_neg==0) 
+                curr_time = curr_time + 1.0;// приращение хода
+            else if (dir_pos==0 && dir_neg==1)
+                curr_time = curr_time - 1.0;// приращение хода
+            
+        }
+    }     
+
+    position = curr_time * 1.0;// приращение хода
+
+    if((dir_pos==1) && (dir_neg==0) && (position >= max_stroke)) // смена хода при достижении максимальной точки
+    {
+        dir_pos = 0;
+        dir_neg = 1;
+        position = max_stroke;
+    }
+
+    if(dir_neg==1 && dir_pos==0 && position<=0.0){ // остановка при возврате в ноль
+        dir_neg=0;
+        dir_pos=0;
+        position=0.0;
+        curr_time = 0.0;
+    }
+
+    if((dir_pos==1) && (dir_neg==0)) { // нагрузка при положительном ходе 
+        load = position * position / 80.0 + 200.0;
+    }
+    else if((dir_pos==0) && (dir_neg==1)) { // нагрузка при отрицательном ходе 
+        load = - ( position - 350.0 ) * ( position - 350.0 ) / 80.0 + 2600.0;
+    }
+    else{
+        load = 0.0;
+    }
+
+    old_timer = timer; // запоминание предыдущего значения таймера
+    start_old = start;
+
+}

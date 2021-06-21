@@ -245,6 +245,14 @@ class HandlerClass:
             if self.VCP_halpins_bit[key][1] is not None:
                 tmp_newpin.value_changed.connect(self.VCP_halpins_bit[key][1])
         return
+    
+    def onBtnBack(self):
+        self.w.stackedWidget.setCurrentIndex(0)
+        return
+    
+    def onBtnLoadApprox(self):
+        self.w.stackedWidget.setCurrentIndex(1)
+        return
 
     def onBtnLoadGCode34(self):
         # код на основе btn_load и load_code из qtdragon

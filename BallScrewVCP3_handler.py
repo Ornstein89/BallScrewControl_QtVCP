@@ -264,6 +264,10 @@ class HandlerClass:
     def onBtnToPID(self):
         self.w.stackedWidget.setCurrentIndex(1)
         return
+    
+    def onBtnToCalib(self):
+        self.w.stackedWidget.setCurrentIndex(2)
+        return
 
     def onBtnResetPressed(self):
         self.hal['pid_reset_pin'] = 0.0
