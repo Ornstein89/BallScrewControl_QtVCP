@@ -244,6 +244,9 @@ class HandlerClass:
             self.VCP_halpins_bit[key][0] = tmp_newpin
             if self.VCP_halpins_bit[key][1] is not None:
                 tmp_newpin.value_changed.connect(self.VCP_halpins_bit[key][1])
+
+        # создание пинов и связывание событий для модели нагрузки
+
         return
     
     def onBtnBack(self):
@@ -752,6 +755,16 @@ class HandlerClass:
         #print "Test pin value changed to:" % (data) # ВЫВОДИТ ВСЕГДА 0 - ВИДИМО ОШИБКА В ДОКУМЕНТАЦИИ
         #print 'halpin object =', self.w.sender()
         #print 'Halpin type: ',self.w.sender().get_type()
+    
+    approx_points = [x * 35.0 for x in range(0, 10)]
+    def onSpnNofPoints(self, p_new_value):
+        max_points = self.w.spnNofPoints.value()
+        max_travel = self.w.spnDsp34.value()
+        multiplier = max_travel/max_points
+        self.approx_points = [x * multiplier for x in range(0, max_points)]
+        self.approx_points[0] = 0.0;
+        self.approx_points[-1] = max_travel;
+        return
 
     def onRODOS_changed(self, state, pinname, number, turn_on):
         #INFO http://linuxcnc.org/docs/2.8/html/gui/qtvcp_code_snippets.html#_add_hal_pins_that_call_functions
