@@ -1,7 +1,0 @@
-component test_load_pos "Test load model for form 3.4";
-pin in float pos_in;
-pin out float load_out;
-function _;
-license "GPL"; // indicates GPL v2 or later // компиляция и установка sudo halcompile --install test_load_pos.comp
-;;
-load_out = pos_in * pos_in * 80.0 + 200;

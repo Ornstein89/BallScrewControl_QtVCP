@@ -1,0 +1,33 @@
+loadrt test_model
+loadrt siggen
+loadrt approx2
+loadrt threads name1=test-thread period1=10000000
+
+addf siggen.0.update test-thread
+addf test-model.0 test-thread
+addf approx2.0 test-thread
+
+net timing_signal test-model.0.timer siggen.0.square
+setp siggen.0.frequency 10.0
+
+setp test-model.0.max-stroke 350.0
+
+setp approx2.0.kpos1 0.0125
+setp approx2.0.kpos2 0.0
+setp approx2.0.kpos3 200.0
+
+setp approx2.0.kneg1 -0.0125
+setp approx2.0.kneg2 8.75
+setp approx2.0.kneg3 1069.0
+
+net dir_pos approx2.0.dir-pos <= test-model.0.dir-pos
+net dir_neg approx2.0.dir-neg <= test-model.0.dir-neg
+
+net pos approx2.0.position <= test-model.0.position
+setp approx2.0.position-max 350.0;
+setp approx2.0.position-terminal 50.0;
+
+start
+
+loadrt halscope
+setp test-model.0.start 1
