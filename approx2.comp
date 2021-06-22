@@ -1,22 +1,26 @@
 component approx2 "Аппроксимация параболой";  // компиляция и установка sudo halcompile --install test_model.comp
+
+// на выход - аппроксимированная нагрузка и номинальная нагрузка (линейно от f1 до f2)
+pin out float load_approx = 0.0;
+pin out float load_nom = 0.0;
+
+// входная кинематика
 pin in bit dir_pos "1 если направление положительное";
 pin in bit dir_neg "1 если направление отрицательное";
 pin in float position=0.0 "Текущаяя позиция, мм";
 pin in float position_max=0.0 "Максимальный ход, мм";
 pin in float position_terminal = 50.0 "Граница терминальных эффектов, мм";
 
-pin out float load_approx = 0.0;
-pin out float load_nom = 0.0;
-
 // параметры линейной номинальной функции
 pin in float f1 "Начальное значение номинальной линейной нагрузки";
 pin in float f2 "Конечное значение номинальной линейной нагрузки";
 
-// параметры кубической аппроксимации
+// параметры кубической аппроксимации на положительном ходе, dir_pos=1, dir_neg=0, load_approx = kpos1*position^2 + kpos2*position + kpos3
 pin in float kpos1=0.0;
 pin in float kpos2=0.0;
 pin in float kpos3=0.0;
 
+// параметры кубической аппроксимации на отрицательном ходе, dir_pos=0, dir_neg=1, load_approx = kneg1*position^2 + kneg2*position + kneg3
 pin in float kneg1=0.0;
 pin in float kneg2=0.0;
 pin in float kneg3=0.0;

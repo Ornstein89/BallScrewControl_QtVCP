@@ -1,17 +1,23 @@
 loadrt test_model
 loadrt siggen
 loadrt approx2
+loadrt error_monitor
 loadrt threads name1=test-thread period1=10000000
 
 addf siggen.0.update test-thread
 addf test-model.0 test-thread
 addf approx2.0 test-thread
+addf error-monitor.0 test-thread
 
-net timing_signal test-model.0.timer siggen.0.square
 setp siggen.0.frequency 10.0
 
+# настройка модели станка
+net timing_signal test-model.0.timer siggen.0.square
 setp test-model.0.max-stroke 350.0
+setp test-model.0.f1 600
+setp test-model.0.f1 2200
 
+# настройка аппроксиматора
 setp approx2.0.kpos1 0.0125
 setp approx2.0.kpos2 0.0
 setp approx2.0.kpos3 200.0
@@ -20,14 +26,26 @@ setp approx2.0.kneg1 -0.0125
 setp approx2.0.kneg2 8.75
 setp approx2.0.kneg3 1069.0
 
+setp approx2.0.position-max 350.0
+setp approx2.0.position-terminal 50.0
+
 net dir_pos approx2.0.dir-pos <= test-model.0.dir-pos
 net dir_neg approx2.0.dir-neg <= test-model.0.dir-neg
+net pos_signal approx2.0.position <= test-model.0.position
 
-net pos approx2.0.position <= test-model.0.position
-setp approx2.0.position-max 350.0;
-setp approx2.0.position-terminal 50.0;
+# настройка монитора ошибок
+setp error-monitor.0.f1 600
+setp error-monitor.0.f1 2200
+setp error-monitor.0.position-max 350.0
+setp error-monitor.0.n-of-points 15
+
+net dir_pos error-monitor.0.dir-pos
+net dir_neg error-monitor.0.dir-neg
+net load_signal error-monitor.0.load <= test-model.0.load
+net pos_signal error-monitor.0.position
 
 start
 
 loadrt halscope
 setp test-model.0.start 1
+setp test-model.0.start 0

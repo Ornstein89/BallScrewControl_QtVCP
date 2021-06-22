@@ -1,0 +1,78 @@
+component error_monitor "Сбор ошибок дейсвительной нагрузки по сравнению с линейной функцией";  // компиляция и установка sudo halcompile --install test_model.comp
+
+// ВХОД
+// реальная кинематика
+pin in float load = 0.0 "Реальная внешняя нагрузка";
+pin in float position = 0.0 "Позиция перемещения";
+pin in float position_max = 0.0 "Максимальное перемещение";
+pin in bit dir_pos "1 если направление положительное";
+pin in bit dir_neg "1 если направление отрицательное";
+pin in u32 n_of_points "Количество точек выборки, не более 100";
+
+// параметры номинальной линейной функции
+pin in float f1 = 0.0 "Начальное значение номинальной нагрузки";
+pin in float f2 = 0.0 "Конечное значение номинальной нагрузки";
+
+// ВЫХОД - ошибки на положительном и отрицательном ходе
+pin out float errors_pos-# [100];
+pin out float errors_neg-# [100];
+
+variable double load_nom = 0.0;
+variable int n_old = 0.0;
+variable int n_current = 0.0;
+variable double step = 0.0;
+variable bool dir_pos_old = 0;
+variable bool dir_neg_old = 0;
+
+function _;
+license "GPL";
+;;
+
+/*EXTRA_SETUP(){
+    old_timer = 0.0;
+    time = 0.0;
+    start_old = 0;
+    dir_neg = 0;
+    dir_pos = 0;
+}*/
+
+FUNCTION(_) {
+    load_nom = f1 + (f2-f1)/position_max * position;
+    step = position_max / n_of_points;
+    n_current = (int)(position / step);
+    if(n_current > (n_of_points-1))
+        n_current = n_of_points-1;
+
+    if(dir_pos==1 && dir_neg==0) { // положительный ход
+        if(dir_pos_old==0){ // момент старта - запись первой точки
+            n_current = 0;
+            errors_pos(n_current) = load - load_nom;
+        }
+        else if(n_current > n_old){// если произошла смена точки
+            errors_pos(n_current) = load - load_nom;
+        }
+    }
+    else if(dir_pos==0 && dir_neg==1) {// обратный ход
+        if(dir_pos_old==1){ // момент смены направления при начале обратного хода
+            n_current = n_of_points-1;
+            errors_pos(n_current) = load - load_nom;
+            //errors_neg(n_current) = load - load_nom;
+        }
+        else if(n_current < n_old){// если произошла смена точки
+            errors_neg(n_old) = load - load_nom;
+        }
+    }
+    else if(dir_pos==0 && dir_neg==0){
+        n_current = 0;
+        if(dir_neg_old==1){// конец обратного хода и остановка
+            errors_neg(n_current)=load - load_nom;
+        }
+    }
+    else if(dir_pos==1 && dir_neg==1){// СОСТОЯНИЕ НЕОПРЕДЕЛЁННОСТИ
+        n_current = 0;
+    }
+
+    n_old = n_current;
+    dir_pos_old = dir_pos;
+    dir_neg_old = dir_neg;
+}
