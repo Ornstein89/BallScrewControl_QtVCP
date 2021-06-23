@@ -1,15 +1,16 @@
 component approx2 "Аппроксимация параболой";  // компиляция и установка sudo halcompile --install test_model.comp
 
-// на выход - аппроксимированная нагрузка и номинальная нагрузка (линейно от f1 до f2)
-pin out float load_approx = 0.0;
-pin out float load_nom = 0.0;
+// ВЫХОД - аппроксимированная нагрузка и номинальная нагрузка (линейно от f1 до f2)
+pin out float load_approx = 0.0;// пин будет называться load-approx, нижние подчёркивания заменяются на тире
+pin out float load_nom = 0.0; // пин будет называться load-nom, нижние подчёркивания заменяются на тире
 
+//ВХОД
 // входная кинематика
-pin in bit dir_pos "1 если направление положительное";
-pin in bit dir_neg "1 если направление отрицательное";
+pin in bit dir_pos "1 если направление положительное"; // пин будет называться dir-pos, нижние подчёркивания заменяются на тире
+pin in bit dir_neg "1 если направление отрицательное"; // пин будет называться dir-neg, нижние подчёркивания заменяются на тире
 pin in float position=0.0 "Текущаяя позиция, мм";
-pin in float position_max=0.0 "Максимальный ход, мм";
-pin in float position_terminal = 50.0 "Граница терминальных эффектов, мм";
+pin in float position_max=0.0 "Максимальный ход, мм"; // пин будет называться position-max, нижние подчёркивания заменяются на тире
+pin in float position_terminal = 50.0 "Граница терминальных эффектов, мм"; // пин будет называться position-terminal, нижние подчёркивания заменяются на тире
 
 // параметры линейной номинальной функции
 pin in float f1 "Начальное значение номинальной линейной нагрузки";
@@ -43,12 +44,12 @@ license "GPL";
 FUNCTION(_) {
     load_nom = f1 + (f2-f1)/position_max * position;
     if(dir_pos ==1 && dir_neg == 0){ // положительное направление
-        if(position < position_terminal){ // вблизи стартового края
-            load_approx = (kpos1*position_terminal*position_terminal + kpos2*position_terminal + kpos3)/position_terminal * position;
+        if(position < position_terminal){ // вблизи стартового края - линия
+            load_approx = (kpos1*position_terminal*position_terminal + kpos2*position_terminal + kpos3 + f1)/position_terminal * position;
         }
         else if(position > (position_max-position_terminal) && position < position_max) { // вблизи конца хода
             pos_term2 = position_max - position_terminal;
-            load_term2 = kpos1*pos_term2*pos_term2 + kpos2*pos_term2 + kpos3;
+            load_term2 = kpos1*pos_term2*pos_term2 + kpos2*pos_term2 + kpos3 + f2;
             load_approx = load_term2 - load_term2/position_terminal * (position-position_max+position_terminal);
         }
         else if(position >= position_max || position <= 0.0){ // за пределами хода
@@ -56,16 +57,16 @@ FUNCTION(_) {
         }
         else // на основном интервале
         {
-            load_approx = kpos1*position*position + kpos2*position + kpos3;
+            load_approx = kpos1*position*position + kpos2*position + kpos3 + load_nom;
         }
     }
     else if(dir_pos ==0 && dir_neg == 1){ // отрицательное направление
         if(position < position_terminal){ // вблизи стартового края
-            load_approx = (kneg1*position_terminal*position_terminal + kneg2*position_terminal + kneg3) / position_terminal * position;
+            load_approx = (kneg1*position_terminal*position_terminal + kneg2*position_terminal + kneg3 + f1) / position_terminal * position;
         }
         else if(position > (position_max-position_terminal) && position < position_max) { // вблизи конца хода
             pos_term2 = position_max - position_terminal;
-            load_term2 = kneg1*pos_term2*pos_term2 + kneg2*pos_term2 + kneg3;
+            load_term2 = kneg1*pos_term2*pos_term2 + kneg2*pos_term2 + kneg3 + f2;
             load_approx = load_term2 - load_term2/position_terminal * (position-position_max+position_terminal);
         }
         else if(position >= position_max || position <= 0.0){ // за пределами хода
@@ -73,7 +74,7 @@ FUNCTION(_) {
         }
         else // на основном интервале
         {
-            load_approx = kneg1*position*position + kneg2*position + kneg3;
+            load_approx = kneg1*position*position + kneg2*position + kneg3 + load_nom;
         }
     }
     else if(dir_pos ==0 && dir_neg == 0){

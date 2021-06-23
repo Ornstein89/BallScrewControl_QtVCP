@@ -1,0 +1,76 @@
+### ПРИМЕР ПОДКЛЮЧЕНИЯ approx2 И error_monitor К ИНТЕРФЕЙСУ ###
+loadrt approx2
+loadrt error_monitor
+loadrt threads name1=test-thread period1=10000000
+
+addf approx2.0 test-thread
+addf error-monitor.0 test-thread
+
+# настройки аппроксиматора
+net dsp approx2.0.position-max
+net position_terminal approx2.0.position-terminal <= BallScrewVCP4.position_terminal-pin34
+net dir_pos approx2.0.dir-pos <= test-model.0.dir-pos
+net dir_neg approx2.0.dir-neg <= test-model.0.dir-neg
+net position_actual approx2.0.position
+
+net kpos1 approx2.0.kpos1 <= BallScrewVCP4.kpos1
+net kpos2 approx2.0.kpos2 <= BallScrewVCP4.kpos2
+net kpos3 approx2.0.kpos3 <= BallScrewVCP4.kpos3
+
+net kneg1 approx2.0.kneg1 <= BallScrewVCP4.kneg1
+net kneg2 approx2.0.kneg2 <= BallScrewVCP4.kneg2
+net kneg3 approx2.0.kneg3 <= BallScrewVCP4.kneg3
+
+# настройки монитора ошибок
+net f1 error-monitor.0.f1
+net f2 error-monitor.0.f2
+net dsp error-monitor.0.position-max
+net n-of-points error-monitor.0.n-of-points <= BallScrewVCP4.n_of_points-pin34
+
+net dir_pos error-monitor.0.dir-pos
+net dir_neg error-monitor.0.dir-neg
+net load_actual error-monitor.0.load
+net position_actual error-monitor.0.position
+net position_terminal error-monitor.0.position-terminal
+
+net err-pos-0 BallScrewVCP4.err_pos_0 <= error-monitor.0.errors-pos-0
+net err-pos-1 BallScrewVCP4.err_pos_1 <= error-monitor.0.errors-pos-1
+net err-pos-2 BallScrewVCP4.err_pos_2 <= error-monitor.0.errors-pos-2
+net err-pos-3 BallScrewVCP4.err_pos_3 <= error-monitor.0.errors-pos-3
+net err-pos-4 BallScrewVCP4.err_pos_4 <= error-monitor.0.errors-pos-4
+net err-pos-5 BallScrewVCP4.err_pos_5 <= error-monitor.0.errors-pos-5
+net err-pos-6 BallScrewVCP4.err_pos_6 <= error-monitor.0.errors-pos-6
+net err-pos-7 BallScrewVCP4.err_pos_7 <= error-monitor.0.errors-pos-7
+net err-pos-8 BallScrewVCP4.err_pos_8 <= error-monitor.0.errors-pos-8
+net err-pos-9 BallScrewVCP4.err_pos_9 <= error-monitor.0.errors-pos-9
+net err-pos-10 BallScrewVCP4.err_pos_10 <= error-monitor.0.errors-pos-10
+net err-pos-11 BallScrewVCP4.err_pos_11 <= error-monitor.0.errors-pos-11
+net err-pos-12 BallScrewVCP4.err_pos_12 <= error-monitor.0.errors-pos-12
+net err-pos-13 BallScrewVCP4.err_pos_13 <= error-monitor.0.errors-pos-13
+net err-pos-14 BallScrewVCP4.err_pos_14 <= error-monitor.0.errors-pos-14
+net err-pos-15 BallScrewVCP4.err_pos_15 <= error-monitor.0.errors-pos-15
+net err-pos-16 BallScrewVCP4.err_pos_16 <= error-monitor.0.errors-pos-16
+net err-pos-17 BallScrewVCP4.err_pos_17 <= error-monitor.0.errors-pos-17
+net err-pos-18 BallScrewVCP4.err_pos_18 <= error-monitor.0.errors-pos-18
+net err-pos-19 BallScrewVCP4.err_pos_19 <= error-monitor.0.errors-pos-19
+
+net err-neg-0 BallScrewVCP4.err_neg_0 <= error-monitor.0.errors-neg-0
+net err-neg-1 BallScrewVCP4.err_neg_1 <= error-monitor.0.errors-neg-1
+net err-neg-2 BallScrewVCP4.err_neg_2 <= error-monitor.0.errors-neg-2
+net err-neg-3 BallScrewVCP4.err_neg_3 <= error-monitor.0.errors-neg-3
+net err-neg-4 BallScrewVCP4.err_neg_4 <= error-monitor.0.errors-neg-4
+net err-neg-5 BallScrewVCP4.err_neg_5 <= error-monitor.0.errors-neg-5
+net err-neg-6 BallScrewVCP4.err_neg_6 <= error-monitor.0.errors-neg-6
+net err-neg-7 BallScrewVCP4.err_neg_7 <= error-monitor.0.errors-neg-7
+net err-neg-8 BallScrewVCP4.err_neg_8 <= error-monitor.0.errors-neg-8
+net err-neg-9 BallScrewVCP4.err_neg_9 <= error-monitor.0.errors-neg-9
+net err-neg-10 BallScrewVCP4.err_neg_10 <= error-monitor.0.errors-neg-10
+net err-neg-11 BallScrewVCP4.err_neg_11 <= error-monitor.0.errors-neg-11
+net err-neg-12 BallScrewVCP4.err_neg_12 <= error-monitor.0.errors-neg-12
+net err-neg-13 BallScrewVCP4.err_neg_13 <= error-monitor.0.errors-neg-13
+net err-neg-14 BallScrewVCP4.err_neg_14 <= error-monitor.0.errors-neg-14
+net err-neg-15 BallScrewVCP4.err_neg_15 <= error-monitor.0.errors-neg-15
+net err-neg-16 BallScrewVCP4.err_neg_16 <= error-monitor.0.errors-neg-16
+net err-neg-17 BallScrewVCP4.err_neg_17 <= error-monitor.0.errors-neg-17
+net err-neg-18 BallScrewVCP4.err_neg_18 <= error-monitor.0.errors-neg-18
+net err-neg-19 BallScrewVCP4.err_neg_19 <= error-monitor.0.errors-neg-19
