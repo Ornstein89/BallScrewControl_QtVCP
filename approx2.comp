@@ -26,8 +26,10 @@ pin in float kneg1=0.0;
 pin in float kneg2=0.0;
 pin in float kneg3=0.0;
 
-variable float pos_term2 = 0.0;
-variable float load_term2 = 0.0;
+variable double pos_term2 = 0.0;
+variable double load_term2 = 0.0;
+variable double load_nom1 = 0.0; // номинальная нагрузка в момент перехода от линейного набора к аппроксимации
+variable double load_nom2 = 0.0; // номинальная нагрузка в момент перехода к линейному спаду
 
 function _;
 license "GPL";
@@ -43,13 +45,15 @@ license "GPL";
 
 FUNCTION(_) {
     load_nom = f1 + (f2-f1)/position_max * position;
+    load_nom1 = f1 + (f2-f1)/position_max * position_terminal; // номинальная нагрузка в момент перехода от линейного набора к аппроксимации
+    load_nom2 = f1 + (f2-f1)/position_max * (position_max - position_terminal); // номинальная нагрузка в момент перехода к линейному спаду
     if(dir_pos ==1 && dir_neg == 0){ // положительное направление
         if(position < position_terminal){ // вблизи стартового края - линия
-            load_approx = (kpos1*position_terminal*position_terminal + kpos2*position_terminal + kpos3 + f1)/position_terminal * position;
+            load_approx = (kpos1*position_terminal*position_terminal + kpos2*position_terminal + kpos3 + load_nom1)/position_terminal * position;
         }
         else if(position > (position_max-position_terminal) && position < position_max) { // вблизи конца хода
             pos_term2 = position_max - position_terminal;
-            load_term2 = kpos1*pos_term2*pos_term2 + kpos2*pos_term2 + kpos3 + f2;
+            load_term2 = kpos1*pos_term2*pos_term2 + kpos2*pos_term2 + kpos3 + load_nom2;
             load_approx = load_term2 - load_term2/position_terminal * (position-position_max+position_terminal);
         }
         else if(position >= position_max || position <= 0.0){ // за пределами хода
@@ -62,11 +66,11 @@ FUNCTION(_) {
     }
     else if(dir_pos ==0 && dir_neg == 1){ // отрицательное направление
         if(position < position_terminal){ // вблизи стартового края
-            load_approx = (kneg1*position_terminal*position_terminal + kneg2*position_terminal + kneg3 + f1) / position_terminal * position;
+            load_approx = (kneg1*position_terminal*position_terminal + kneg2*position_terminal + kneg3 + load_nom1) / position_terminal * position;
         }
         else if(position > (position_max-position_terminal) && position < position_max) { // вблизи конца хода
             pos_term2 = position_max - position_terminal;
-            load_term2 = kneg1*pos_term2*pos_term2 + kneg2*pos_term2 + kneg3 + f2;
+            load_term2 = kneg1*pos_term2*pos_term2 + kneg2*pos_term2 + kneg3 + load_nom2;
             load_approx = load_term2 - load_term2/position_terminal * (position-position_max+position_terminal);
         }
         else if(position >= position_max || position <= 0.0){ // за пределами хода

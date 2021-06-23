@@ -1230,19 +1230,6 @@ qproperty-diameter: 40;</string>
 }</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_25">
-           <item row="0" column="1">
-            <spacer name="horizontalSpacer_27">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label_137">
              <property name="minimumSize">
@@ -1268,47 +1255,18 @@ qproperty-diameter: 40;</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="3">
-            <widget class="ActionButton" name="actionbutton_4">
-             <property name="text">
-              <string>АВ ОСТ</string>
+           <item row="0" column="1">
+            <spacer name="horizontalSpacer_27">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
              </property>
-             <property name="indicator_option" stdset="0">
-              <bool>true</bool>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
              </property>
-             <property name="indicator_status_option" stdset="0">
-              <bool>true</bool>
-             </property>
-             <property name="is_estopped_status" stdset="0">
-              <bool>true</bool>
-             </property>
-             <property name="estop_action" stdset="0">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="ActionButton" name="actionbutton_5">
-             <property name="text">
-              <string>Вкл/
-выкл</string>
-             </property>
-             <property name="indicator_option" stdset="0">
-              <bool>true</bool>
-             </property>
-             <property name="indicator_status_option" stdset="0">
-              <bool>true</bool>
-             </property>
-             <property name="is_estopped_status" stdset="0">
-              <bool>true</bool>
-             </property>
-             <property name="estop_action" stdset="0">
-              <bool>false</bool>
-             </property>
-             <property name="machine_on_action" stdset="0">
-              <bool>true</bool>
-             </property>
-            </widget>
+            </spacer>
            </item>
           </layout>
          </widget>
