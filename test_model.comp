@@ -49,6 +49,7 @@ FUNCTION(_) {
         dir_pos = 1;
         dir_neg = 0;
         old_point_passed = 0.0;
+        //errors_pos[0] = 0;
     }
 
     if( (dir_pos==1 && dir_neg==0) || (dir_pos==0 && dir_neg==1) ) { // приращение времени
@@ -69,6 +70,11 @@ FUNCTION(_) {
         dir_pos = 0;
         dir_neg = 1;
         position = max_stroke;
+        load = 0.0;
+        
+        old_point_passed = n_of_points - 1;
+        //errors_neg[old_point_passed] = 
+        return;
     }
 
     if((dir_neg==1) && (dir_pos==0) && position<=0.0){ // остановка при возврате в ноль
@@ -76,15 +82,16 @@ FUNCTION(_) {
         dir_pos=0;
         position=0.0;
         curr_time = 0.0;
+        errors_neg[0] = 0;
     }
 
-    point_passed = int(position/step);
+    point_passed = (int)(position/step);
     if((point_passed > old_point_passed) && (dir_pos==1) && (dir_neg==0)){// проверка прохождения точки
-        errors_pos[point_passed] = load - load_nom;
+        //errors_pos[point_passed] = load - load_nom;
 
     }
     else if((point_passed < old_point_passed) && (dir_neg==1) && (dir_pos==0)){
-        errors_neg[point_passed] = load - load_nom;
+        //errors_neg[point_passed] = load - load_nom;
     }
 
     if((dir_pos==1) && (dir_neg==0)) { // нагрузка при положительном ходе 

@@ -35,7 +35,7 @@ net pos_signal approx2.0.position <= test-model.0.position
 
 # настройка монитора ошибок
 setp error-monitor.0.f1 600
-setp error-monitor.0.f1 2200
+setp error-monitor.0.f2 2200
 setp error-monitor.0.position-max 350.0
 setp error-monitor.0.n-of-points 15
 

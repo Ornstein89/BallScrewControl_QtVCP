@@ -14,6 +14,8 @@
 # стандартные пакеты
 import sys, os, io, re, configparser, subprocess
 from datetime import datetime
+import numpy as np
+from scipy.linalg import *
 
 # пакеты linuxcnc
 import linuxcnc, hal # http://linuxcnc.org/docs/html/hal/halmodule.html
@@ -245,7 +247,24 @@ class HandlerClass:
             if self.VCP_halpins_bit[key][1] is not None:
                 tmp_newpin.value_changed.connect(self.VCP_halpins_bit[key][1])
 
-        # создание пинов и связывание событий для модели нагрузки
+        # создание пинов и связывание событий для модели нагрузки, аппроксиматора и сборщика ошибок
+        for i in range(100):
+            pinname='err_pos_%d' % i 
+            self.hal.newpin(pinname, hal.HAL_FLOAT, hal.HAL_IN)
+            pinname='err_neg_%d' % i 
+            self.hal.newpin(pinname, hal.HAL_FLOAT, hal.HAL_IN)
+        
+        for i in range(1,4):
+            pinname='kpos%d' % i
+            self.hal.newpin(pinname, hal.HAL_FLOAT, hal.HAL_OUT)
+            pinname='kneg%d' % i
+            self.hal.newpin(pinname, hal.HAL_FLOAT, hal.HAL_OUT)
+
+        self.hal.newpin('position_terminal-pin34', hal.HAL_FLOAT, hal.HAL_OUT)
+        self.hal['position_terminal-pin34'] = 50.0
+
+        self.hal.newpin('n_of_points-pin34', hal.HAL_U32, hal.HAL_OUT)
+        self.hal['n_of_points-pin34'] = 15
 
         return
     
@@ -758,12 +777,57 @@ class HandlerClass:
     
     approx_points = [x * 35.0 for x in range(0, 10)]
     def onSpnNofPoints(self, p_new_value):
-        max_points = self.w.spnNofPoints.value()
+        max_points = p_new_value # self.w.spnNofPoints.value()
         max_travel = self.w.spnDsp34.value()
-        multiplier = max_travel/max_points
-        self.approx_points = [x * multiplier for x in range(0, max_points)]
+        multiplier = max_travel/p_new_value
+        self.approx_points = [x * multiplier for x in range(0, p_new_value)]
         self.approx_points[0] = 0.0;
         self.approx_points[-1] = max_travel;
+        self.hal['n_of_points-pin34'] = p_new_value
+        return
+    
+    def onSpnTerminalEffects(self, p_new_value):
+        self.hal['position_terminal-pin34']=p_new_value
+        return
+
+    def onBtnGetApprox(self):
+        '''
+        Расчёт аппроксимирующих функцию по массиву ошибок после пробного хода
+        '''
+
+        # сбор показаний в массив
+        tmp_n_of_points = self.w.spnNofPoints.value()
+        tmp_terminal_eff = self.w.spnTerminalEffects.value()
+        tmp_travel_max = self.w.spnDsp34.value()
+        err_positions = np.linspace(tmp_terminal_eff, tmp_travel_max - tmp_terminal_eff, num=tmp_n_of_points)
+        print "err_positions ", err_positions
+        err_pos_array = np.array([])
+        err_neg_array = np.array([])
+        for i in range(tmp_n_of_points):
+            err_pos_array = np.append(err_pos_array, self.hal['err_pos_'+str(i)])
+            err_neg_array = np.append(err_neg_array, self.hal['err_neg_'+str(i)])
+        print "err_pos_array ", err_pos_array
+        print "err_neg_array ", err_neg_array
+        # метод наименьших квадратов
+        #m=np.vstack((err_positions**2,err_positions,np.ones(tmp_n_of_points))).T
+
+        features = np.concatenate((np.vstack(np.ones(tmp_n_of_points)),
+            np.vstack(err_positions),
+            np.vstack(err_positions**2)), axis = 1)
+        determinants = np.linalg.lstsq(features, err_pos_array)[0]
+        print "approx_pos = ", determinants[2],"x**2+",determinants[1],"x+",determinants[0]
+        print determinants
+        # передача подобранных коэффициентов в аппроксиматор
+        self.hal['kpos1'] = determinants[2]
+        self.hal['kpos2'] = determinants[1]
+        self.hal['kpos3'] = determinants[0]
+
+        determinants = np.linalg.lstsq(features, err_neg_array)[0]
+        print "approx_neg = ", determinants[2],"x**2+",determinants[1],"x+",determinants[0]
+        print determinants
+        self.hal['kneg1'] = determinants[2]
+        self.hal['kneg2'] = determinants[1]
+        self.hal['kneg3'] = determinants[0]
         return
 
     def onRODOS_changed(self, state, pinname, number, turn_on):

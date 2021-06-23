@@ -3,15 +3,16 @@ component error_monitor "Сбор ошибок дейсвительной наг
 // ВХОД
 // реальная кинематика
 pin in float load = 0.0 "Реальная внешняя нагрузка";
-pin in float position = 0.0 "Позиция перемещения";
-pin in float position_max = 0.0 "Максимальное перемещение";
+pin in float position = 0.0 "Текущее перемещение, мм";
+pin in float position_max = 0.0 "Максимальное перемещение, мм";
+pin in float position_terminal = 0.0 "Граница концевых эффектов слева и справа, мм";
 pin in bit dir_pos "1 если направление положительное";
 pin in bit dir_neg "1 если направление отрицательное";
 pin in u32 n_of_points "Количество точек выборки, не более 100";
 
 // параметры номинальной линейной функции
-pin in float f1 = 0.0 "Начальное значение номинальной нагрузки";
-pin in float f2 = 0.0 "Конечное значение номинальной нагрузки";
+pin in float f1 = 0.0 "Начальное значение номинальной линейной нагрузки";
+pin in float f2 = 0.0 "Конечное значение номинальной линейной нагрузки";
 
 // ВЫХОД - ошибки на положительном и отрицательном ходе
 pin out float errors_pos-# [100];
@@ -23,6 +24,11 @@ variable int n_current = 0.0;
 variable double step = 0.0;
 variable bool dir_pos_old = 0;
 variable bool dir_neg_old = 0;
+
+variable double pos1_term = 0.0;
+variable double pos2_term = 0.0;
+variable double range_term = 0.0;
+variable double position_old = 0.0;
 
 function _;
 license "GPL";
@@ -38,35 +44,55 @@ license "GPL";
 
 FUNCTION(_) {
     load_nom = f1 + (f2-f1)/position_max * position;
-    step = position_max / n_of_points;
-    n_current = (int)(position / step);
-    if(n_current > (n_of_points-1))
+
+    pos1_term = position_terminal;
+    pos2_term = position_max - position_terminal;
+    range_term = position_max - position_terminal - position_terminal;
+
+    step = range_term / (n_of_points-1);
+    if(position<pos1_term){
+        n_current = 0;
+    }
+    else if(position>pos2_term){
         n_current = n_of_points-1;
+    }
+    else{
+        n_current = (int)((position-pos1_term) / step);
+    }
+
+    //if(n_current > (n_of_points-1))
+    //    n_current = n_of_points-1;
 
     if(dir_pos==1 && dir_neg==0) { // положительный ход
-        if(dir_pos_old==0){ // момент старта - запись первой точки
+        if(position>=pos1_term && position_old < pos1_term){ // момент старта - запись первой точки - пересечение pos1_term
             n_current = 0;
             errors_pos(n_current) = load - load_nom;
         }
         else if(n_current > n_old){// если произошла смена точки
             errors_pos(n_current) = load - load_nom;
         }
+        else if(position>=pos2_term && position_old < pos2_term){
+            errors_pos(n_of_points-1) = load - load_nom;
+        }
     }
     else if(dir_pos==0 && dir_neg==1) {// обратный ход
-        if(dir_pos_old==1){ // момент смены направления при начале обратного хода
+        if(position <= pos2_term && position_old > pos2_term){ // момент смены направления при начале обратного хода - пересечение pos2_term
             n_current = n_of_points-1;
-            errors_pos(n_current) = load - load_nom;
-            //errors_neg(n_current) = load - load_nom;
+            errors_neg(n_current) = load - load_nom;
+            n_current = n_current-1;
         }
         else if(n_current < n_old){// если произошла смена точки
             errors_neg(n_old) = load - load_nom;
         }
+        else if(position <= pos1_term && position_old > pos1_term){
+            errors_neg(0) = load - load_nom;
+        }
     }
     else if(dir_pos==0 && dir_neg==0){
         n_current = 0;
-        if(dir_neg_old==1){// конец обратного хода и остановка
-            errors_neg(n_current)=load - load_nom;
-        }
+        //if(dir_neg_old==1){// конец обратного хода и остановка
+        //    errors_neg(n_current)=load - load_nom;
+        //}
     }
     else if(dir_pos==1 && dir_neg==1){// СОСТОЯНИЕ НЕОПРЕДЕЛЁННОСТИ
         n_current = 0;
@@ -75,4 +101,5 @@ FUNCTION(_) {
     n_old = n_current;
     dir_pos_old = dir_pos;
     dir_neg_old = dir_neg;
+    position_old = position;
 }
